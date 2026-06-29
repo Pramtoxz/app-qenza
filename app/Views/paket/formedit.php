@@ -4,11 +4,11 @@
     <div class="col-md-10">
         <div class="card card-primary">
             <div class="card-header text-center">
-                <h3 class="card-title">Tambah Data Paket</h3>
+                <h3 class="card-title">Edit Data Paket</h3>
             </div>
 
             <div class="card-body">
-                  <?= form_open(base_url('paket/updatedata'), ['id' => 'formedit', 'enctype' => 'multipart/form-data']) ?>
+                  <?= form_open(base_url('paket/updatedata'), ['id' => 'formeditpaket', 'enctype' => 'multipart/form-data']) ?>
                 <?= csrf_field() ?>
                 
                   <div class="row justify-content-center">
@@ -28,26 +28,26 @@
                                 
                                 <div class="form-group">
                                     <label for="harga">Harga Paket</label>
-                                    <input type="text" id="harga" name="harga" class="form-control" placeholder="Rp. 0" value="<?= $paket['harga']; ?>">
+                                    <input type="text" id="harga" name="harga" class="form-control" placeholder="Rp. 0" value="<?= 'Rp. ' . number_format($paket['harga'], 0, ',', '.'); ?>">
                                     <div class="invalid-feedback error_harga"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="jenis">Jenis Paket</label>
-                                    <select id="jenis" name="jenis" class="form-control" value="<?= $paket['jenis']; ?>">
-                                        <option value="motor">Motor</option>
-                                        <option value="mobil">Mobil</option>
+                                    <select id="jenis" name="jenis" class="form-control">
+                                        <option value="motor" <?= $paket['jenis'] == 'motor' ? 'selected' : '' ?>>Motor</option>
+                                        <option value="mobil" <?= $paket['jenis'] == 'mobil' ? 'selected' : '' ?>>Mobil</option>
                                     </select>
                                     <div class="invalid-feedback error_jenis"></div>
                                 </div>
                              <div class="form-group">
                                     <label for="upah">Upah Cuci</label>
-                                    <input type="text" id="upah" name="upah" class="form-control" placeholder="Rp. 0" value="<?= $paket['upah']; ?>">
+                                    <input type="text" id="upah" name="upah" class="form-control" placeholder="Rp. 0" value="<?= 'Rp. ' . number_format($paket['upah'], 0, ',', '.'); ?>">
                                     <div class="invalid-feedback error_upah"></div>
                                 </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="keterangan">Deskripsi</label>
-                                    <textarea id="keterangan" name="keterangan" class="form-control" rows="8" value="<?= $paket['keterangan']; ?>"></textarea>
+                                    <textarea id="keterangan" name="keterangan" class="form-control" rows="8"><?= $paket['keterangan']; ?></textarea>
                                     <div class="invalid-feedback error_keterangan"></div>
                                 </div>
                             </div>
@@ -96,11 +96,13 @@
             input.val(formatted);
         });
 
-        $('#formtambahpaket').submit(function(e) {
+        $('#formeditpaket').submit(function(e) {
             e.preventDefault();
             const hargaPlain = removeCurrencyFormat($('#harga').val());
+            const upahPlain = removeCurrencyFormat($('#upah').val());
             let formData = new FormData(this);
             formData.set('harga', hargaPlain);
+            formData.set('upah', upahPlain);
 
             $.ajax({
                 type: "post",
@@ -114,7 +116,7 @@
                     $('#tombolSimpan').prop('disabled', true);
                 },
                 complete: function() {
-                    $('#tombolSimpan').html('<i class="fas fa-save"></i> Simpan');
+                    $('#tombolSimpan').html('<i class="fas fa-save"></i> Update');
                     $('#tombolSimpan').prop('disabled', false);
                 },
                 success: function(response) {

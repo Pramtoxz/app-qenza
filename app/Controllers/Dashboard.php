@@ -35,9 +35,11 @@ class Dashboard extends BaseController
         
         // Format status count for easier use
         $statusStats = [
+            'pending' => 0,
             'diproses' => 0,
             'dijemput' => 0,
-            'selesai' => 0
+            'selesai' => 0,
+            'batal' => 0
         ];
         
         foreach ($statusCount as $status) {
@@ -50,7 +52,7 @@ class Dashboard extends BaseController
                      paket_cucian.namapaket, karyawan.nama as nama_karyawan')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
-            ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan')
+            ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
             ->orderBy('pencucian.tgl', 'DESC')
             ->limit(5)
             ->get()

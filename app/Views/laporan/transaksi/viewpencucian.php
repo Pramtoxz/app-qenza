@@ -417,7 +417,7 @@
                     <td class="col-id"><?= esc($row['idpencucian']) ?></td>
                     <td class="col-id"><?= esc($row['platnomor']) ?></td>
                     <td class="col-name"><?= esc($row['nama_pelanggan']) ?></td>
-                    <td class="col-name"><?= esc($row['nama_karyawan']) ?></td>
+                    <td class="col-name"><?= esc($row['nama_karyawan'] ?? '-') ?></td>
                     <td class="col-date"><?= date('d-m-Y', strtotime($row['tglpencucian'])) ?></td>
                     <td class="col-paket"><?= esc($row['namapaket']) ?></td>
                     <td class="col-status">

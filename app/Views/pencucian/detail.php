@@ -68,14 +68,22 @@
                     <h5 class="card-title"><i class="fas fa-user-tie mr-2"></i>Detail Karyawan</h5>
                 </div>
                 <div class="card-body">
-                    <h5 class="text-primary"><?= $pencucian['nama_karyawan'] ?></h5>
+                    <?php if (!empty($pencucian['nama_karyawan'])): ?>
+                        <h5 class="text-primary"><?= $pencucian['nama_karyawan'] ?></h5>
+                    <?php else: ?>
+                        <h5 class="text-muted"><i>Belum ditugaskan</i></h5>
+                    <?php endif; ?>
                     <p class="mb-2">Status:</p>
-                    <?php if ($pencucian['status'] == 'diproses'): ?>
+                    <?php if ($pencucian['status'] == 'pending'): ?>
+                        <span class="badge badge-secondary"><i class="fas fa-clock mr-1"></i>Menunggu Proses</span>
+                    <?php elseif ($pencucian['status'] == 'diproses'): ?>
                         <span class="badge badge-warning"><i class="fas fa-spinner mr-1"></i>Sedang Diproses</span>
                     <?php elseif ($pencucian['status'] == 'dijemput'): ?>
                         <span class="badge badge-info"><i class="fas fa-check mr-1"></i>Siap Dijemput</span>
                     <?php elseif ($pencucian['status'] == 'selesai'): ?>
                         <span class="badge badge-success"><i class="fas fa-check-double mr-1"></i>Selesai</span>
+                    <?php elseif ($pencucian['status'] == 'batal'): ?>
+                        <span class="badge badge-danger"><i class="fas fa-times mr-1"></i>Batal</span>
                     <?php endif; ?>
                 </div>
             </div>
@@ -104,7 +112,7 @@
                             <td><?= $pencucian['idpencucian'] ?></td>
                             <td><?= $pencucian['nama_pelanggan'] ?></td>
                             <td><?= $pencucian['namapaket'] ?></td>
-                            <td><?= $pencucian['nama_karyawan'] ?></td>
+                            <td><?= $pencucian['nama_karyawan'] ?? '<span class="text-muted"><i>Belum ditugaskan</i></span>' ?></td>
                             <td class="font-weight-bold text-success">Rp <?= number_format($pencucian['harga'], 0, ',', '.') ?></td>
                         </tr>
                     </tbody>
@@ -212,15 +220,19 @@
             <!-- Karyawan -->
             <div style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
                 <h3 style="margin: 0 0 8px 0; color: #343a40; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Detail Karyawan</h3>
-                <div><strong><?= $pencucian['nama_karyawan'] ?></strong></div>
+                <div><strong><?= $pencucian['nama_karyawan'] ?? 'Belum ditugaskan' ?></strong></div>
                 <div style="margin-top: 5px; font-size: 11px;">
                     Status: 
-                    <?php if ($pencucian['status'] == 'diproses'): ?>
+                    <?php if ($pencucian['status'] == 'pending'): ?>
+                        <span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">Menunggu Proses</span>
+                    <?php elseif ($pencucian['status'] == 'diproses'): ?>
                         <span style="background: #ffc107; color: #856404; padding: 2px 6px; border-radius: 3px; font-size: 10px;">Sedang Diproses</span>
                     <?php elseif ($pencucian['status'] == 'dijemput'): ?>
                         <span style="background: #007bff; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">Siap Dijemput</span>
                     <?php elseif ($pencucian['status'] == 'selesai'): ?>
                         <span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">Selesai</span>
+                    <?php elseif ($pencucian['status'] == 'batal'): ?>
+                        <span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">Batal</span>
                     <?php endif; ?>
                 </div>
             </div>
@@ -244,7 +256,7 @@
                         <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $pencucian['idpencucian'] ?></td>
                         <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $pencucian['nama_pelanggan'] ?></td>
                         <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $pencucian['namapaket'] ?></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $pencucian['nama_karyawan'] ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $pencucian['nama_karyawan'] ?? 'Belum ditugaskan' ?></td>
                         <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px; font-weight: bold; color: #28a745;">Rp <?= number_format($pencucian['harga'], 0, ',', '.') ?></td>
                     </tr>
                 </tbody>

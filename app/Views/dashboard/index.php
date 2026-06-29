@@ -81,7 +81,16 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-sm">Menunggu (Pending)</span>
+                                    <span class="badge badge-secondary"><?= $statusStats['pending'] ?></span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-secondary" style="width: <?= $totalPencucian > 0 ? ($statusStats['pending'] / $totalPencucian * 100) : 0 ?>%"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
                                 <div class="d-flex justify-content-between mb-1">
                                     <span class="text-sm">Sedang Diproses</span>
                                     <span class="badge badge-warning"><?= $statusStats['diproses'] ?></span>
@@ -90,7 +99,7 @@
                                     <div class="progress-bar bg-warning" style="width: <?= $totalPencucian > 0 ? ($statusStats['diproses'] / $totalPencucian * 100) : 0 ?>%"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <div class="d-flex justify-content-between mb-1">
                                     <span class="text-sm">Siap Dijemput</span>
                                     <span class="badge badge-info"><?= $statusStats['dijemput'] ?></span>
@@ -99,7 +108,7 @@
                                     <div class="progress-bar bg-info" style="width: <?= $totalPencucian > 0 ? ($statusStats['dijemput'] / $totalPencucian * 100) : 0 ?>%"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <div class="d-flex justify-content-between mb-1">
                                     <span class="text-sm">Selesai</span>
                                     <span class="badge badge-success"><?= $statusStats['selesai'] ?></span>
@@ -140,15 +149,19 @@
                                         <td><code><?= $item['idpencucian'] ?></code></td>
                                         <td><?= $item['nama_pelanggan'] ?></td>
                                         <td><?= $item['namapaket'] ?></td>
-                                        <td><?= $item['nama_karyawan'] ?></td>
+                                        <td><?= $item['nama_karyawan'] ?? '<span class="text-muted">-</span>' ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tgl'] . ' ' . $item['jamdatang'])) ?></td>
                                         <td>
-                                            <?php if ($item['status'] == 'diproses'): ?>
+                                            <?php if ($item['status'] == 'pending'): ?>
+                                                <span class="badge badge-secondary">Pending</span>
+                                            <?php elseif ($item['status'] == 'diproses'): ?>
                                                 <span class="badge badge-warning">Diproses</span>
                                             <?php elseif ($item['status'] == 'dijemput'): ?>
                                                 <span class="badge badge-info">Siap Dijemput</span>
-                                            <?php else: ?>
+                                            <?php elseif ($item['status'] == 'selesai'): ?>
                                                 <span class="badge badge-success">Selesai</span>
+                                            <?php elseif ($item['status'] == 'batal'): ?>
+                                                <span class="badge badge-danger">Batal</span>
                                             <?php endif; ?>
                                         </td>
                                     </tr>

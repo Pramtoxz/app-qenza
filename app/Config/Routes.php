@@ -86,6 +86,8 @@ $routes->group('pencucian', ['filter' => ['auth', 'role:admin']], function ($rou
     $routes->get('viewgetkaryawan', 'PencucianController::viewGetKaryawan');
     $routes->post('delete', 'PencucianController::delete');
     $routes->post('ubahstatus', 'PencucianController::ubahstatus');
+    $routes->post('ubahbatal', 'PencucianController::ubahbatal');
+    $routes->post('assignKaryawan', 'PencucianController::assignKaryawan');
 });
 
 $routes->group('checkout', ['filter' => ['auth', 'role:admin']], function ($routes) {

@@ -99,8 +99,10 @@
         $('#formtambahpaket').submit(function(e) {
             e.preventDefault();
             const hargaPlain = removeCurrencyFormat($('#harga').val());
+            const upahPlain = removeCurrencyFormat($('#upah').val());
             let formData = new FormData(this);
             formData.set('harga', hargaPlain);
+            formData.set('upah', upahPlain);
 
             $.ajax({
                 type: "post",

@@ -259,7 +259,7 @@
                         $text.html('<i class="fas fa-check mr-2"></i>Berhasil!');
                         Swal.fire({
                             title: 'Login Berhasil!',
-                            text: 'Selamat datang di Qenza',
+                            text: 'Selamat datang di Applikasi Pencucian Qenza',
                             icon: 'success',
                             confirmButtonColor: '#0e0e37',
                             timer: 1500,

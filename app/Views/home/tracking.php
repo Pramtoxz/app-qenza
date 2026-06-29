@@ -245,6 +245,13 @@
             <div class="result-body">
                 <div class="timeline">
                     <div class="tl-step">
+                        <div class="tl-dot <?= in_array($pencucian['status'], ['pending', 'diproses', 'dijemput', 'selesai']) ? 'on' : 'off' ?>">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <span class="tl-label">Pending</span>
+                    </div>
+                    <div class="tl-line <?= in_array($pencucian['status'], ['diproses', 'dijemput', 'selesai']) ? 'on' : 'off' ?>"></div>
+                    <div class="tl-step">
                         <div class="tl-dot <?= in_array($pencucian['status'], ['diproses', 'dijemput', 'selesai']) ? 'on' : 'off' ?>">
                             <i class="fas fa-clock"></i>
                         </div>
@@ -267,7 +274,10 @@
                 </div>
 
                 <div class="text-center mb-4">
-                    <?php if ($pencucian['status'] == 'diproses'): ?>
+                    <?php if ($pencucian['status'] == 'pending'): ?>
+                        <span class="status-badge" style="background:#f3f4f6;color:#6b7280;"><i class="fas fa-clipboard-list"></i> Menunggu Proses</span>
+                        <p class="status-msg">Pesanan Anda sedang menunggu untuk diproses.</p>
+                    <?php elseif ($pencucian['status'] == 'diproses'): ?>
                         <span class="status-badge proses"><i class="fas fa-clock"></i> Sedang Diproses</span>
                         <p class="status-msg">Kendaraan sedang dalam proses pencucian.</p>
                     <?php elseif ($pencucian['status'] == 'dijemput'): ?>
@@ -276,6 +286,9 @@
                     <?php elseif ($pencucian['status'] == 'selesai'): ?>
                         <span class="status-badge selesai"><i class="fas fa-check-circle"></i> Selesai</span>
                         <p class="status-msg">Terima kasih! Kendaraan sudah dijemput.</p>
+                    <?php elseif ($pencucian['status'] == 'batal'): ?>
+                        <span class="status-badge" style="background:#fef2f2;color:#b91c1c;"><i class="fas fa-times-circle"></i> Dibatalkan</span>
+                        <p class="status-msg">Pesanan ini telah dibatalkan.</p>
                     <?php endif; ?>
                 </div>
 
@@ -299,14 +312,14 @@
                     </div>
                     <div class="detail-box">
                         <div class="detail-box-title">Karyawan</div>
-                        <div class="name"><?= $pencucian['nama_karyawan'] ?></div>
-                        <div class="info">Penanggung jawab pencucian</div>
+                        <div class="name"><?= $pencucian['nama_karyawan'] ?? 'Belum ditugaskan' ?></div>
+                        <div class="info"><?= !empty($pencucian['nama_karyawan']) ? 'Penanggung jawab pencucian' : 'Menunggu penugasan karyawan' ?></div>
                     </div>
                 </div>
 
                 <div class="action-row">
                     <a href="<?= base_url() ?>" class="btn-ghost-sm"><i class="fas fa-arrow-left mr-1"></i> Beranda</a>
-                    <?php if ($pencucian['status'] != 'selesai'): ?>
+                    <?php if (!in_array($pencucian['status'], ['selesai', 'batal'])): ?>
                     <button onclick="location.reload()" class="btn-accent-sm"><i class="fas fa-sync-alt mr-1"></i> Refresh</button>
                     <?php endif; ?>
                 </div>
@@ -342,7 +355,7 @@
     </footer>
 
     <script>
-        <?php if (isset($pencucian) && $pencucian['status'] != 'selesai'): ?>
+        <?php if (isset($pencucian) && !in_array($pencucian['status'], ['selesai', 'batal'])): ?>
         setTimeout(function() { location.reload(); }, 30000);
         <?php endif; ?>
     </script>

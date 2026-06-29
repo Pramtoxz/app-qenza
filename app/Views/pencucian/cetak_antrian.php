@@ -178,8 +178,8 @@
     </style>
     <div class="ticket">
         <div class="ticket-header">
-            <h1>OTOBIZZ</h1>
-            <p>Car Wash & Detailing</p>
+            <h1>QENZA</h1>
+            <p>Cucian Salju Sijunjung</p>
         </div>
         
         <div class="ticket-body">

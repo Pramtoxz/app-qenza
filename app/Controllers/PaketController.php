@@ -132,7 +132,7 @@ class PaketController extends BaseController
                     ];
                 } 
             }
-            echo json_encode($json);
+            return $this->response->setJSON($json);
         }
 
     public function formedit($idpaket)

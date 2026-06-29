@@ -1,4 +1,4 @@
-<div class="table-responsive datatable-minimal mt-4">
+<div class="table-responsive datatable-minimal">
     <table class="table table-hover" id="tabelKaryawan">
         <thead>
             <tr>
@@ -14,35 +14,18 @@
     </table>
 </div>
 <script>
+    if ($.fn.DataTable.isDataTable('#tabelKaryawan')) {
+        $('#tabelKaryawan').DataTable().destroy();
+    }
+
     $('#tabelKaryawan').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '/pencucian/viewgetkaryawan',
+        ajax: '<?= site_url('pencucian/viewgetkaryawan') ?>',
         info: true,
         ordering: true,
         paging: true,
-        order: [
-            [0, 'desc']
-        ],
-        "aoColumnDefs": [{
-            "bSortable": false,
-            "aTargets": ["no-short"]
-        }],
-    });
-
-    $(document).ready(function() {
-        // Event listener untuk memilih karyawan
-        $(document).on('click', '.btn-pilihkaryawan', function() {
-            var idkaryawan = $(this).data('idkaryawan');
-            var namakaryawan = $(this).data('namakaryawan');
-            var alamat = $(this).data('alamat');
-            var nohp = $(this).data('nohp');
-            
-            $('#idkaryawan').val(idkaryawan);
-            $('#namakaryawan').val(namakaryawan);
-            $('#alamatkaryawan').val(alamat);
-            $('#nohpkaryawan').val(nohp);
-            $('#modalcariKaryawan').modal('hide');
-        });
+        order: [[1, 'asc']],
+        aoColumnDefs: [{ bSortable: false, aTargets: ["no-short"] }]
     });
 </script>
