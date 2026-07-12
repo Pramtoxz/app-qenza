@@ -20,7 +20,7 @@ class PelangganController extends BaseController
     {
         $db = db_connect();
         $query = $db->table('pelanggan')
-            ->select('idpelanggan, nama, nohp, jk, platnomor');
+            ->select('idpelanggan, nama, nohp, jk');
 
         return DataTable::of($query)
             ->add('action', function ($row) {
@@ -59,7 +59,6 @@ class PelangganController extends BaseController
             $alamat = $this->request->getPost('alamat');
             $nohp = $this->request->getPost('nohp');
             $jk = $this->request->getPost('jk');
-            $platnomor = $this->request->getPost('platnomor');
 
             $rules = [
                 'nama' => [
@@ -90,13 +89,6 @@ class PelangganController extends BaseController
                         'required' => '{field} tidak boleh kosong',
                     ]
                 ],
-                'platnomor' => [
-                    'label' => 'Plat Nomor',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
             ];
 
             if (!$this->validate($rules)) {
@@ -116,7 +108,6 @@ class PelangganController extends BaseController
                     'alamat' => $alamat,
                     'nohp' => $nohp,
                     'jk' => $jk,
-                    'platnomor' => $platnomor,
                 ]);
 
                 $json = [
@@ -124,10 +115,10 @@ class PelangganController extends BaseController
                 ];
             }
 
-            return $this->response->setJSON($json); // Lebih rapi pakai setJSON
+            return $this->response->setJSON($json);
         } else {
             return $this->response->setJSON([
-                'error' => 'Akses tidak valid' // respon default kalau bukan AJAX
+                'error' => 'Akses tidak valid'
             ]);
         }
     }
@@ -152,7 +143,6 @@ class PelangganController extends BaseController
     {
         $db = db_connect();
         
-        // Join tabel tamu dengan users untuk mendapatkan email
         $pelanggan = $db->table('pelanggan')
             ->select('pelanggan.*')
             ->where('pelanggan.idpelanggan', $idpelanggan)
@@ -178,7 +168,6 @@ class PelangganController extends BaseController
             $alamat = $this->request->getPost('alamat');
             $nohp = $this->request->getPost('nohp');
             $jk = $this->request->getPost('jk');
-            $platnomor = $this->request->getPost('platnomor');
 
             $rules = [
                 'nama' => [
@@ -209,13 +198,6 @@ class PelangganController extends BaseController
                         'required' => '{field} tidak boleh kosong',
                     ]
                 ],
-                'platnomor' => [
-                    'label' => 'Plat Nomor',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
             ];
 
             if (!$this->validate($rules)) {
@@ -235,7 +217,6 @@ class PelangganController extends BaseController
                     'alamat' => $alamat,
                     'nohp' => $nohp,
                     'jk' => $jk,
-                    'platnomor' => $platnomor,
                 ];
 
                 $model->update($idpelanggan, $dataUpdate);

@@ -104,6 +104,21 @@ $routes->group('checkout', ['filter' => ['auth', 'role:admin']], function ($rout
     $routes->post('updatedata/(:segment)', 'CheckoutController::updatedata/$1');
 });
 
+$routes->group('gaji', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'GajiController::index');
+    $routes->get('viewGaji', 'GajiController::viewGaji');
+    $routes->get('formtambah', 'GajiController::formtambah');
+    $routes->get('getkaryawan', 'GajiController::getKaryawan');
+    $routes->get('viewgetkaryawan', 'GajiController::viewGetKaryawan');
+    $routes->post('save', 'GajiController::save');
+    $routes->post('hitungUpah', 'GajiController::hitungUpah');
+    $routes->get('detail/(:segment)', 'GajiController::detail/$1');
+    $routes->get('slip/(:segment)', 'GajiController::slip/$1');
+    $routes->get('formedit/(:segment)', 'GajiController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'GajiController::updatedata/$1');
+    $routes->post('delete', 'GajiController::delete');
+});
+
 $routes->group('selesai', ['filter' => ['auth', 'role:admin']], function ($routes) {
     $routes->get('/', 'SelesaiController::index');
     $routes->get('viewSelesai', 'SelesaiController::viewSelesai');

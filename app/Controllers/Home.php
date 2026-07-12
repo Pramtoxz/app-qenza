@@ -29,11 +29,11 @@ class Home extends BaseController
            // Join tabel pencucian dengan pelanggan, paket, dan karyawan untuk tracking
            $pencucianQuery = $db
                ->table('pencucian')
-               ->select('pencucian.*, 
-                        pelanggan.nama as nama_pelanggan, 
-                        pelanggan.alamat, 
-                        pelanggan.nohp, 
-                        pelanggan.platnomor,
+                ->select('pencucian.*, 
+                         pelanggan.nama as nama_pelanggan, 
+                         pelanggan.alamat, 
+                         pelanggan.nohp, 
+                         pencucian.platnomor,
                         paket_cucian.namapaket, 
                         paket_cucian.harga, 
                         paket_cucian.jenis,

@@ -417,7 +417,7 @@ class LaporanTransaksi extends BaseController
                     pencucian.jamdatang,
                     pencucian.status,
                     pelanggan.nama as nama_pelanggan,
-                    pelanggan.platnomor,
+                    pencucian.platnomor,
                     karyawan.nama as nama_karyawan,
                     paket_cucian.namapaket,
                     paket_cucian.jenis
@@ -449,7 +449,6 @@ class LaporanTransaksi extends BaseController
 
             $db = db_connect();
             
-            // Query untuk mengambil data pencucian berdasarkan rentang tanggal (tanpa informasi harga)
             $pencucian = $db->table('pencucian')
                 ->select('
                     pencucian.idpencucian,
@@ -457,7 +456,7 @@ class LaporanTransaksi extends BaseController
                     pencucian.jamdatang,
                     pencucian.status,
                     pelanggan.nama as nama_pelanggan,
-                    pelanggan.platnomor,
+                    pencucian.platnomor,
                     karyawan.nama as nama_karyawan,
                     paket_cucian.namapaket,
                     paket_cucian.jenis
@@ -493,7 +492,6 @@ class LaporanTransaksi extends BaseController
 
             $db = db_connect();
             
-            // Query untuk mengambil data pencucian berdasarkan bulan dan tahun (tanpa informasi harga)
             $pencucian = $db->table('pencucian')
                 ->select('
                     pencucian.idpencucian,
@@ -501,7 +499,7 @@ class LaporanTransaksi extends BaseController
                     pencucian.jamdatang,
                     pencucian.status,
                     pelanggan.nama as nama_pelanggan,
-                    pelanggan.platnomor,
+                    pencucian.platnomor,
                     karyawan.nama as nama_karyawan,
                     paket_cucian.namapaket,
                     paket_cucian.jenis
@@ -547,7 +545,7 @@ class LaporanTransaksi extends BaseController
                     kendaraan_selesai.totalbayar,
                     pencucian.idpencucian,
                     pelanggan.nama as nama_pelanggan,
-                    pelanggan.platnomor
+                    pencucian.platnomor
                 ')
                 ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian', 'left')
                 ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
@@ -583,7 +581,7 @@ class LaporanTransaksi extends BaseController
                     pencucian.idpencucian,
                     pencucian.tgl as tglpencucian,
                     pelanggan.nama as nama_pelanggan,
-                    pelanggan.platnomor
+                    pencucian.platnomor
                 ')
                 ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian', 'left')
                 ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
@@ -623,7 +621,7 @@ class LaporanTransaksi extends BaseController
                     pencucian.idpencucian,
                     pencucian.tgl as tglpencucian,
                     pelanggan.nama as nama_pelanggan,
-                    pelanggan.platnomor
+                    pencucian.platnomor
                 ')
                 ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian', 'left')
                 ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')

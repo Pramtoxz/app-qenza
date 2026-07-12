@@ -1,23 +1,24 @@
 <div class="table-responsive datatable-minimal mt-4">
-    <table class="table table-hover" id="tabelPaket">
+    <table class="table table-hover" id="tabelCariKaryawan">
         <thead>
             <tr>
                 <th>No</th>
-                <th>ID Paket</th>
-                <th>Nama Paket</th>
-                <th>Harga</th>
-                <th>Jenis</th>
-                <th>Keterangan</th>
+                <th>ID Karyawan</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>No HP</th>
                 <th class="no-short">Aksi</th>
             </tr>
         </thead>
     </table>
 </div>
 <script>
-    $('#tabelPaket').DataTable({
+    var bulan = $('#bulan').val();
+    var tahun = $('#tahun').val();
+    $('#tabelCariKaryawan').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '/pencucian/viewgetpaket',
+        ajax: '/gaji/viewgetkaryawan?bulan=' + bulan + '&tahun=' + tahun,
         info: true,
         ordering: true,
         paging: true,

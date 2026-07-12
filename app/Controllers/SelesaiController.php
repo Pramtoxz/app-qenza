@@ -25,12 +25,15 @@ class SelesaiController extends BaseController
                 ->select('kendaraan_selesai.idselesai,
                          pencucian.idpencucian,
                          pencucian.tgl,
+                         pencucian.platnomor,
                          pelanggan.nama as nama_pelanggan, 
-                         pelanggan.platnomor,
-                         paket_cucian.namapaket,')
+                         paket_cucian.namapaket,
+                         paket2.namapaket as namapaket2')
                 ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian')
                 ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
-                ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket');
+                ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+                ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
+                ->orderBy('kendaraan_selesai.idselesai', 'DESC');
 
             return DataTable::of($selesai)
                 ->add('action', function ($row) {
@@ -41,6 +44,14 @@ class SelesaiController extends BaseController
                     $buttonsGroup = '<div style="display: flex;">' . $button1 . $button2 . $button3 . '</div>';
                     return $buttonsGroup;
                 }, 'last')
+                ->edit('namapaket', function ($row) {
+                    $paket = $row->namapaket;
+                    if (!empty($row->namapaket2)) {
+                        $paket .= ' + ' . $row->namapaket2;
+                    }
+                    return $paket;
+                })
+                ->hide('namapaket2')
                 ->addNumbering()
                 ->toJson();
         }
@@ -50,7 +61,6 @@ class SelesaiController extends BaseController
     {
         $db = db_connect();
         
-        // Generate ID Selesai
         $today = date('Ymd');
         $prefix = "SLS-$today-";
         
@@ -96,13 +106,16 @@ class SelesaiController extends BaseController
                 ->select('pencucian.idpencucian, 
                          pencucian.tgl, 
                          pencucian.jamdatang,
+                         pencucian.platnomor,
                          pelanggan.nama as nama_pelanggan, 
-                         pelanggan.platnomor,
                          paket_cucian.namapaket, 
                          paket_cucian.harga,
+                         paket2.namapaket as namapaket2,
+                         paket2.harga as harga2,
                          karyawan.nama as nama_karyawan')
                 ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
                 ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+                ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
                 ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan')
                 ->where('pencucian.status', 'dijemput')
                 ->whereNotIn('pencucian.idpencucian', function($builder) {
@@ -111,12 +124,17 @@ class SelesaiController extends BaseController
 
             return DataTable::of($pencucian)
                 ->add('action', function ($row) {
+                    $totalHarga = $row->harga + ($row->harga2 ?? 0);
+                    $paketDisplay = $row->namapaket;
+                    if (!empty($row->namapaket2)) {
+                        $paketDisplay .= ' + ' . $row->namapaket2;
+                    }
                     $button1 = '<button type="button" class="btn btn-primary btn-pilihpencucian" 
                                 data-idpencucian="' . $row->idpencucian . '" 
                                 data-nama_pelanggan="' . esc($row->nama_pelanggan) . '"
                                 data-platnomor="' . esc($row->platnomor) . '"
-                                data-namapaket="' . esc($row->namapaket) . '"
-                                data-harga="' . $row->harga . '"
+                                data-namapaket="' . esc($paketDisplay) . '"
+                                data-harga="' . $totalHarga . '"
                                 data-nama_karyawan="' . esc($row->nama_karyawan) . '"
                                 data-tgl="' . $row->tgl . '"
                                 data-jamdatang="' . $row->jamdatang . '">Pilih</button>';
@@ -124,8 +142,18 @@ class SelesaiController extends BaseController
                 }, 'last')
                 ->addNumbering()
                 ->edit('harga', function ($row) {
-                    return 'Rp. ' . number_format($row->harga, 0, ',', '.');
+                    $total = $row->harga + ($row->harga2 ?? 0);
+                    return 'Rp. ' . number_format($total, 0, ',', '.');
                 })
+                ->edit('namapaket', function ($row) {
+                    $paket = $row->namapaket;
+                    if (!empty($row->namapaket2)) {
+                        $paket .= ' + ' . $row->namapaket2;
+                    }
+                    return $paket;
+                })
+                ->hide('harga2')
+                ->hide('namapaket2')
                 ->toJson();
         }
     }
@@ -175,7 +203,6 @@ class SelesaiController extends BaseController
             } else {
                 $db = db_connect();
                 
-                // Insert ke tabel kendaraan_selesai
                 $db->table('kendaraan_selesai')->insert([
                     'idselesai' => $idselesai,
                     'idpencucian' => $idpencucian,
@@ -184,7 +211,6 @@ class SelesaiController extends BaseController
                     'totaldibayar' => $totaldibayar,
                 ]);
 
-                // Update status pencucian menjadi 'selesai'
                 $db->table('pencucian')
                    ->where('idpencucian', $idpencucian)
                    ->update(['status' => 'selesai']);
@@ -205,17 +231,14 @@ class SelesaiController extends BaseController
 
             $db = db_connect();
             
-            // Ambil data selesai untuk mendapatkan idpencucian
             $selesai = $db->table('kendaraan_selesai')
                          ->where('idselesai', $idselesai)
                          ->get()
                          ->getRowArray();
             
             if ($selesai) {
-                // Hapus dari kendaraan_selesai
                 $db->table('kendaraan_selesai')->where('idselesai', $idselesai)->delete();
                 
-                // Update status pencucian kembali ke 'dijemput'
                 $db->table('pencucian')
                    ->where('idpencucian', $selesai['idpencucian'])
                    ->update(['status' => 'dijemput']);
@@ -233,25 +256,31 @@ class SelesaiController extends BaseController
     {
         $db = db_connect();
         
-        // Join tabel kendaraan_selesai dengan pencucian, pelanggan, paket, dan karyawan
         $selesaiQuery = $db
             ->table('kendaraan_selesai')
             ->select('kendaraan_selesai.*, 
                      pencucian.idpencucian,
                      pencucian.tgl,
                      pencucian.jamdatang,
+                     pencucian.platnomor,
                      pencucian.status,
                      pelanggan.nama as nama_pelanggan, 
                      pelanggan.alamat, 
                      pelanggan.nohp, 
-                     pelanggan.platnomor,
                      paket_cucian.namapaket, 
                      paket_cucian.harga, 
                      paket_cucian.jenis,
-                     karyawan.nama as nama_karyawan')
+                     paket_cucian.upah,
+                     paket2.namapaket as namapaket2,
+                     paket2.harga as harga2,
+                     paket2.jenis as jenis2,
+                     paket2.upah as upah2,
+                     karyawan.nama as nama_karyawan,
+                     karyawan.idkaryawan')
             ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+            ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
             ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan')
             ->where('kendaraan_selesai.idselesai', $idselesai);
         
@@ -261,8 +290,11 @@ class SelesaiController extends BaseController
             return redirect()->back()->with('error', 'Data kendaraan selesai tidak ditemukan');
         }
 
+        $totalHarga = $selesaiData['harga'] + ($selesaiData['harga2'] ?? 0);
+
         $data = [
-            'selesai' => $selesaiData
+            'selesai' => $selesaiData,
+            'totalHarga' => $totalHarga
         ];
 
         return view('selesai/detail', $data);
@@ -272,25 +304,27 @@ class SelesaiController extends BaseController
     {
         $db = db_connect();
         
-        // Ambil data selesai beserta data pencucian terkait
         $selesaiQuery = $db
             ->table('kendaraan_selesai')
             ->select('kendaraan_selesai.*, 
                      pencucian.idpencucian,
                      pencucian.tgl,
                      pencucian.jamdatang,
+                     pencucian.platnomor,
                      pencucian.status,
                      pelanggan.nama as nama_pelanggan, 
                      pelanggan.alamat, 
                      pelanggan.nohp, 
-                     pelanggan.platnomor,
                      paket_cucian.namapaket, 
                      paket_cucian.harga, 
                      paket_cucian.jenis,
+                     paket2.namapaket as namapaket2,
+                     paket2.harga as harga2,
                      karyawan.nama as nama_karyawan')
             ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+            ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
             ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan')
             ->where('kendaraan_selesai.idselesai', $idselesai);
         
@@ -300,8 +334,11 @@ class SelesaiController extends BaseController
             return redirect()->back()->with('error', 'Data kendaraan selesai tidak ditemukan');
         }
 
+        $totalHarga = $selesaiData['harga'] + ($selesaiData['harga2'] ?? 0);
+
         $data = [
-            'selesai' => $selesaiData
+            'selesai' => $selesaiData,
+            'totalHarga' => $totalHarga
         ];
 
         return view('selesai/formedit', $data);
@@ -347,7 +384,6 @@ class SelesaiController extends BaseController
             } else {
                 $db = db_connect();
                 
-                // Update data kendaraan_selesai
                 $dataUpdate = [
                     'jamjemput' => $jamjemput,
                     'totalbayar' => $totalbayar,

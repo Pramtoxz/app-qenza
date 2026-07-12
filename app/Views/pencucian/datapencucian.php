@@ -16,7 +16,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>ID Cucian</th>
+                                    <th>ID Reservasi</th>
                                     <th>Tanggal</th>
                                     <th>Nama Pelanggan</th>
                                     <th>Plat Nomor</th>
@@ -64,7 +64,7 @@
             info: true,
             ordering: true,
             paging: true,
-            order: [[0, 'desc']],
+            order: [[1, 'desc']],
             aoColumnDefs: [{ bSortable: false, aTargets: ["no-short"] }]
         });
 
@@ -87,7 +87,7 @@
 
             Swal.fire({
                 title: 'Assign Karyawan?',
-                text: 'Assign ' + namakaryawan + ' ke pencucian ' + idpencucian + '?',
+                text: 'Assign ' + namakaryawan + ' ke reservasi ' + idpencucian + '?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#28a745',
@@ -155,7 +155,7 @@
         $(document).on('click', '.btn-batal', function() {
             var idpencucian = $(this).data('idpencucian');
             Swal.fire({
-                title: 'Batalkan pencucian ini?',
+                title: 'Batalkan reservasi ini?',
                 text: 'Status akan diubah menjadi Batal',
                 icon: 'warning',
                 showCancelButton: true,

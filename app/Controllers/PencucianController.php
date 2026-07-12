@@ -28,7 +28,7 @@ class PencucianController extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'Kelola Pencucian'
+            'title' => 'Kelola Reservasi'
         ];
         return view('pencucian/datapencucian', $data);
     }
@@ -38,9 +38,12 @@ class PencucianController extends BaseController
         if ($this->request->isAJAX()) {
             $db = db_connect();
             $produk = $db->table('pencucian')
-                ->select('pencucian.idpencucian, pencucian.tgl, pencucian.nomor_antrian, pelanggan.nama, pelanggan.platnomor, paket_cucian.namapaket, karyawan.nama as nama_karyawan, pencucian.status')
+                ->select('pencucian.idpencucian, pencucian.tgl, pencucian.nomor_antrian,
+                         pelanggan.nama, pencucian.platnomor, paket_cucian.namapaket, paket2.namapaket as namapaket2, 
+                         karyawan.nama as nama_karyawan, pencucian.status, pencucian.idpaket, pencucian.idpaket2')
                 ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
                 ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+                ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
                 ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
                 ->groupBy('idpencucian');
             return DataTable::of($produk)
@@ -70,6 +73,19 @@ class PencucianController extends BaseController
                 }, 'last')
                 ->addNumbering()
                 ->hide('nomor_antrian')
+                ->hide('namapaket2')
+                ->hide('idpaket')
+                ->hide('idpaket2')
+                ->edit('nama', function ($row) {
+                    return $row->nama;
+                })
+                ->edit('namapaket', function ($row) {
+                    $paket = $row->namapaket;
+                    if (!empty($row->namapaket2)) {
+                        $paket .= ' + ' . $row->namapaket2;
+                    }
+                    return $paket;
+                })
                 ->edit('nama_karyawan', function ($row) {
                     if ($row->status == 'pending') {
                         return '<span class="text-muted"><i>Belum ditugaskan</i></span>';
@@ -133,19 +149,29 @@ class PencucianController extends BaseController
         if ($this->request->isAJAX()) {
             $db = db_connect();
             $pelanggan = $db->table('pelanggan')
-                ->select('pelanggan.idpelanggan, pelanggan.nama as nama_pelanggan, pelanggan.alamat, pelanggan.nohp, pelanggan.platnomor')
-                ->join('pencucian', 'pencucian.idpelanggan = pelanggan.idpelanggan AND pencucian.status IN ("pending", "diproses", "dijemput")', 'left')
-                ->where('pencucian.idpelanggan IS NULL');
+                ->select('pelanggan.idpelanggan, pelanggan.nama as nama_pelanggan, pelanggan.alamat, pelanggan.nohp,
+                         active_pencucian.idpencucian as active_idpencucian, active_pencucian.status as active_status')
+                ->join('(SELECT pencucian.idpencucian, pencucian.idpelanggan, pencucian.status 
+                         FROM pencucian 
+                         WHERE pencucian.status IN ("pending", "diproses", "dijemput")) as active_pencucian', 
+                         'active_pencucian.idpelanggan = pelanggan.idpelanggan', 'left');
 
             return DataTable::of($pelanggan)
+                ->add('status_pelanggan', function ($row) {
+                    if (!empty($row->active_idpencucian)) {
+                        return '<span class="badge badge-danger">Sedang Proses</span>';
+                    }
+                    return '<span class="badge badge-success">Tersedia</span>';
+                }, 'last')
                 ->add('action', function ($row) {
                     return '<button type="button" class="btn btn-primary btn-pilihpelanggan" 
                                 data-idpelanggan="' . $row->idpelanggan . '" 
                                 data-nama_pelanggan="' . esc($row->nama_pelanggan) . '"
                                 data-alamat="' . esc($row->alamat) . '"
-                                data-nohp="' . esc($row->nohp) . '"
-                                data-platnomor="' . esc($row->platnomor) . '">Pilih</button>';
+                                data-nohp="' . esc($row->nohp) . '">Pilih</button>';
                 }, 'last')
+                ->hide('active_idpencucian')
+                ->hide('active_status')
                 ->addNumbering()
                 ->toJson();
         }
@@ -191,9 +217,8 @@ class PencucianController extends BaseController
             $karyawan = $db->table('karyawan')
                 ->select('karyawan.idkaryawan, karyawan.nama as namakaryawan, karyawan.alamat, karyawan.nohp,
                          active_task.idpencucian as task_idpencucian, active_task.platnomor as task_platnomor, active_task.namapaket as task_paket')
-                ->join('(SELECT pencucian.idpencucian, pencucian.idkaryawan, pelanggan.platnomor, paket_cucian.namapaket 
+                ->join('(SELECT pencucian.idpencucian, pencucian.idkaryawan, pencucian.platnomor, paket_cucian.namapaket 
                          FROM pencucian 
-                         JOIN pelanggan ON pelanggan.idpelanggan = pencucian.idpelanggan 
                          JOIN paket_cucian ON paket_cucian.idpaket = pencucian.idpaket 
                          WHERE pencucian.status = "diproses") as active_task', 'active_task.idkaryawan = karyawan.idkaryawan', 'left');
 
@@ -231,13 +256,20 @@ class PencucianController extends BaseController
         if ($this->request->isAJAX()) {
             $idpencucian = $this->request->getPost('idpencucian');
             $idpelanggan = $this->request->getPost('idpelanggan');
+            $platnomor = $this->request->getPost('platnomor');
             $idpaket = $this->request->getPost('idpaket');
+            $idpaket2 = $this->request->getPost('idpaket2');
             $tgl = date('Y-m-d');
             $jamdatang = date('H:i:s');
 
             $rules = [
                 'idpelanggan' => [
                     'label' => 'Pelanggan',
+                    'rules' => 'required',
+                    'errors' => ['required' => '{field} tidak boleh kosong']
+                ],
+                'platnomor' => [
+                    'label' => 'Plat Nomor',
                     'rules' => 'required',
                     'errors' => ['required' => '{field} tidak boleh kosong']
                 ],
@@ -256,6 +288,18 @@ class PencucianController extends BaseController
                 return $this->response->setJSON(['error' => $errors]);
             }
 
+            if (!empty($idpaket2)) {
+                $db = db_connect();
+                $paket1 = $db->table('paket_cucian')->where('idpaket', $idpaket)->get()->getRowArray();
+                $paket2 = $db->table('paket_cucian')->where('idpaket', $idpaket2)->get()->getRowArray();
+
+                if ($paket1 && $paket2 && $paket1['jenis'] !== $paket2['jenis']) {
+                    return $this->response->setJSON([
+                        'error' => ['error_idpaket2' => 'Jenis paket ke-2 harus sama dengan paket ke-1 (' . $paket1['jenis'] . ')']
+                    ]);
+                }
+            }
+
             $db = db_connect();
             $nomorAntrian = $this->generateNomorAntrian();
 
@@ -263,7 +307,9 @@ class PencucianController extends BaseController
                 'idpencucian' => $idpencucian,
                 'nomor_antrian' => $nomorAntrian,
                 'idpelanggan' => $idpelanggan,
+                'platnomor' => strtoupper($platnomor),
                 'idpaket' => $idpaket,
+                'idpaket2' => !empty($idpaket2) ? $idpaket2 : null,
                 'idkaryawan' => null,
                 'tgl' => $tgl,
                 'jamdatang' => $jamdatang,
@@ -271,7 +317,7 @@ class PencucianController extends BaseController
             ]);
 
             return $this->response->setJSON([
-                'sukses' => 'Data Pencucian Berhasil Ditambahkan. Nomor Antrian: ' . $nomorAntrian,
+                'sukses' => 'Reservasi Berhasil Ditambahkan. Nomor Antrian: ' . $nomorAntrian,
                 'idpencucian' => $idpencucian,
                 'nomor_antrian' => $nomorAntrian
             ]);
@@ -303,7 +349,7 @@ class PencucianController extends BaseController
             $pencucian = $model->where('idpencucian', $idpencucian)->first();
 
             if (!$pencucian) {
-                return $this->response->setJSON(['error' => 'Pencucian tidak ditemukan']);
+                return $this->response->setJSON(['error' => 'Reservasi tidak ditemukan']);
             }
 
             if ($pencucian['status'] !== 'pending') {
@@ -327,7 +373,7 @@ class PencucianController extends BaseController
             ]);
 
             return $this->response->setJSON([
-                'sukses' => 'Karyawan berhasil di-assign. Pencucian sedang diproses.'
+                'sukses' => 'Karyawan berhasil di-assign. Reservasi sedang diproses.'
             ]);
         }
     }
@@ -340,11 +386,11 @@ class PencucianController extends BaseController
             $pencucian = $model->where('idpencucian', $idpencucian)->first();
 
             if (!$pencucian) {
-                return $this->response->setJSON(['error' => 'Pencucian tidak ditemukan']);
+                return $this->response->setJSON(['error' => 'Reservasi tidak ditemukan']);
             }
 
             $statusBaru = '';
-            $message = 'Status Pencucian berhasil diubah';
+            $message = 'Status Reservasi berhasil diubah';
 
             if ($pencucian['status'] == 'diproses') {
                 $statusBaru = 'dijemput';
@@ -374,7 +420,7 @@ class PencucianController extends BaseController
             $pencucian = $model->where('idpencucian', $idpencucian)->first();
 
             if (!$pencucian) {
-                return $this->response->setJSON(['error' => 'Pencucian tidak ditemukan']);
+                return $this->response->setJSON(['error' => 'Reservasi tidak ditemukan']);
             }
 
             if ($pencucian['status'] !== 'pending') {
@@ -385,7 +431,7 @@ class PencucianController extends BaseController
 
             $model->update($idpencucian, ['status' => 'batal']);
 
-            return $this->response->setJSON(['sukses' => 'Pencucian berhasil dibatalkan']);
+            return $this->response->setJSON(['sukses' => 'Reservasi berhasil dibatalkan']);
         }
     }
 
@@ -401,7 +447,7 @@ class PencucianController extends BaseController
                 ->getRowArray();
 
             if (!$pencucian) {
-                return $this->response->setJSON(['error' => 'Data pencucian tidak ditemukan']);
+                return $this->response->setJSON(['error' => 'Data reservasi tidak ditemukan']);
             }
 
             if ($pencucian['status'] !== 'pending') {
@@ -412,7 +458,7 @@ class PencucianController extends BaseController
 
             $db->table('pencucian')->where('idpencucian', $idpencucian)->delete();
 
-            return $this->response->setJSON(['sukses' => 'Data Pencucian Berhasil Dihapus']);
+            return $this->response->setJSON(['sukses' => 'Data Reservasi Berhasil Dihapus']);
         }
     }
 
@@ -423,18 +469,21 @@ class PencucianController extends BaseController
             ->select('pencucian.*, 
                      pelanggan.nama as nama_pelanggan, 
                      pelanggan.alamat, 
-                     pelanggan.nohp, 
-                     pelanggan.platnomor,
+                     pelanggan.nohp,
                      paket_cucian.namapaket, 
                      paket_cucian.harga, 
-                     paket_cucian.jenis')
+                     paket_cucian.jenis,
+                     paket2.namapaket as namapaket2,
+                     paket2.harga as harga2,
+                     paket2.jenis as jenis2')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+            ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
             ->where('idpencucian', $idpencucian)
             ->get()->getRowArray();
 
         if (!$pencucian) {
-            return redirect()->back()->with('error', 'Data Pencucian tidak ditemukan');
+            return redirect()->back()->with('error', 'Data Reservasi tidak ditemukan');
         }
 
         return view('pencucian/formedit', ['pencucian' => $pencucian]);
@@ -447,11 +496,18 @@ class PencucianController extends BaseController
                 $idpencucian = $this->request->getPost('idpencucian');
             }
             $idpelanggan = $this->request->getPost('idpelanggan');
+            $platnomor = $this->request->getPost('platnomor');
             $idpaket = $this->request->getPost('idpaket');
+            $idpaket2 = $this->request->getPost('idpaket2');
 
             $rules = [
                 'idpelanggan' => [
                     'label' => 'Pelanggan',
+                    'rules' => 'required',
+                    'errors' => ['required' => '{field} tidak boleh kosong']
+                ],
+                'platnomor' => [
+                    'label' => 'Plat Nomor',
                     'rules' => 'required',
                     'errors' => ['required' => '{field} tidak boleh kosong']
                 ],
@@ -470,12 +526,26 @@ class PencucianController extends BaseController
                 return $this->response->setJSON(['error' => $errors]);
             }
 
+            if (!empty($idpaket2)) {
+                $db = db_connect();
+                $paket1 = $db->table('paket_cucian')->where('idpaket', $idpaket)->get()->getRowArray();
+                $paket2 = $db->table('paket_cucian')->where('idpaket', $idpaket2)->get()->getRowArray();
+
+                if ($paket1 && $paket2 && $paket1['jenis'] !== $paket2['jenis']) {
+                    return $this->response->setJSON([
+                        'error' => ['error_idpaket2' => 'Jenis paket ke-2 harus sama dengan paket ke-1 (' . $paket1['jenis'] . ')']
+                    ]);
+                }
+            }
+
             $db = db_connect();
             $db->table('pencucian')
                 ->where('idpencucian', $idpencucian)
                 ->update([
                     'idpelanggan' => $idpelanggan,
+                    'platnomor' => strtoupper($platnomor),
                     'idpaket' => $idpaket,
+                    'idpaket2' => !empty($idpaket2) ? $idpaket2 : null,
                 ]);
 
             return $this->response->setJSON(['sukses' => 'Update data berhasil']);
@@ -489,20 +559,25 @@ class PencucianController extends BaseController
             ->select('pencucian.*, 
                      pelanggan.nama as nama_pelanggan, 
                      pelanggan.alamat, 
-                     pelanggan.nohp, 
-                     pelanggan.platnomor,
+                     pelanggan.nohp,
                      paket_cucian.namapaket, 
                      paket_cucian.harga, 
                      paket_cucian.jenis,
+                     paket_cucian.upah,
+                     paket2.namapaket as namapaket2,
+                     paket2.harga as harga2,
+                     paket2.jenis as jenis2,
+                     paket2.upah as upah2,
                      karyawan.nama as nama_karyawan')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+            ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
             ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
             ->where('pencucian.idpencucian', $idpencucian)
             ->get()->getRowArray();
 
         if (!$pencucian) {
-            return redirect()->back()->with('error', 'Data pencucian tidak ditemukan');
+            return redirect()->back()->with('error', 'Data reservasi tidak ditemukan');
         }
 
         $trackingUrl = site_url("pencucian/tracking/$idpencucian");
@@ -510,9 +585,12 @@ class PencucianController extends BaseController
         $writer = new PngWriter();
         $qrCodeImage = $writer->write($qrCode)->getDataUri();
 
+        $totalHarga = $pencucian['harga'] + ($pencucian['harga2'] ?? 0);
+
         return view('pencucian/detail', [
             'qrCodeImage' => $qrCodeImage,
-            'pencucian' => $pencucian
+            'pencucian' => $pencucian,
+            'totalHarga' => $totalHarga
         ]);
     }
 
@@ -523,18 +601,20 @@ class PencucianController extends BaseController
             ->select('pencucian.*, 
                      pelanggan.nama as nama_pelanggan, 
                      pelanggan.alamat, 
-                     pelanggan.nohp, 
-                     pelanggan.platnomor,
+                     pelanggan.nohp,
                      paket_cucian.namapaket, 
                      paket_cucian.harga, 
-                     paket_cucian.jenis')
+                     paket_cucian.jenis,
+                     paket2.namapaket as namapaket2,
+                     paket2.harga as harga2')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+            ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
             ->where('pencucian.idpencucian', $idpencucian)
             ->get()->getRowArray();
 
         if (!$pencucian) {
-            return redirect()->back()->with('error', 'Data pencucian tidak ditemukan');
+            return redirect()->back()->with('error', 'Data reservasi tidak ditemukan');
         }
 
         $antrianSebelum = $db->table('pencucian')
@@ -546,10 +626,19 @@ class PencucianController extends BaseController
         $estimasiMenit = ($antrianSebelum + 1) * 30;
         $estimasiWaktu = date('H:i', strtotime($pencucian['jamdatang'] . " + {$estimasiMenit} minutes"));
 
+        $totalHarga = $pencucian['harga'] + ($pencucian['harga2'] ?? 0);
+
+        $trackingUrl = site_url("pencucian/tracking/$idpencucian");
+        $qrCode = QrCode::create($trackingUrl)->setSize(200)->setMargin(5);
+        $writer = new PngWriter();
+        $qrCodeImage = $writer->write($qrCode)->getDataUri();
+
         return view('pencucian/cetak_antrian', [
             'pencucian' => $pencucian,
             'estimasi_waktu' => $estimasiWaktu,
-            'antrian_sebelum' => $antrianSebelum
+            'antrian_sebelum' => $antrianSebelum,
+            'totalHarga' => $totalHarga,
+            'qrCodeImage' => $qrCodeImage
         ]);
     }
 
@@ -564,23 +653,27 @@ class PencucianController extends BaseController
             ->select('pencucian.*, 
                      pelanggan.nama as nama_pelanggan, 
                      pelanggan.alamat, 
-                     pelanggan.nohp, 
-                     pelanggan.platnomor,
+                     pelanggan.nohp,
                      paket_cucian.namapaket, 
                      paket_cucian.harga, 
                      paket_cucian.jenis,
+                     paket2.namapaket as namapaket2,
+                     paket2.harga as harga2,
                      karyawan.nama as nama_karyawan')
             ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan')
             ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket')
+            ->join('paket_cucian as paket2', 'paket2.idpaket = pencucian.idpaket2', 'left')
             ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
             ->where('pencucian.idpencucian', $idpencucian)
             ->get()->getRowArray();
 
         if (!$pencucian) {
             return view('home/tracking', [
-                'error' => 'ID Pencucian tidak ditemukan. Pastikan ID yang Anda masukkan benar.'
+                'error' => 'ID Reservasi tidak ditemukan. Pastikan ID yang Anda masukkan benar.'
             ]);
         }
+
+        $pencucian['totalHarga'] = $pencucian['harga'] + ($pencucian['harga2'] ?? 0);
 
         return view('home/tracking', ['pencucian' => $pencucian]);
     }

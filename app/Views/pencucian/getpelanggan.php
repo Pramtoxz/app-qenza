@@ -7,7 +7,7 @@
                 <th>Nama</th>
                 <th>Alamat</th>
                 <th>No HP</th>
-                <th>Plat Nomor</th>
+                <th>Status</th>
                 <th class="no-short">Aksi</th>
             </tr>
         </thead>
@@ -32,6 +32,5 @@
 
     $(document).ready(function() {
         // Event listener sudah ada di formtambah.php
-        // Tidak perlu duplikasi handler di sini
     });
 </script>

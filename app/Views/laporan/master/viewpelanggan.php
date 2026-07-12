@@ -344,7 +344,6 @@
                     <th style="width: 250px; text-align: left;">Alamat</th>
                     <th style="width: 130px; text-align: center;">No HP</th>
                     <th style="width: 140px; text-align: center;">Jenis Kelamin</th>
-                    <th style="width: 140px; text-align: center;">Plat Nomor</th>
                 </tr>
             </thead>
             <tbody>
@@ -366,7 +365,6 @@
                             </span>
                         <?php endif; ?>
                     </td>
-                    <td class="col-platnomor"><?= esc($value['platnomor']) ?></td>
     </tr>
                 <?php endforeach; ?>
             </tbody>

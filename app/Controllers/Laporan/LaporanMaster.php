@@ -20,8 +20,8 @@ class LaporanMaster extends BaseController
         $db = db_connect();
         $pelanggan = $db
             ->table('pelanggan')
-            ->select('idpelanggan, nama, alamat, nohp, jk,platnomor') 
-            ->groupBy('pelanggan.idpelanggan, pelanggan.nama, pelanggan.alamat, pelanggan.nohp, pelanggan.jk, pelanggan.platnomor')
+            ->select('idpelanggan, nama, alamat, nohp, jk') 
+            ->groupBy('pelanggan.idpelanggan, pelanggan.nama, pelanggan.alamat, pelanggan.nohp, pelanggan.jk')
             ->get()
             ->getResultArray();
         $data = [

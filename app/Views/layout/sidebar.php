@@ -51,14 +51,21 @@
                 <li class="nav-header">TRANSAKSI</li>
                 <li class="nav-item">
                     <a href="<?= base_url() ?>/pencucian" class="nav-link <?= (current_url() == base_url('pencucian')) ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-hand-sparkles"></i>
-                        <p>Pencucian</p>
+                        <i class="nav-icon fas fa-calendar-check"></i>
+                        <p>Reservasi</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?= base_url() ?>/selesai" class="nav-link <?= (current_url() == base_url('selesai')) ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-car"></i>
                         <p>Kendaraan Selesai</p>
+                    </a>
+                </li>
+                <li class="nav-header">KEUANGAN</li>
+                <li class="nav-item">
+                    <a href="<?= base_url() ?>/gaji" class="nav-link <?= (current_url() == base_url('gaji')) ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <p>Gaji Karyawan</p>
                     </a>
                 </li>
                 <?php endif; ?>

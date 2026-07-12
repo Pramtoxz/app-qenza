@@ -45,12 +45,6 @@
                             </select>
                             <div class="invalid-feedback error_jk"></div>
                         </div>
-                        <div class="form-group">
-                            <label for="platnomor">Plat Nomor</label>
-                            <input type="text" id="platnomor" name="platnomor" class="form-control" value="<?= $pelanggan['platnomor'] ?>">
-                            <div class="invalid-feedback error_platnomor"></div>
-                        </div>
-                        
                         <div class="form-group text-center mt-4">
                             <button type="submit" class="btn btn-primary" id="tombolSimpan">
                                 <i class="fas fa-save"></i> SIMPAN
@@ -136,13 +130,6 @@
                             $('.error_jk').html('');
                         }
 
-                        if (err.error_platnomor) {
-                            $('#platnomor').addClass('is-invalid').removeClass('is-valid');
-                            $('.error_platnomor').html(err.error_platnomor);
-                        } else {
-                            $('#platnomor').removeClass('is-invalid').addClass('is-valid');
-                            $('.error_platnomor').html('');
-                        }
                     }
 
                     if (response.sukses) {

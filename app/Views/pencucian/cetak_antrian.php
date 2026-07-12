@@ -165,15 +165,8 @@
             }
         }
         
-        .barcode {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            letter-spacing: 2px;
-            background: #000;
-            color: #fff;
-            padding: 5px 10px;
-            margin: 10px 0;
-            border-radius: 3px;
+        .barcode-section {
+            margin: 15px 0;
         }
     </style>
     <div class="ticket">
@@ -186,7 +179,10 @@
             <div class="queue-number"><?= str_pad($pencucian['nomor_antrian'], 2, '0', STR_PAD_LEFT) ?></div>
             <div class="queue-label">NOMOR ANTRIAN</div>
             
-            <div class="barcode"><?= $pencucian['idpencucian'] ?></div>
+            <div class="barcode-section">
+                <img src="<?= $qrCodeImage ?>" alt="QR Code" style="width: 150px; height: 150px;">
+                <div style="font-size: 11px; color: #6c757d; margin-top: 5px;">Scan untuk cek status kendaraan</div>
+            </div>
             
             <div class="info-section">
                 <div class="info-row">
@@ -199,11 +195,14 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Paket:</span>
-                    <span class="info-value"><?= esc($pencucian['namapaket']) ?></span>
+                    <span class="info-value">
+                        <?= esc($pencucian['namapaket']) ?>
+                        <?= !empty($pencucian['namapaket2']) ? ' + ' . esc($pencucian['namapaket2']) : '' ?>
+                    </span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Harga:</span>
-                    <span class="info-value">Rp <?= number_format($pencucian['harga'], 0, ',', '.') ?></span>
+                    <span class="info-value">Rp <?= number_format($totalHarga, 0, ',', '.') ?></span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Tanggal:</span>
@@ -235,7 +234,6 @@
         
         <div class="footer-note">
             <p><strong>Simpan tiket ini sebagai bukti antrian</strong></p>
-            <p>Hubungi kami jika ada pertanyaan: 0812-3456-7890</p>
             <p>Terima kasih telah mempercayakan kendaraan Anda kepada kami!</p>
         </div>
     </div>
@@ -244,12 +242,10 @@
 
 <?= $this->section('script') ?>
 <script>
-    // Auto focus untuk memudahkan print
     $(document).ready(function() {
         $('.print-button').focus();
     });
     
-    // Keyboard shortcut untuk print
     document.addEventListener('keydown', function(event) {
         if (event.ctrlKey && event.key === 'p') {
             event.preventDefault();
