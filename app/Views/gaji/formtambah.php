@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card card-info">
+        <div class="card">
             <div class="card-header text-center">
                 <h3 class="card-title"><i class="fas fa-money-bill-wave"></i> Tambah Data Gaji</h3>
             </div>
@@ -10,14 +10,14 @@
                 <?= form_open('gaji/save', ['id' => 'formtambahgaji']) ?>
                 <?= csrf_field() ?>
 
-                <div class="form-group">
-                    <label for="idgaji">ID Gaji</label>
+                <div class="mb-3">
+                    <label for="idgaji" class="form-label">ID Gaji</label>
                     <input type="text" id="idgaji" name="idgaji" class="form-control" value="<?= $next_id ?>" readonly>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="bulan">Bulan <span class="text-danger">*</span></label>
+                        <div class="mb-3">
+                            <label for="bulan" class="form-label">Bulan <span class="text-danger">*</span></label>
                             <select id="bulan" name="bulan" class="form-control">
                                 <option value="">-- Pilih Bulan --</option>
                                 <?php for ($i = 1; $i <= 12; $i++): ?>
@@ -30,20 +30,20 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="tahun">Tahun <span class="text-danger">*</span></label>
+                        <div class="mb-3">
+                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
                             <input type="number" id="tahun" name="tahun" class="form-control" value="<?= date('Y') ?>" min="2020" max="2030">
                             <div class="invalid-feedback error_tahun"></div>
                         </div>
                     </div>
                 </div>
-                   <div class="form-group">
-                    <label for="idkaryawan">Karyawan <span class="text-danger">*</span></label>
+                   <div class="mb-3">
+                    <label for="idkaryawan" class="form-label">Karyawan <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <input type="hidden" id="idkaryawan" name="idkaryawan">
                         <input type="text" id="nama_karyawan" name="nama_karyawan" class="form-control" placeholder="Pilih Karyawan" readonly>
                         <div class="input-group-append">
-                            <button class="btn btn-info" type="button" data-toggle="modal" data-target="#modalcariKaryawan">Cari</button>
+                            <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modalcariKaryawan">Cari</button>
                         </div>
                         <div class="invalid-feedback error_idkaryawan"></div>
                     </div>
@@ -56,39 +56,39 @@
 
                 <div id="hasilHitung" style="display: none;">
                     <hr>
-                    <div class="form-group">
-                        <label for="jumlah_cucian">Jumlah Cucian Selesai</label>
+                    <div class="mb-3">
+                        <label for="jumlah_cucian" class="form-label">Jumlah Cucian Selesai</label>
                         <input type="number" id="jumlah_cucian" name="jumlah_cucian" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group">
-                        <label for="total_upah">Total Upah</label>
+                    <div class="mb-3">
+                        <label for="total_upah" class="form-label">Total Upah</label>
                         <input type="hidden" id="total_upah_raw" name="total_upah" value="0">
                         <input type="text" id="total_upah" class="form-control" readonly>
                     </div>
 
-                    <div class="form-group">
-                        <label for="bonus">Bonus</label>
+                    <div class="mb-3">
+                        <label for="bonus" class="form-label">Bonus</label>
                         <input type="number" id="bonus" name="bonus" class="form-control" value="0" min="0">
                     </div>
 
-                    <div class="form-group">
-                        <label for="potongan">Potongan</label>
+                    <div class="mb-3">
+                        <label for="potongan" class="form-label">Potongan</label>
                         <input type="number" id="potongan" name="potongan" class="form-control" value="0" min="0">
                     </div>
 
-                    <div class="form-group">
-                        <label for="total_bayar_display">Total Bayar</label>
-                        <input type="text" id="total_bayar_display" class="form-control font-weight-bold text-success" readonly>
+                    <div class="mb-3">
+                        <label for="total_bayar_display" class="form-label">Total Bayar</label>
+                        <input type="text" id="total_bayar_display" class="form-control fw-bold text-success" readonly>
                     </div>
 
-                    <div class="form-group">
-                        <label for="tanggal_bayar">Tanggal Bayar</label>
+                    <div class="mb-3">
+                        <label for="tanggal_bayar" class="form-label">Tanggal Bayar</label>
                         <input type="date" id="tanggal_bayar" name="tanggal_bayar" class="form-control" value="<?= date('Y-m-d') ?>">
                     </div>
 
-                    <div class="form-group">
-                        <label for="status">Status</label>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
                         <select id="status" name="status" class="form-control">
                             <option value="draft">Draft</option>
                             <option value="dibayar">Dibayar</option>
@@ -96,11 +96,11 @@
                     </div>
                 </div>
 
-                <div class="form-group text-center mt-3">
+                <div class="mb-3 text-center mt-3">
                     <button type="submit" class="btn btn-success btn-lg" id="tombolSimpan" style="display: none;">
                         <i class="fas fa-save"></i> Simpan Gaji
                     </button>
-                    <a class="btn btn-secondary btn-lg ml-2" href="<?= base_url() ?>gaji">
+                    <a class="btn btn-secondary btn-lg ms-2" href="<?= base_url() ?>gaji">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -114,11 +114,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Pilih Karyawan</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
