@@ -226,7 +226,7 @@
             <?php endif; ?>
 
             <div class="alert-info-box">
-                <p class="info-inline"><i class="fas fa-envelope mr-1"></i> Reset password untuk: <strong><?= $email ?></strong></p>
+                <p class="info-inline"><i class="fas fa-envelope me-1"></i> Reset password untuk: <strong><?= $email ?></strong></p>
             </div>
 
             <form id="formResetPassword" action="<?= site_url('auth/reset-password') ?>" method="POST">
@@ -236,7 +236,7 @@
                     <label for="password">Password Baru</label>
                     <input type="password" id="password" name="password" placeholder="Minimal 6 karakter" required autofocus>
                     <?php if(isset($validation) && $validation->hasError('password')): ?>
-                        <p class="field-error"><i class="fas fa-exclamation-triangle mr-1"></i><?= $validation->getError('password') ?></p>
+                        <p class="field-error"><i class="fas fa-exclamation-triangle me-1"></i><?= $validation->getError('password') ?></p>
                     <?php endif; ?>
                 </div>
 
@@ -252,7 +252,7 @@
                     <label for="password_confirm">Konfirmasi Password</label>
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="Ulangi password" required>
                     <?php if(isset($validation) && $validation->hasError('password_confirm')): ?>
-                        <p class="field-error"><i class="fas fa-exclamation-triangle mr-1"></i><?= $validation->getError('password_confirm') ?></p>
+                        <p class="field-error"><i class="fas fa-exclamation-triangle me-1"></i><?= $validation->getError('password_confirm') ?></p>
                     <?php endif; ?>
                 </div>
 
@@ -270,7 +270,7 @@
             </form>
 
             <div class="auth-links">
-                <a href="<?= site_url('auth') ?>" class="link-bold"><i class="fas fa-arrow-left mr-1"></i>Kembali ke Login</a>
+                <a href="<?= site_url('auth') ?>" class="link-bold"><i class="fas fa-arrow-left me-1"></i>Kembali ke Login</a>
                 <span class="sep">|</span>
                 <a href="<?= site_url('/') ?>">Beranda</a>
             </div>
@@ -324,7 +324,7 @@
                 return false;
             }
             $('#submit-btn').prop('disabled', true);
-            $('#submit-text').html('<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...');
+            $('#submit-text').html('<i class="fas fa-spinner fa-spin me-2"></i>Memproses...');
         });
     });
     </script>

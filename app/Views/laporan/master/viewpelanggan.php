@@ -357,11 +357,11 @@
                     <td class="col-jk">
                         <?php if (strtolower($value['jk']) == 'laki-laki' || strtolower($value['jk']) == 'l'): ?>
                             <span class="badge badge-male">
-                                <i class="fas fa-mars mr-1"></i>Laki-laki
+                                <i class="fas fa-mars me-1"></i>Laki-laki
                             </span>
                         <?php else: ?>
                             <span class="badge badge-female">
-                                <i class="fas fa-venus mr-1"></i>Perempuan
+                                <i class="fas fa-venus me-1"></i>Perempuan
                             </span>
                         <?php endif; ?>
                     </td>

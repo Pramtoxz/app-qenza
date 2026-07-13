@@ -54,7 +54,7 @@
 .print-signature p { font-family: 'Times New Roman', serif; }
 .signature-space { margin-top: 60px; }
 @media print {
-    .card-header, .btn, .callout { display: none !important; }
+    .card-header, .btn, .alert { display: none !important; }
     .report-container { box-shadow: none; border: none; margin: 0; padding: 0; }
 }
 </style>
@@ -63,29 +63,29 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
-                <i class="fas fa-users mr-2"></i>
+                <i class="fas fa-users me-2"></i>
                 Laporan Data Pelanggan
             </h3>
         </div>
         
         <div class="card-body">
             <!-- Control Panel -->
-            <div class="callout callout-info">
+            <div class="alert alert-info">
                 <h5>
-                    <i class="fas fa-cog mr-2"></i>
+                    <i class="fas fa-cog me-2"></i>
                     Panel Kontrol Laporan
                 </h5>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="d-flex flex-wrap align-items-center">
-                            <button class="btn btn-primary mr-2 mb-2" onclick="ViewLaporanSemua()" 
+                            <button class="btn btn-primary me-2 mb-2" onclick="ViewLaporanSemua()" 
                                     title="Memuat dan menampilkan data pelanggan terbaru (Ctrl+R)">
-                                <i class="fas fa-eye mr-2"></i>
+                                <i class="fas fa-eye me-2"></i>
                                 Tampilkan Laporan
                             </button>
-                            <button class="btn btn-success mr-2 mb-2" onclick="PrintLaporan()" 
+                            <button class="btn btn-success me-2 mb-2" onclick="PrintLaporan()" 
                                     title="Mencetak laporan dalam format yang siap cetak (Ctrl+P)">
-                                <i class="fas fa-print mr-2"></i>
+                                <i class="fas fa-print me-2"></i>
                                 Cetak Laporan
                             </button>
                         </div>
@@ -93,7 +93,7 @@
                     <div class="col-md-6">
                         <div class="text-md-right">
                             <small class="text-muted">
-                                <i class="fas fa-info-circle mr-1"></i>
+                                <i class="fas fa-info-circle me-1"></i>
                                 Klik "Tampilkan Laporan" untuk melihat data terbaru
                             </small>
                         </div>
@@ -168,7 +168,7 @@
         const $container = $('.tabelAset');
         const originalBtnText = $btn.html();
         
-        $btn.html('<i class="fas fa-spinner fa-spin mr-2"></i>Memuat Data...').prop('disabled', true);
+        $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Memuat Data...').prop('disabled', true);
         
         $container.html(`
             <div class="loading-container">
@@ -221,7 +221,7 @@
                         <h5 class="text-warning">Gagal Memuat Data</h5>
                         <p class="text-muted">${errorMessage}</p>
                         <button class="btn btn-warning btn-sm" onclick="ViewLaporanSemua()">
-                            <i class="fas fa-redo mr-2"></i>Coba Lagi
+                            <i class="fas fa-redo me-2"></i>Coba Lagi
                         </button>
                     </div>
                 `);
@@ -243,7 +243,7 @@
             return;
         }
         
-        $printBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i>Mempersiapkan...').prop('disabled', true);
+        $printBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Mempersiapkan...').prop('disabled', true);
         
         try {
             const printContent = document.getElementById('printHalaman');

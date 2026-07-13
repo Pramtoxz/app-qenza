@@ -1,186 +1,175 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">Dashboard</h1>
+<div class="row gy-4">
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card h-100 radius-12">
+            <div class="card-body p-24">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary-light text-sm fw-medium">Total Pelanggan</span>
+                        <h6 class="mb-0 mt-8"><?= number_format($totalPelanggan) ?></h6>
+                    </div>
+                    <div class="w-48-px h-48-px bg-info-600 rounded-circle d-flex justify-content-center align-items-center">
+                        <iconify-icon icon="solar:users-group-two-rounded-outline" class="text-white text-xl"></iconify-icon>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-<li class="breadcrumb-item"><a href="<?= base_url('/admin') ?>">Home</a></li>
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ol>
+        </div>
+    </div>
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card h-100 radius-12">
+            <div class="card-body p-24">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary-light text-sm fw-medium">Pencucian Hari Ini</span>
+                        <h6 class="mb-0 mt-8"><?= number_format($pencucianHariIni) ?></h6>
+                    </div>
+                    <div class="w-48-px h-48-px bg-danger-600 rounded-circle d-flex justify-content-center align-items-center">
+                        <iconify-icon icon="solar:hand-shake-outline" class="text-white text-xl"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card h-100 radius-12">
+            <div class="card-body p-24">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary-light text-sm fw-medium">Total Karyawan</span>
+                        <h6 class="mb-0 mt-8"><?= number_format($totalKaryawan) ?></h6>
+                    </div>
+                    <div class="w-48-px h-48-px bg-success-600 rounded-circle d-flex justify-content-center align-items-center">
+                        <iconify-icon icon="solar:user-outline" class="text-white text-xl"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card h-100 radius-12">
+            <div class="card-body p-24">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary-light text-sm fw-medium">Pendapatan Bulan Ini</span>
+                        <h6 class="mb-0 mt-8">Rp <?= number_format($pendapatanBulanIni, 0, ',', '.') ?></h6>
+                    </div>
+                    <div class="w-48-px h-48-px bg-warning-600 rounded-circle d-flex justify-content-center align-items-center">
+                        <iconify-icon icon="solar:dollar-linear" class="text-white text-xl"></iconify-icon>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3><?= number_format($totalPelanggan) ?></h3>
-                        <p>Total Pelanggan</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <a href="<?= base_url('/pelanggan') ?>" class="small-box-footer">Lihat detail <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
+<div class="row gy-4 mt-4">
+    <div class="col-12">
+        <div class="card radius-12">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="ri-pie-chart-line me-2"></i> Status Pencucian</h6>
             </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3><?= number_format($pencucianHariIni) ?></h3>
-                        <p>Pencucian Hari Ini</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-hand-sparkles"></i>
-                    </div>
-                    <a href="<?= base_url('/pencucian') ?>" class="small-box-footer">Lihat detail <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3><?= number_format($totalKaryawan) ?></h3>
-                        <p>Total Karyawan</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-user-friends"></i>
-                    </div>
-                    <a href="<?= base_url('/karyawan') ?>" class="small-box-footer">Lihat detail <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>Rp <?= number_format($pendapatanBulanIni, 0, ',', '.') ?></h3>
-                        <p>Pendapatan Bulan Ini</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <a href="<?= base_url('laporan-transaksi/selesai') ?>" class="small-box-footer">Lihat detail <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i> Status Pencucian</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span class="text-sm">Menunggu (Pending)</span>
-                                    <span class="badge badge-secondary"><?= $statusStats['pending'] ?></span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-secondary" style="width: <?= $totalPencucian > 0 ? ($statusStats['pending'] / $totalPencucian * 100) : 0 ?>%"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span class="text-sm">Sedang Diproses</span>
-                                    <span class="badge badge-warning"><?= $statusStats['diproses'] ?></span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-warning" style="width: <?= $totalPencucian > 0 ? ($statusStats['diproses'] / $totalPencucian * 100) : 0 ?>%"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span class="text-sm">Siap Dijemput</span>
-                                    <span class="badge badge-info"><?= $statusStats['dijemput'] ?></span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-info" style="width: <?= $totalPencucian > 0 ? ($statusStats['dijemput'] / $totalPencucian * 100) : 0 ?>%"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span class="text-sm">Selesai</span>
-                                    <span class="badge badge-success"><?= $statusStats['selesai'] ?></span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-success" style="width: <?= $totalPencucian > 0 ? ($statusStats['selesai'] / $totalPencucian * 100) : 0 ?>%"></div>
-                                </div>
-                            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-sm">Menunggu (Pending)</span>
+                            <span class="badge bg-secondary-600"><?= $statusStats['pending'] ?></span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-secondary" style="width: <?= $totalPencucian > 0 ? ($statusStats['pending'] / $totalPencucian * 100) : 0 ?>%"></div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-clock mr-1"></i> Pencucian Terbaru</h3>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-sm">Sedang Diproses</span>
+                            <span class="badge bg-warning-600"><?= $statusStats['diproses'] ?></span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-warning" style="width: <?= $totalPencucian > 0 ? ($statusStats['diproses'] / $totalPencucian * 100) : 0 ?>%"></div>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
-                        <?php if (!empty($recentPencucian)): ?>
-                        <div class="table-responsive">
-                            <table class="table table-striped mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Pelanggan</th>
-                                        <th>Paket</th>
-                                        <th>Karyawan</th>
-                                        <th>Tanggal</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($recentPencucian as $item): ?>
-                                    <tr>
-                                        <td><code><?= $item['idpencucian'] ?></code></td>
-                                        <td><?= $item['nama_pelanggan'] ?></td>
-                                        <td><?= $item['namapaket'] ?></td>
-                                        <td><?= $item['nama_karyawan'] ?? '<span class="text-muted">-</span>' ?></td>
-                                        <td><?= date('d/m/Y H:i', strtotime($item['tgl'] . ' ' . $item['jamdatang'])) ?></td>
-                                        <td>
-                                            <?php if ($item['status'] == 'pending'): ?>
-                                                <span class="badge badge-secondary">Pending</span>
-                                            <?php elseif ($item['status'] == 'diproses'): ?>
-                                                <span class="badge badge-warning">Diproses</span>
-                                            <?php elseif ($item['status'] == 'dijemput'): ?>
-                                                <span class="badge badge-info">Siap Dijemput</span>
-                                            <?php elseif ($item['status'] == 'selesai'): ?>
-                                                <span class="badge badge-success">Selesai</span>
-                                            <?php elseif ($item['status'] == 'batal'): ?>
-                                                <span class="badge badge-danger">Batal</span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-sm">Siap Dijemput</span>
+                            <span class="badge bg-info-600"><?= $statusStats['dijemput'] ?></span>
                         </div>
-                        <?php else: ?>
-                        <div class="text-center py-4">
-                            <i class="fas fa-inbox text-muted" style="font-size:40px;opacity:.4"></i>
-                            <p class="text-muted mt-2">Belum ada data pencucian</p>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-info" style="width: <?= $totalPencucian > 0 ? ($statusStats['dijemput'] / $totalPencucian * 100) : 0 ?>%"></div>
                         </div>
-                        <?php endif; ?>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-sm">Selesai</span>
+                            <span class="badge bg-success-600"><?= $statusStats['selesai'] ?></span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: <?= $totalPencucian > 0 ? ($statusStats['selesai'] / $totalPencucian * 100) : 0 ?>%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+<div class="row gy-4 mt-4">
+    <div class="col-12">
+        <div class="card radius-12">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="ri-time-line me-2"></i> Pencucian Terbaru</h6>
+            </div>
+            <div class="card-body p-0">
+                <?php if (!empty($recentPencucian)): ?>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Pelanggan</th>
+                                <th>Paket</th>
+                                <th>Karyawan</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($recentPencucian as $item): ?>
+                            <tr>
+                                <td><code><?= $item['idpencucian'] ?></code></td>
+                                <td><?= $item['nama_pelanggan'] ?></td>
+                                <td><?= $item['namapaket'] ?></td>
+                                <td><?= $item['nama_karyawan'] ?? '<span class="text-muted">-</span>' ?></td>
+                                <td><?= date('d/m/Y H:i', strtotime($item['tgl'] . ' ' . $item['jamdatang'])) ?></td>
+                                <td>
+                                    <?php if ($item['status'] == 'pending'): ?>
+                                        <span class="badge bg-secondary-600">Pending</span>
+                                    <?php elseif ($item['status'] == 'diproses'): ?>
+                                        <span class="badge bg-warning-600">Diproses</span>
+                                    <?php elseif ($item['status'] == 'dijemput'): ?>
+                                        <span class="badge bg-info-600">Siap Dijemput</span>
+                                    <?php elseif ($item['status'] == 'selesai'): ?>
+                                        <span class="badge bg-success-600">Selesai</span>
+                                    <?php elseif ($item['status'] == 'batal'): ?>
+                                        <span class="badge bg-danger-600">Batal</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php else: ?>
+                <div class="text-center py-4">
+                    <iconify-icon icon="solar:inbox-outline" class="text-muted" style="font-size:40px;opacity:.4"></iconify-icon>
+                    <p class="text-muted mt-2">Belum ada data pencucian</p>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?= $this->endSection() ?>
 

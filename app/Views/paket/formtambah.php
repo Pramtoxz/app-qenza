@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div class="row justify-content-center">
     <div class="col-md-10">
-        <div class="card card-primary">
+        <div class="card">
             <div class="card-header text-center">
                 <h3 class="card-title">Tambah Data Paket</h3>
             </div>
@@ -14,39 +14,39 @@
                   <div class="row justify-content-center">
                     <div class="col-md-8">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="idpaket">ID paket</label>
+                                <div class="mb-3">
+                                    <label for="idpaket" class="form-label">ID paket</label>
                                     <input type="text" id="idpaket" name="idpaket" class="form-control" value="<?= $next_id ?>" readonly>
                                     <div class="invalid-feedback error_idpaket"></div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="namapaket">Nama paket</label>
+                                <div class="mb-3">
+                                    <label for="namapaket" class="form-label">Nama paket</label>
                                     <input type="text" id="namapaket" name="namapaket" class="form-control">
                                     <div class="invalid-feedback error_namapaket"></div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="harga">Harga Paket</label>
+                                <div class="mb-3">
+                                    <label for="harga" class="form-label">Harga Paket</label>
                                     <input type="text" id="harga" name="harga" class="form-control" placeholder="Rp. 0">
                                     <div class="invalid-feedback error_harga"></div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="jenis">Jenis Paket</label>
+                                <div class="mb-3">
+                                    <label for="jenis" class="form-label">Jenis Paket</label>
                                     <select id="jenis" name="jenis" class="form-control">
                                         <option value="motor">Motor</option>
                                         <option value="mobil">Mobil</option>
                                     </select>
                                     <div class="invalid-feedback error_jenis"></div>
                                 </div>
-                             <div class="form-group">
-                                    <label for="upah">Upah Cuci</label>
+                             <div class="mb-3">
+                                    <label for="upah" class="form-label">Upah Cuci</label>
                                     <input type="text" id="upah" name="upah" class="form-control" placeholder="Rp. 0">
                                     <div class="invalid-feedback error_upah"></div>
                                 </div>
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="keterangan">Deskripsi</label>
+                                <div class="mb-3">
+                                    <label for="keterangan" class="form-label">Deskripsi</label>
                                     <textarea id="keterangan" name="keterangan" class="form-control" rows="8"></textarea>
                                     <div class="invalid-feedback error_keterangan"></div>
                                 </div>
@@ -55,7 +55,7 @@
                         <button type="submit" class="btn btn-primary" id="tombolSimpan">
                             <i class="fas fa-save"></i> SIMPAN
                         </button>
-                        <a class="btn btn-secondary ml-2" href="<?= base_url('paket') ?>">
+                        <a class="btn btn-secondary ms-2" href="<?= base_url('paket') ?>">
                             <i class="fas fa-arrow-left"></i> KEMBALI
                         </a>
                     </div>

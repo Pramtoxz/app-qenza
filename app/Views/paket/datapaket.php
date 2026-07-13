@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card card-primary">
+            <div class="card">
                 <div class="card-header">
                     <h5 class="card-title"><?= $title ?></h5>
                 </div>
@@ -37,16 +37,14 @@
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;">
         <div class="modal-content">
             <div class="modal-header bg-maroon text-white">
-                <h5 class="modal-title"><i class="fas fa-bed mr-2"></i> Detail Kamar</h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title"><i class="fas fa-bed me-2"></i> Detail Kamar</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="detail-content">
                 <!-- Konten detail kamar akan dimuat lewat AJAX -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
             </div>
         </div>
     </div>

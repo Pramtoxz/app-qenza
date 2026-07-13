@@ -155,22 +155,22 @@
     letter-spacing: 0.5px;
 }
 
-.badge-warning {
+.bg-warning-600 {
     background-color: #ffc107;
     color: #856404;
 }
 
-.badge-primary {
+.bg-primary-600 {
     background-color: #007bff;
     color: white;
 }
 
-.badge-success {
+.bg-success-600 {
     background-color: #28a745;
     color: white;
 }
 
-.badge-secondary {
+.bg-secondary-600 {
     background-color: #6c757d;
     color: white;
 }
@@ -367,14 +367,14 @@
     <?php if (isset($tglmulai) && isset($tglakhir)): ?>
     <div class="filter-info">
         <p>
-            <i class="fas fa-calendar-day mr-2"></i>
+            <i class="fas fa-calendar-day me-2"></i>
             <strong>Periode:</strong> Dari tanggal <?= date('d-m-Y', strtotime($tglmulai)) ?> s/d <?= date('d-m-Y', strtotime($tglakhir)) ?>
         </p>
     </div>
     <?php elseif (isset($bulan) && isset($tahun)): ?>
     <div class="filter-info">
         <p>
-            <i class="fas fa-calendar-alt mr-2"></i>
+            <i class="fas fa-calendar-alt me-2"></i>
             <strong>Periode:</strong> 
             <?php 
             $bulanNames = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
@@ -386,7 +386,7 @@
     <?php else: ?>
     <div class="filter-info">
         <p>
-            <i class="fas fa-list mr-2"></i>
+            <i class="fas fa-list me-2"></i>
             <strong>Periode:</strong> Semua Data Pencucian
         </p>
     </div>
@@ -422,13 +422,13 @@
                     <td class="col-paket"><?= esc($row['namapaket']) ?></td>
                     <td class="col-status">
                         <?php if ($row['status'] == 'diproses'): ?>
-                            <span class="badge badge-warning">Sedang Proses</span>
+                            <span class="badge bg-warning-600">Sedang Proses</span>
                         <?php elseif ($row['status'] == 'dijemput'): ?>
-                            <span class="badge badge-primary">Siap Dijemput</span>
+                            <span class="badge bg-primary-600">Siap Dijemput</span>
                         <?php elseif ($row['status'] == 'selesai'): ?>
-                            <span class="badge badge-success">Selesai</span>
+                            <span class="badge bg-success-600">Selesai</span>
                         <?php else: ?>
-                            <span class="badge badge-secondary"><?= esc(ucfirst($row['status'])) ?></span>
+                            <span class="badge bg-secondary-600"><?= esc(ucfirst($row['status'])) ?></span>
                         <?php endif; ?>
                     </td>
                 </tr>

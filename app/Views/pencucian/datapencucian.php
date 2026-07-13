@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card card-primary">
+            <div class="card">
                 <div class="card-header">
                     <h5 class="card-title"><?= $title ?></h5>
                 </div>
@@ -38,15 +38,15 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="fas fa-user-plus mr-2"></i>Assign Karyawan</h5>
-                <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Assign Karyawan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="assign_idpencucian">
                 <div id="assign-karyawan-content"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
         $(document).on('click', '.btn-assign', function() {
             var idpencucian = $(this).data('idpencucian');
             $('#assign_idpencucian').val(idpencucian);
-            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
+            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $('#assign-karyawan-content').html(loader);
             $('#modalAssignKaryawan').modal('show');
 

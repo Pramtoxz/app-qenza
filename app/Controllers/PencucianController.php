@@ -48,23 +48,23 @@ class PencucianController extends BaseController
                 ->groupBy('idpencucian');
             return DataTable::of($produk)
                 ->add('action', function ($row) {
-                    $button1 = '<button type="button" class="btn btn-primary btn-sm btn-detail" data-idpencucian="' . $row->idpencucian . '"><i class="fas fa-eye"></i></button>';
+                    $button1 = '<button type="button" class="btn btn-primary btn-sm btn-detail" data-idpencucian="' . $row->idpencucian . '"><i class="ri-eye-line"></i></button>';
                     $buttonsGroup = '<div style="display: flex;">' . $button1;
 
                     if ($row->status == 'pending') {
-                        $buttonAssign = '<button type="button" class="btn btn-success btn-sm btn-assign" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Assign Karyawan"><i class="fas fa-user-plus"></i></button>';
-                        $buttonCetak = '<button type="button" class="btn btn-info btn-sm btn-cetak-antrian" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Cetak Antrian"><i class="fas fa-print"></i></button>';
-                        $buttonEdit = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
-                        $buttonDelete = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>';
-                        $buttonBatal = '<button type="button" class="btn btn-warning btn-sm btn-batal" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Batalkan"><i class="fas fa-times"></i></button>';
+                        $buttonAssign = '<button type="button" class="btn btn-success btn-sm btn-assign" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Assign Karyawan"><i class="ri-user-add-line"></i></button>';
+                        $buttonCetak = '<button type="button" class="btn btn-info btn-sm btn-cetak-antrian" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Cetak Antrian"><i class="ri-printer-line"></i></button>';
+                        $buttonEdit = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="ri-pencil-line"></i></button>';
+                        $buttonDelete = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="ri-delete-bin-line"></i></button>';
+                        $buttonBatal = '<button type="button" class="btn btn-warning btn-sm btn-batal" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Batalkan"><i class="ri-close-line"></i></button>';
                         $buttonsGroup .= $buttonAssign . $buttonCetak . $buttonEdit . $buttonDelete . $buttonBatal;
                     } elseif ($row->status == 'diproses') {
-                        $buttonStatus = '<button type="button" class="btn btn-warning btn-sm btn-status" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Ubah Status"><i class="fas fa-sync-alt"></i></button>';
-                        $buttonEdit = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
+                        $buttonStatus = '<button type="button" class="btn btn-warning btn-sm btn-status" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Ubah Status"><i class="ri-refresh-line"></i></button>';
+                        $buttonEdit = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="ri-pencil-line"></i></button>';
                         $buttonsGroup .= $buttonStatus . $buttonEdit;
                     } elseif ($row->status == 'dijemput') {
-                        $buttonStatus = '<button type="button" class="btn btn-warning btn-sm btn-status" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Ubah Status"><i class="fas fa-sync-alt"></i></button>';
-                        $buttonEdit = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
+                        $buttonStatus = '<button type="button" class="btn btn-warning btn-sm btn-status" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;" title="Ubah Status"><i class="ri-refresh-line"></i></button>';
+                        $buttonEdit = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpencucian="' . $row->idpencucian . '" style="margin-left: 5px;"><i class="ri-pencil-line"></i></button>';
                         $buttonsGroup .= $buttonStatus . $buttonEdit;
                     }
 
@@ -159,9 +159,9 @@ class PencucianController extends BaseController
             return DataTable::of($pelanggan)
                 ->add('status_pelanggan', function ($row) {
                     if (!empty($row->active_idpencucian)) {
-                        return '<span class="badge badge-danger">Sedang Proses</span>';
+                        return '<span class="badge bg-danger">Sedang Proses</span>';
                     }
-                    return '<span class="badge badge-success">Tersedia</span>';
+                    return '<span class="badge bg-success">Tersedia</span>';
                 }, 'last')
                 ->add('action', function ($row) {
                     return '<button type="button" class="btn btn-primary btn-pilihpelanggan" 
@@ -225,13 +225,13 @@ class PencucianController extends BaseController
             return DataTable::of($karyawan)
                 ->add('status_label', function ($row) {
                     if (empty($row->task_idpencucian)) {
-                        return '<span class="badge badge-success">FREE</span>';
+                        return '<span class="badge bg-success">FREE</span>';
                     }
                     $info = 'Sedang cuci';
                     if ($row->task_platnomor) {
                         $info .= ' (' . $row->task_platnomor . ')';
                     }
-                    return '<span class="badge badge-danger" title="' . esc($info) . '">BUSY</span>';
+                    return '<span class="badge bg-danger" title="' . esc($info) . '">BUSY</span>';
                 }, 'first')
                 ->add('action', function ($row) {
                     if (empty($row->task_idpencucian)) {

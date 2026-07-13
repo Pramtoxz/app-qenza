@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card card-primary">
+        <div class="card">
             <div class="card-header text-center">
                 <h3 class="card-title">Edit Data Pelanggan</h3>
             </div>
@@ -13,43 +13,43 @@
                 
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="idpelanggan">ID Pelanggan</label>
+                        <div class="mb-3">
+                            <label for="idpelanggan" class="form-label">ID Pelanggan</label>
                             <input type="text" id="idpelanggan" name="idpelanggan" class="form-control" value="<?= $pelanggan['idpelanggan'] ?>" readonly>
                             <div class="invalid-feedback error_idpelanggan"></div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="nama">Nama Pelanggan</label>
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Pelanggan</label>
                             <input type="text" id="nama" name="nama" class="form-control" value="<?= $pelanggan['nama'] ?>">
                             <div class="invalid-feedback error_nama"></div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="alamat">Alamat</label>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
                             <textarea type="text" id="alamat" name="alamat" class="form-control"><?= isset($pelanggan['alamat']) ? $pelanggan['alamat'] : '' ?></textarea>
                             <div class="invalid-feedback error_alamat"></div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="nohp">No HP</label>
+                        <div class="mb-3">
+                            <label for="nohp" class="form-label">No HP</label>
                             <input type="number" id="nohp" name="nohp" class="form-control" value="<?= $pelanggan['nohp'] ?>">
                             <div class="invalid-feedback error_nohp"></div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="jk">Jenis Kelamin</label>
+                        <div class="mb-3">
+                            <label for="jk" class="form-label">Jenis Kelamin</label>
                             <select id="jk" name="jk" class="form-control">
                                 <option value="L" <?= $pelanggan['jk'] == 'L' ? 'selected' : '' ?>>Laki-laki</option>
                                 <option value="P" <?= $pelanggan['jk'] == 'P' ? 'selected' : '' ?>>Perempuan</option>
                             </select>
                             <div class="invalid-feedback error_jk"></div>
                         </div>
-                        <div class="form-group text-center mt-4">
+                        <div class="mb-3 text-center mt-4">
                             <button type="submit" class="btn btn-primary" id="tombolSimpan">
                                 <i class="fas fa-save"></i> SIMPAN
                             </button>
-                            <a class="btn btn-secondary ml-2" href="<?= base_url('pelanggan') ?>">
+                            <a class="btn btn-secondary ms-2" href="<?= base_url('pelanggan') ?>">
                                 <i class="fas fa-arrow-left"></i> KEMBALI
                             </a>
                         </div>

@@ -310,7 +310,7 @@
                     </td>
                     <td class="col-jenis">
                         <span class="badge badge-jenis">
-                            <i class="fas fa-tag mr-1"></i><?= esc($value['jenis']) ?>
+                            <i class="fas fa-tag me-1"></i><?= esc($value['jenis']) ?>
                         </span>
                     </td>
                     <td class="col-keterangan"><?= esc($value['keterangan']) ?></td>

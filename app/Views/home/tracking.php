@@ -318,9 +318,9 @@
                 </div>
 
                 <div class="action-row">
-                    <a href="<?= base_url() ?>" class="btn-ghost-sm"><i class="fas fa-arrow-left mr-1"></i> Beranda</a>
+                    <a href="<?= base_url() ?>" class="btn-ghost-sm"><i class="fas fa-arrow-left me-1"></i> Beranda</a>
                     <?php if (!in_array($pencucian['status'], ['selesai', 'batal'])): ?>
-                    <button onclick="location.reload()" class="btn-accent-sm"><i class="fas fa-sync-alt mr-1"></i> Refresh</button>
+                    <button onclick="location.reload()" class="btn-accent-sm"><i class="fas fa-sync-alt me-1"></i> Refresh</button>
                     <?php endif; ?>
                 </div>
             </div>

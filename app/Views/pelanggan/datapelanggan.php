@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card card-primary">
+            <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">
                         <?= $title ?>
@@ -40,18 +40,16 @@
             <div class="modal-header"
                 style="background-color: #D81B60; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
                 <h5 class="modal-title" id="detailModalLabel">
-                    <i class="fas fa-id-card mr-2"></i> Detail Pelanggan
+                    <i class="fas fa-id-card me-2"></i> Detail Pelanggan
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white;">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
             </div>
             <div class="modal-body p-4" id="detail-content" style="overflow-y: auto;">
                 <!-- Detail Dokter akan dimuat melalui AJAX -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fas fa-times mr-1"></i> Tutup
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Tutup
                 </button>
             </div>
         </div>

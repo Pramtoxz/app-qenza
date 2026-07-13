@@ -204,12 +204,12 @@
                     <label for="email">Alamat Email</label>
                     <input type="email" id="email" name="email" placeholder="email@contoh.com" required autofocus>
                     <?php if(isset($validation) && $validation->hasError('email')): ?>
-                        <p class="field-error"><i class="fas fa-exclamation-triangle mr-1"></i><?= $validation->getError('email') ?></p>
+                        <p class="field-error"><i class="fas fa-exclamation-triangle me-1"></i><?= $validation->getError('email') ?></p>
                     <?php endif; ?>
                 </div>
 
                 <div class="alert-info-box">
-                    <h6><i class="fas fa-info-circle mr-1"></i>Cara kerja reset password:</h6>
+                    <h6><i class="fas fa-info-circle me-1"></i>Cara kerja reset password:</h6>
                     <ul>
                         <li>Kode OTP akan dikirim ke email Anda</li>
                         <li>Kode berlaku selama 10 menit</li>
@@ -223,7 +223,7 @@
             </form>
 
             <div class="auth-links">
-                <a href="<?= site_url('auth') ?>" class="link-bold"><i class="fas fa-arrow-left mr-1"></i>Kembali ke Login</a>
+                <a href="<?= site_url('auth') ?>" class="link-bold"><i class="fas fa-arrow-left me-1"></i>Kembali ke Login</a>
                 <span class="sep">|</span>
                 <a href="<?= site_url('/') ?>">Beranda</a>
             </div>
@@ -237,7 +237,7 @@
             var email = $('#email').val().trim();
             if (!email) return false;
             $('#submit-btn').prop('disabled', true);
-            $('#submit-text').html('<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...');
+            $('#submit-text').html('<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...');
         });
     });
     </script>

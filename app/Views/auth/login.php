@@ -228,7 +228,7 @@
 
             <div class="auth-links">
                 <a href="<?= site_url('/') ?>" class="back-home">
-                    <i class="fas fa-arrow-left mr-1"></i> Kembali ke beranda
+                    <i class="fas fa-arrow-left me-1"></i> Kembali ke beranda
                 </a>
             </div>
         </div>

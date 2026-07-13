@@ -1,9 +1,7 @@
-<footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-        <b>Version</b> 1.0.0
+<footer class="d-footer">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-auto">
+            <p class="mb-0">&copy; <?= date('Y') ?> Pencucian Qenza. All Rights Reserved.</p>
+        </div>
     </div>
-    <strong>
-        Copyright &copy; <?= date('Y') ?>
-        <a href="<?= base_url('/') ?>">Pencucian Qenza</a>.
-    </strong> All rights reserved.
 </footer>

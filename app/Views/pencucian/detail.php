@@ -3,23 +3,27 @@
 
 <div class="invoice p-4">
     <!-- Header Card -->
-    <div class="card card-primary card-outline shadow-sm mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-body text-center">
             <div class="mb-3">
                 <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Logo Qenza" style="height: 80px;">
             </div>
-            <h3 class="text-primary font-weight-bold mb-1">Faktur Reservasi Qenza</h3>
+            <h3 class="text-primary fw-bold mb-1">Faktur Reservasi Qenza</h3>
             <h5 class="text-muted">Cucian Salju Sijunjung</h5>
             <hr>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="info-box bg-primary">
-                        <span class="info-box-icon"><i class="fas fa-car"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text font-weight-bold">ID Reservasi #<?= $pencucian['idpencucian'] ?></span>
-                            <div class="row mt-2">
-                                <div class="col-6 text-white"><small>Tanggal:</small><br><strong><?= date('d F Y', strtotime($pencucian['tgl'])) ?></strong></div>
-                                <div class="col-6 text-white"><small>Jam Datang:</small><br><strong><?= $pencucian['jamdatang'] ?></strong></div>
+                    <div class="p-4 rounded-3 text-white" style="background-color: #487FFF;">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="fas fa-car fa-2x"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">ID Reservasi #<?= $pencucian['idpencucian'] ?></h6>
+                                <div class="row mt-2">
+                                    <div class="col-6"><small>Tanggal:</small><br><strong><?= date('d F Y', strtotime($pencucian['tgl'])) ?></strong></div>
+                                    <div class="col-6"><small>Jam Datang:</small><br><strong><?= $pencucian['jamdatang'] ?></strong></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -32,37 +36,37 @@
     <div class="row mb-4">
         <!-- Detail Pelanggan -->
         <div class="col-md-4">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-user mr-2"></i>Detail Pelanggan</h5>
+                    <h5 class="card-title"><i class="fas fa-user me-2"></i>Detail Pelanggan</h5>
                 </div>
                 <div class="card-body">
                     <h5 class="text-primary"><?= $pencucian['nama_pelanggan'] ?></h5>
-                    <p class="mb-1"><i class="fas fa-map-marker-alt mr-2 text-muted"></i><?= $pencucian['alamat'] ?></p>
-                    <p class="mb-1"><i class="fas fa-phone mr-2 text-muted"></i><?= $pencucian['nohp'] ?></p>
-                    <p class="mb-0"><i class="fas fa-car mr-2 text-muted"></i><?= $pencucian['platnomor'] ?></p>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-muted"></i><?= $pencucian['alamat'] ?></p>
+                    <p class="mb-1"><i class="fas fa-phone me-2 text-muted"></i><?= $pencucian['nohp'] ?></p>
+                    <p class="mb-0"><i class="fas fa-car me-2 text-muted"></i><?= $pencucian['platnomor'] ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Detail Paket -->
         <div class="col-md-4">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-box mr-2"></i>Detail Paket</h5>
+                    <h5 class="card-title"><i class="fas fa-box me-2"></i>Detail Paket</h5>
                 </div>
                 <div class="card-body">
                     <h5 class="text-primary"><?= $pencucian['namapaket'] ?></h5>
-                    <p class="mb-1"><i class="fas fa-tag mr-2 text-muted"></i>Jenis: <?= $pencucian['jenis'] ?></p>
-                    <p class="mb-1"><i class="fas fa-money-bill-wave mr-2 text-muted"></i>Rp <?= number_format($pencucian['harga'], 0, ',', '.') ?></p>
+                    <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i>Jenis: <?= $pencucian['jenis'] ?></p>
+                    <p class="mb-1"><i class="fas fa-money-bill-wave me-2 text-muted"></i>Rp <?= number_format($pencucian['harga'], 0, ',', '.') ?></p>
                     <?php if (!empty($pencucian['namapaket2'])): ?>
                         <hr class="my-2">
                         <h5 class="text-primary"><?= $pencucian['namapaket2'] ?></h5>
-                        <p class="mb-1"><i class="fas fa-tag mr-2 text-muted"></i>Jenis: <?= $pencucian['jenis2'] ?></p>
-                        <p class="mb-1"><i class="fas fa-money-bill-wave mr-2 text-muted"></i>Rp <?= number_format($pencucian['harga2'], 0, ',', '.') ?></p>
+                        <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i>Jenis: <?= $pencucian['jenis2'] ?></p>
+                        <p class="mb-1"><i class="fas fa-money-bill-wave me-2 text-muted"></i>Rp <?= number_format($pencucian['harga2'], 0, ',', '.') ?></p>
                     <?php endif; ?>
-                    <h4 class="text-success font-weight-bold mt-3">
-                        <i class="fas fa-money-bill-wave mr-2"></i>Rp <?= number_format($totalHarga, 0, ',', '.') ?>
+                    <h4 class="text-success fw-bold mt-3">
+                        <i class="fas fa-money-bill-wave me-2"></i>Rp <?= number_format($totalHarga, 0, ',', '.') ?>
                     </h4>
                 </div>
             </div>
@@ -70,9 +74,9 @@
 
         <!-- Detail Karyawan -->
         <div class="col-md-4">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-user-tie mr-2"></i>Detail Karyawan</h5>
+                    <h5 class="card-title"><i class="fas fa-user-tie me-2"></i>Detail Karyawan</h5>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($pencucian['nama_karyawan'])): ?>
@@ -82,15 +86,15 @@
                     <?php endif; ?>
                     <p class="mb-2">Status:</p>
                     <?php if ($pencucian['status'] == 'pending'): ?>
-                        <span class="badge badge-secondary"><i class="fas fa-clock mr-1"></i>Menunggu Proses</span>
+                        <span class="badge bg-secondary"><i class="fas fa-clock me-1"></i>Menunggu Proses</span>
                     <?php elseif ($pencucian['status'] == 'diproses'): ?>
-                        <span class="badge badge-warning"><i class="fas fa-spinner mr-1"></i>Sedang Diproses</span>
+                        <span class="badge bg-warning"><i class="fas fa-spinner me-1"></i>Sedang Diproses</span>
                     <?php elseif ($pencucian['status'] == 'dijemput'): ?>
-                        <span class="badge badge-info"><i class="fas fa-check mr-1"></i>Siap Dijemput</span>
+                        <span class="badge bg-info"><i class="fas fa-check me-1"></i>Siap Dijemput</span>
                     <?php elseif ($pencucian['status'] == 'selesai'): ?>
-                        <span class="badge badge-success"><i class="fas fa-check-double mr-1"></i>Selesai</span>
+                        <span class="badge bg-success"><i class="fas fa-check-double me-1"></i>Selesai</span>
                     <?php elseif ($pencucian['status'] == 'batal'): ?>
-                        <span class="badge badge-danger"><i class="fas fa-times mr-1"></i>Batal</span>
+                        <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Batal</span>
                     <?php endif; ?>
                 </div>
             </div>
@@ -98,14 +102,14 @@
     </div>
 
     <!-- Table Section -->
-    <div class="card card-primary card-outline shadow-sm mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-header">
-            <h5 class="card-title"><i class="fas fa-table mr-2"></i>Ringkasan Reservasi</h5>
+            <h5 class="card-title"><i class="fas fa-table me-2"></i>Ringkasan Reservasi</h5>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mb-0">
-                    <thead class="bg-primary">
+                    <thead style="background-color: #487FFF;">
                         <tr>
                             <th class="text-white">ID Reservasi</th>
                             <th class="text-white">Pelanggan</th>
@@ -127,7 +131,7 @@
                                 <?php endif; ?>
                             </td>
                             <td><?= $pencucian['nama_karyawan'] ?? '<span class="text-muted"><i>Belum ditugaskan</i></span>' ?></td>
-                            <td class="font-weight-bold text-success">Rp <?= number_format($totalHarga, 0, ',', '.') ?></td>
+                            <td class="fw-bold text-success">Rp <?= number_format($totalHarga, 0, ',', '.') ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -135,8 +139,8 @@
         </div>
         <div class="card-footer bg-light">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="font-weight-bold mb-0">Total Harga Paket:</h5>
-                <h4 class="text-primary font-weight-bold mb-0">Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
+                <h5 class="fw-bold mb-0">Total Harga Paket:</h5>
+                <h4 class="text-primary fw-bold mb-0">Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
             </div>
         </div>
     </div>
@@ -144,9 +148,9 @@
     <!-- QR Code & Signature Section -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header text-center">
-                    <h5 class="card-title"><i class="fas fa-qrcode mr-2"></i>QR Code Tracking</h5>
+                    <h5 class="card-title"><i class="fas fa-qrcode me-2"></i>QR Code Tracking</h5>
                 </div>
                 <div class="card-body text-center">
                     <p class="text-muted mb-3">Silakan scan kode QR berikut untuk melacak status cucian Anda:</p>
@@ -157,16 +161,16 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header text-center">
-                    <h5 class="card-title"><i class="fas fa-signature mr-2"></i>Tanda Tangan</h5>
+                    <h5 class="card-title"><i class="fas fa-signature me-2"></i>Tanda Tangan</h5>
                 </div>
                 <div class="card-body text-center">
                     <p class="text-muted mb-3">Sijunjung, <?= date('d F Y') ?></p>
                     <div class="my-4">
                         <img src="<?= base_url() ?>/assets/img/acc.png" alt="Tanda Tangan" style="width: 120px;">
                     </div>
-                    <h5 class="text-primary font-weight-bold">Qenza</h5>
+                    <h5 class="text-primary fw-bold">Qenza</h5>
                 </div>
             </div>
         </div>
@@ -176,10 +180,10 @@
     <div class="card shadow-sm no-print">
         <div class="card-body d-flex justify-content-between">
             <a href="<?= base_url() ?>/pencucian" class="btn btn-secondary btn-lg">
-                <i class="fas fa-arrow-left mr-2"></i>Kembali
+                <i class="fas fa-arrow-left me-2"></i>Kembali
             </a>
             <a href="#" onclick="window.print();" class="btn btn-primary btn-lg">
-                <i class="fas fa-print mr-2"></i>Print
+                <i class="fas fa-print me-2"></i>Print
             </a>
         </div>
     </div>

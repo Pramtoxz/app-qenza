@@ -26,9 +26,9 @@ class GajiController extends BaseController
 
             return DataTable::of($gaji)
                 ->add('action', function ($row) {
-                    $button1 = '<button type="button" class="btn btn-primary btn-sm btn-detail" data-idgaji="' . $row->idgaji . '"><i class="fas fa-eye"></i></button>';
-                    $button2 = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idgaji="' . $row->idgaji . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
-                    $button3 = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idgaji="' . $row->idgaji . '" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>';
+                    $button1 = '<button type="button" class="btn btn-primary btn-sm btn-detail" data-idgaji="' . $row->idgaji . '"><i class="ri-eye-line"></i></button>';
+                    $button2 = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idgaji="' . $row->idgaji . '" style="margin-left: 5px;"><i class="ri-pencil-line"></i></button>';
+                    $button3 = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idgaji="' . $row->idgaji . '" style="margin-left: 5px;"><i class="ri-delete-bin-line"></i></button>';
                     $buttonsGroup = '<div style="display: flex;">' . $button1 . $button2 . $button3 . '</div>';
                     return $buttonsGroup;
                 }, 'last')
@@ -54,9 +54,9 @@ class GajiController extends BaseController
                 })
                 ->edit('status', function ($row) {
                     if ($row->status == 'draft') {
-                        return '<span class="badge badge-warning">Draft</span>';
+                        return '<span class="badge bg-warning text-dark">Draft</span>';
                     }
-                    return '<span class="badge badge-success">Dibayar</span>';
+                    return '<span class="badge bg-success">Dibayar</span>';
                 })
                 ->addNumbering()
                 ->toJson();

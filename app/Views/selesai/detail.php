@@ -3,24 +3,28 @@
 
 <div class="invoice p-4">
     <!-- Header Card -->
-    <div class="card card-success card-outline shadow-sm mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-body text-center">
             <div class="mb-3">
                 <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Logo Pencucian Qenza" style="height: 80px;">
             </div>
-            <h3 class="text-primary font-weight-bold mb-1">Faktur Pembayaran Pencucian Qenza</h3>
+            <h3 class="text-primary fw-bold mb-1">Faktur Pembayaran Pencucian Qenza</h3>
             <h5 class="text-muted">Cucian Salju Sijunjung</h5>
             <hr>
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="info-box bg-success">
-                        <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text font-weight-bold">ID Selesai #<?= $selesai['idselesai'] ?> | Pencucian #<?= $selesai['idpencucian'] ?></span>
-                            <div class="row mt-2">
-                                <div class="col-4 text-white"><small>Tanggal Masuk:</small><br><strong><?= date('d F Y', strtotime($selesai['tgl'])) ?></strong></div>
-                                <div class="col-4 text-white"><small>Jam Datang:</small><br><strong><?= $selesai['jamdatang'] ?></strong></div>
-                                <div class="col-4 text-white"><small>Jam Jemput:</small><br><strong><?= $selesai['jamjemput'] ?></strong></div>
+                    <div class="p-4 rounded-3 text-white" style="background-color: #28a745;">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">ID Selesai #<?= $selesai['idselesai'] ?> | Pencucian #<?= $selesai['idpencucian'] ?></h6>
+                                <div class="row mt-2">
+                                    <div class="col-4"><small>Tanggal Masuk:</small><br><strong><?= date('d F Y', strtotime($selesai['tgl'])) ?></strong></div>
+                                    <div class="col-4"><small>Jam Datang:</small><br><strong><?= $selesai['jamdatang'] ?></strong></div>
+                                    <div class="col-4"><small>Jam Jemput:</small><br><strong><?= $selesai['jamjemput'] ?></strong></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -33,30 +37,30 @@
     <div class="row mb-4">
         <!-- Detail Pelanggan -->
         <div class="col-md-4">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-user mr-2"></i>Detail Pelanggan</h5>
+                    <h5 class="card-title"><i class="fas fa-user me-2"></i>Detail Pelanggan</h5>
                 </div>
                 <div class="card-body">
                     <h5 class="text-primary"><?= $selesai['nama_pelanggan'] ?></h5>
-                    <p class="mb-1"><i class="fas fa-map-marker-alt mr-2 text-muted"></i><?= $selesai['alamat'] ?></p>
-                    <p class="mb-1"><i class="fas fa-phone mr-2 text-muted"></i><?= $selesai['nohp'] ?></p>
-                    <p class="mb-0"><i class="fas fa-car mr-2 text-muted"></i><?= $selesai['platnomor'] ?></p>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-muted"></i><?= $selesai['alamat'] ?></p>
+                    <p class="mb-1"><i class="fas fa-phone me-2 text-muted"></i><?= $selesai['nohp'] ?></p>
+                    <p class="mb-0"><i class="fas fa-car me-2 text-muted"></i><?= $selesai['platnomor'] ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Detail Paket -->
         <div class="col-md-4">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-box mr-2"></i>Detail Paket</h5>
+                    <h5 class="card-title"><i class="fas fa-box me-2"></i>Detail Paket</h5>
                 </div>
                 <div class="card-body">
                     <h5 class="text-primary"><?= $selesai['namapaket'] ?></h5>
-                    <p class="mb-1"><i class="fas fa-tag mr-2 text-muted"></i>Jenis: <?= $selesai['jenis'] ?></p>
-                    <h4 class="text-success font-weight-bold mt-3">
-                        <i class="fas fa-money-bill-wave mr-2"></i>Rp <?= number_format($selesai['harga'], 0, ',', '.') ?>
+                    <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i>Jenis: <?= $selesai['jenis'] ?></p>
+                    <h4 class="text-success fw-bold mt-3">
+                        <i class="fas fa-money-bill-wave me-2"></i>Rp <?= number_format($selesai['harga'], 0, ',', '.') ?>
                     </h4>
                 </div>
             </div>
@@ -64,28 +68,28 @@
 
         <!-- Detail Karyawan -->
         <div class="col-md-4">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-user-tie mr-2"></i>Detail Karyawan</h5>
+                    <h5 class="card-title"><i class="fas fa-user-tie me-2"></i>Detail Karyawan</h5>
                 </div>
                 <div class="card-body">
                     <h5 class="text-primary"><?= $selesai['nama_karyawan'] ?></h5>
                     <p class="mb-2">Status:</p>
-                    <span class="badge badge-success"><i class="fas fa-check-double mr-1"></i>Selesai - Kendaraan sudah dijemput</span>
+                    <span class="badge bg-success-600"><i class="fas fa-check-double me-1"></i>Selesai - Kendaraan sudah dijemput</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Table Section -->
-    <div class="card card-primary card-outline shadow-sm mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-header">
-            <h5 class="card-title"><i class="fas fa-table mr-2"></i>Ringkasan Pembayaran</h5>
+            <h5 class="card-title"><i class="fas fa-table me-2"></i>Ringkasan Pembayaran</h5>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mb-0">
-                    <thead class="bg-primary">
+                    <thead style="background-color: #487FFF;">
                         <tr>
                             <th class="text-white">ID Selesai</th>
                             <th class="text-white">ID Pencucian</th>
@@ -102,7 +106,7 @@
                             <td><?= $selesai['nama_pelanggan'] ?></td>
                             <td><?= $selesai['namapaket'] ?></td>
                             <td><?= $selesai['nama_karyawan'] ?></td>
-                            <td class="font-weight-bold text-success">Rp <?= number_format($selesai['harga'], 0, ',', '.') ?></td>
+                            <td class="fw-bold text-success">Rp <?= number_format($selesai['harga'], 0, ',', '.') ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -111,53 +115,53 @@
     </div>
 
     <!-- Detail Pembayaran -->
-    <div class="card card-info card-outline shadow-sm mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-header">
-            <h5 class="card-title"><i class="fas fa-calculator mr-2"></i>Detail Pembayaran</h5>
+            <h5 class="card-title"><i class="fas fa-calculator me-2"></i>Detail Pembayaran</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <table class="table table-borderless">
                         <tr>
-                            <td class="text-right font-weight-bold" style="width:50%">Total Bayar:</td>
-                            <td class="font-weight-bold text-primary h5">Rp <?= number_format($selesai['totalbayar'], 0, ',', '.') ?></td>
+                            <td class="text-right fw-bold" style="width:50%">Total Bayar:</td>
+                            <td class="fw-bold text-primary h5">Rp <?= number_format($selesai['totalbayar'], 0, ',', '.') ?></td>
                         </tr>
                         <?php if (isset($selesai['totaldibayar'])): ?>
                         <tr>
-                            <td class="text-right font-weight-bold">Total Di Bayar:</td>
-                            <td class="font-weight-bold text-success h5">Rp <?= number_format($selesai['totaldibayar'], 0, ',', '.') ?></td>
+                            <td class="text-right fw-bold">Total Di Bayar:</td>
+                            <td class="fw-bold text-success h5">Rp <?= number_format($selesai['totaldibayar'], 0, ',', '.') ?></td>
                         </tr>
                         <?php 
                         $kembalian = $selesai['totaldibayar'] - $selesai['totalbayar'];
                         $kembalianClass = $kembalian >= 0 ? 'success' : 'danger';
                         ?>
                         <tr class="bg-<?= $kembalianClass ?>">
-                            <td class="text-right font-weight-bold text-white h5">Kembalian:</td>
-                            <td class="font-weight-bold text-white h4">Rp <?= number_format($kembalian, 0, ',', '.') ?></td>
+                            <td class="text-right fw-bold text-white h5">Kembalian:</td>
+                            <td class="fw-bold text-white h4">Rp <?= number_format($kembalian, 0, ',', '.') ?></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="text-center pt-3">
                                 <?php if ($kembalian >= 0): ?>
-                                    <span class="badge badge-success p-2" style="font-size: 14px;">
-                                        <i class="fas fa-check-circle mr-1"></i> Pembayaran Lunas
+                                    <span class="badge bg-success-600 p-2" style="font-size: 14px;">
+                                        <i class="fas fa-check-circle me-1"></i> Pembayaran Lunas
                                     </span>
                                 <?php else: ?>
-                                    <span class="badge badge-danger p-2" style="font-size: 14px;">
-                                        <i class="fas fa-exclamation-circle mr-1"></i> Pembayaran Kurang
+                                    <span class="badge bg-danger-600 p-2" style="font-size: 14px;">
+                                        <i class="fas fa-exclamation-circle me-1"></i> Pembayaran Kurang
                                     </span>
                                 <?php endif; ?>
                             </td>
                         </tr>
                         <?php else: ?>
                         <tr class="bg-success">
-                            <td class="text-right font-weight-bold text-white h5">Status:</td>
-                            <td class="font-weight-bold text-white h4">LUNAS</td>
+                            <td class="text-right fw-bold text-white h5">Status:</td>
+                            <td class="fw-bold text-white h4">LUNAS</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="text-center pt-3">
-                                <span class="badge badge-success p-2" style="font-size: 14px;">
-                                    <i class="fas fa-check-circle mr-1"></i> Pembayaran Selesai
+                                <span class="badge bg-success-600 p-2" style="font-size: 14px;">
+                                    <i class="fas fa-check-circle me-1"></i> Pembayaran Selesai
                                 </span>
                             </td>
                         </tr>
@@ -172,15 +176,15 @@
     <div class="row mb-4">
         <!-- Thank You Section -->
         <div class="col-md-6">
-            <div class="card card-success card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header text-center">
-                    <h5 class="card-title"><i class="fas fa-heart mr-2"></i>Terima Kasih</h5>
+                    <h5 class="card-title"><i class="fas fa-heart me-2"></i>Terima Kasih</h5>
                 </div>
                 <div class="card-body text-center">
-                    <h5 class="font-weight-bold mb-3">Terima kasih atas kepercayaan Anda!</h5>
+                    <h5 class="fw-bold mb-3">Terima kasih atas kepercayaan Anda!</h5>
                     <p class="text-muted mb-4">Kendaraan Anda telah selesai dicuci dan sudah dapat dijemput.</p>
-                    <span class="badge badge-success p-2" style="font-size: 16px;">
-                        <i class="fas fa-check-circle mr-1"></i> LUNAS
+                    <span class="badge bg-success-600 p-2" style="font-size: 16px;">
+                        <i class="fas fa-check-circle me-1"></i> LUNAS
                     </span>
                 </div>
             </div>
@@ -188,16 +192,16 @@
 
         <!-- Signature Section -->
         <div class="col-md-6">
-            <div class="card card-primary card-outline shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-header text-center">
-                    <h5 class="card-title"><i class="fas fa-signature mr-2"></i>Tanda Tangan</h5>
+                    <h5 class="card-title"><i class="fas fa-signature me-2"></i>Tanda Tangan</h5>
                 </div>
                 <div class="card-body text-center">
                     <p class="text-muted mb-3">Sijunjung, <?= date('d F Y') ?></p>
                     <div class="my-4">
                         <img src="<?= base_url() ?>/assets/img/acc.png" alt="Tanda Tangan" style="width: 120px;">
                     </div>
-                    <h5 class="text-primary font-weight-bold mb-2">Pencucian Qenza</h5>
+                    <h5 class="text-primary fw-bold mb-2">Pencucian Qenza</h5>
                     <p class="text-muted">Terima kasih dan sampai jumpa kembali!</p>
                 </div>
             </div>
@@ -208,10 +212,10 @@
     <div class="card shadow-sm no-print">
         <div class="card-body d-flex justify-content-between">
             <a href="<?= base_url() ?>/selesai" class="btn btn-secondary btn-lg">
-                <i class="fas fa-arrow-left mr-2"></i>Kembali
+                <i class="fas fa-arrow-left me-2"></i>Kembali
             </a>
             <a href="#" onclick="window.print();" class="btn btn-primary btn-lg">
-                <i class="fas fa-print mr-2"></i>Print
+                <i class="fas fa-print me-2"></i>Print
             </a>
         </div>
     </div>

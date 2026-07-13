@@ -24,9 +24,9 @@ class PelangganController extends BaseController
 
         return DataTable::of($query)
             ->add('action', function ($row) {
-                $button1 = '<button type="button" class="btn btn-primary btn-sm btn-detail" data-idpelanggan="' . $row->idpelanggan . '" data-toggle="modal" data-target="#detailModal"><i class="fas fa-eye"></i></button>';
-                $button2 = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpelanggan="' . $row->idpelanggan . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
-                $button3 = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idpelanggan="' . $row->idpelanggan . '" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>';
+                $button1 = '<button type="button" class="btn btn-primary btn-sm btn-detail" data-idpelanggan="' . $row->idpelanggan . '" data-toggle="modal" data-target="#detailModal"><i class="ri-eye-line"></i></button>';
+                $button2 = '<button type="button" class="btn btn-secondary btn-sm btn-edit" data-idpelanggan="' . $row->idpelanggan . '" style="margin-left: 5px;"><i class="ri-pencil-line"></i></button>';
+                $button3 = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idpelanggan="' . $row->idpelanggan . '" style="margin-left: 5px;"><i class="ri-delete-bin-line"></i></button>';
 
                 $buttonsGroup = '<div style="display: flex;">' . $button1 . $button2 . $button3 . '</div>';
                 return $buttonsGroup;

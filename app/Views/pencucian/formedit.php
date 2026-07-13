@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div class="row" style="justify-content: center;">
     <div class="col-md-12">
-        <div class="card card-info">
+        <div class="card">
             <div class="card-header text-center">
                 <h3 class="card-title" style="color: #007bff;">
                     <i class="fas fa-edit"></i> Edit Data Reservasi
@@ -13,101 +13,95 @@
                 <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="idpencucian">ID Reservasi</label>
+                        <div class="mb-3">
+                            <label for="idpencucian" class="form-label">ID Reservasi</label>
                             <input type="text" id="idpencucian" name="idpencucian" class="form-control" value="<?= $pencucian['idpencucian'] ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="idpelanggan">Pelanggan</label>
+                        <div class="mb-3">
+                            <label for="idpelanggan" class="form-label">Pelanggan</label>
                             <div class="input-group">
                                 <input type="hidden" id="idpelanggan" name="idpelanggan" class="form-control" value="<?= $pencucian['idpelanggan'] ?>" readonly>
                                 <input type="text" id="nama_pelanggan" name="nama_pelanggan" class="form-control" value="<?= $pencucian['nama_pelanggan'] ?>" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info" type="button" data-toggle="modal" data-target="#modalcariPelanggan">Cari</button>
-                                </div>
+                                <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modalcariPelanggan">Cari</button>
                                 <div class="invalid-feedback error_idpelanggan"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="platnomor">Plat Nomor <span class="text-danger">*</span></label>
+                        <div class="mb-3">
+                            <label for="platnomor" class="form-label">Plat Nomor <span class="text-danger">*</span></label>
                             <input type="text" id="platnomor" name="platnomor" class="form-control" value="<?= isset($pencucian['platnomor']) ? $pencucian['platnomor'] : '' ?>">
                             <div class="invalid-feedback error_platnomor"></div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="nohp">No HP</label>
+                        <div class="mb-3">
+                            <label for="nohp" class="form-label">No HP</label>
                             <input type="text" id="nohp" name="nohp" class="form-control" value="<?= isset($pencucian['nohp']) ? $pencucian['nohp'] : '' ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="alamat">Alamat</label>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
                             <input type="text" id="alamat" name="alamat" class="form-control" value="<?= isset($pencucian['alamat']) ? $pencucian['alamat'] : '' ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="idpaket">Paket Cucian 1</label>
+                        <div class="mb-3">
+                            <label for="idpaket" class="form-label">Paket Cucian 1</label>
                             <div class="input-group">
                                 <input type="hidden" id="idpaket" name="idpaket" class="form-control" value="<?= $pencucian['idpaket'] ?>" readonly>
                                 <input type="text" id="namapaket" name="namapaket" class="form-control" value="<?= $pencucian['namapaket'] ?>" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info btn-cari-paket" type="button" data-target="1">Cari</button>
-                                </div>
+                                <button class="btn btn-info btn-cari-paket" type="button" data-target="1">Cari</button>
                                 <div class="invalid-feedback error_idpaket"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="harga">Harga Paket 1</label>
+                        <div class="mb-3">
+                            <label for="harga" class="form-label">Harga Paket 1</label>
                             <input type="text" id="harga" name="harga" class="form-control" value="<?= isset($pencucian['harga']) ? 'Rp. ' . number_format($pencucian['harga'], 0, ',', '.') : '' ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="jenis">Jenis Paket 1</label>
+                        <div class="mb-3">
+                            <label for="jenis" class="form-label">Jenis Paket 1</label>
                             <input type="text" id="jenis" name="jenis" class="form-control" value="<?= isset($pencucian['jenis']) ? $pencucian['jenis'] : '' ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="idpaket2">Paket Cucian 2 <small class="text-muted">(Opsional)</small></label>
+                        <div class="mb-3">
+                            <label for="idpaket2" class="form-label">Paket Cucian 2 <small class="text-muted">(Opsional)</small></label>
                             <div class="input-group">
                                 <input type="hidden" id="idpaket2" name="idpaket2" class="form-control" value="<?= $pencucian['idpaket2'] ?? '' ?>" readonly>
                                 <input type="text" id="namapaket2" name="namapaket2" class="form-control" value="<?= $pencucian['namapaket2'] ?? '' ?>" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info btn-cari-paket" type="button" data-target="2">Cari</button>
-                                    <button class="btn btn-danger" type="button" id="btnHapusPaket2" <?= empty($pencucian['idpaket2']) ? 'style="display: none;"' : '' ?>><i class="fas fa-times"></i></button>
-                                </div>
+                                <button class="btn btn-info btn-cari-paket" type="button" data-target="2">Cari</button>
+                                <button class="btn btn-danger" type="button" id="btnHapusPaket2" <?= empty($pencucian['idpaket2']) ? 'style="display: none;"' : '' ?>><i class="fas fa-times"></i></button>
                                 <div class="invalid-feedback error_idpaket2"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="harga2">Harga Paket 2</label>
+                        <div class="mb-3">
+                            <label for="harga2" class="form-label">Harga Paket 2</label></label>
                             <input type="text" id="harga2" name="harga2" class="form-control" value="<?= isset($pencucian['harga2']) && $pencucian['harga2'] ? 'Rp. ' . number_format($pencucian['harga2'], 0, ',', '.') : '' ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="jenis2">Jenis Paket 2</label>
+                        <div class="mb-3">
+                            <label for="jenis2" class="form-label">Jenis Paket 2</label></label>
                             <input type="text" id="jenis2" name="jenis2" class="form-control" value="<?= $pencucian['jenis2'] ?? '' ?>" readonly>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group text-center mt-3">
+                <div class="mb-3 text-center mt-3">
                     <button type="submit" class="btn btn-success btn-lg" id="tombolSimpan">
                         <i class="fas fa-save"></i> Update Reservasi
                     </button>
-                    <a class="btn btn-secondary btn-lg ml-2" href="<?= base_url() ?>pencucian">
+                    <a class="btn btn-secondary btn-lg ms-2" href="<?= base_url() ?>pencucian">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -121,11 +115,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Pilih Pelanggan</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -136,11 +130,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalPaketTitle">Pilih Paket</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -231,7 +225,7 @@
         });
 
         $('#modalcariPelanggan').on('show.bs.modal', function() {
-            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
+            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $(this).find('.modal-body').html(loader);
             $.get('<?= base_url() ?>/pencucian/getpelanggan', function(data) {
                 $('#modalcariPelanggan .modal-body').html(data);
@@ -241,7 +235,7 @@
         $(document).on('click', '.btn-cari-paket', function() {
             paketTarget = $(this).data('target');
             $('#modalPaketTitle').text('Pilih Paket Cucian ' + paketTarget);
-            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
+            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $('#modalcariPaket .modal-body').html(loader);
             $('#modalcariPaket').modal('show');
             $.get('<?= base_url() ?>/pencucian/getpaket', function(data) {

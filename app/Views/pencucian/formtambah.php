@@ -2,97 +2,91 @@
 <?= $this->section('content') ?>
 <div class="row" style="justify-content: center;">
     <div class="col-md-12">
-        <div class="card card-info">
+        <div class="card">
             <div class="card-body">
                 <?= form_open('pencucian/save', ['id' => 'formtambahpencucian']) ?>
                 <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="idpencucian">ID Reservasi</label>
+                        <div class="mb-3">
+                            <label for="idpencucian" class="form-label">ID Reservasi</label>
                             <input type="text" id="idpencucian" name="idpencucian" class="form-control" value="<?= $next_id ?>" readonly>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="idpelanggan">Pelanggan</label>
+                        <div class="mb-3">
+                            <label for="idpelanggan" class="form-label">Pelanggan</label>
                             <div class="input-group">
                                 <input type="hidden" id="idpelanggan" name="idpelanggan" class="form-control" readonly>
                                 <input type="text" id="nama_pelanggan" name="nama_pelanggan" class="form-control" placeholder="Pilih Pelanggan" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info" type="button" data-toggle="modal" data-target="#modalcariPelanggan">Cari</button>
-                                </div>
+                                <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modalcariPelanggan">Cari</button>
                                 <div class="invalid-feedback error_idpelanggan"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="platnomor">Plat Nomor <span class="text-danger">*</span></label>
+                        <div class="mb-3">
+                            <label for="platnomor" class="form-label">Plat Nomor <span class="text-danger">*</span></label>
                             <input type="text" id="platnomor" name="platnomor" class="form-control" placeholder="Contoh: BA 1234 AA">
                             <div class="invalid-feedback error_platnomor"></div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="nohp">No HP</label>
+                        <div class="mb-3">
+                            <label for="nohp" class="form-label">No HP</label>
                             <input type="text" id="nohp" name="nohp" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="alamat">Alamat</label>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
                             <input type="text" id="alamat" name="alamat" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="idpaket">Paket Cucian 1</label>
+                        <div class="mb-3">
+                            <label for="idpaket" class="form-label">Paket Cucian 1</label>
                             <div class="input-group">
                                 <input type="hidden" id="idpaket" name="idpaket" class="form-control" readonly>
                                 <input type="text" id="namapaket" name="namapaket" class="form-control" placeholder="Pilih Paket" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info btn-cari-paket" type="button" data-target="1">Cari</button>
-                                </div>
+                                <button class="btn btn-info btn-cari-paket" type="button" data-target="1">Cari</button>
                                 <div class="invalid-feedback error_idpaket"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="harga">Harga Paket 1</label>
+                        <div class="mb-3">
+                            <label for="harga" class="form-label">Harga Paket 1</label>
                             <input type="text" id="harga" name="harga" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="jenis">Jenis Paket 1</label>
+                        <div class="mb-3">
+                            <label for="jenis" class="form-label">Jenis Paket 1</label>
                             <input type="text" id="jenis" name="jenis" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="idpaket2">Paket Cucian 2 <small class="text-muted">(Opsional, harus sama jenis)</small></label>
+                        <div class="mb-3">
+                            <label for="idpaket2" class="form-label">Paket Cucian 2 <small class="text-muted">(Opsional, harus sama jenis)</small></label>
                             <div class="input-group">
                                 <input type="hidden" id="idpaket2" name="idpaket2" class="form-control" readonly>
                                 <input type="text" id="namapaket2" name="namapaket2" class="form-control" placeholder="Pilih Paket 2 (Opsional)" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info btn-cari-paket" type="button" data-target="2">Cari</button>
-                                    <button class="btn btn-danger" type="button" id="btnHapusPaket2" style="display: none;"><i class="fas fa-times"></i></button>
-                                </div>
+                                <button class="btn btn-info btn-cari-paket" type="button" data-target="2">Cari</button>
+                                <button class="btn btn-danger" type="button" id="btnHapusPaket2" style="display: none;"><i class="fas fa-times"></i></button>
                                 <div class="invalid-feedback error_idpaket2"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="harga2">Harga Paket 2</label>
+                        <div class="mb-3">
+                            <label for="harga2" class="form-label">Harga Paket 2</label></label>
                             <input type="text" id="harga2" name="harga2" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="jenis2">Jenis Paket 2</label>
+                        <div class="mb-3">
+                            <label for="jenis2" class="form-label">Jenis Paket 2</label></label>
                             <input type="text" id="jenis2" name="jenis2" class="form-control" readonly>
                         </div>
                     </div>
@@ -101,14 +95,14 @@
                 <div id="detailPencucianPreview" style="display: none;">
                     <hr>
                     <div class="text-center mb-4">
-                        <h4><i class="fas fa-eye mr-2"></i>Detail Reservasi</h4>
+                        <h4><i class="fas fa-eye me-2"></i>Detail Reservasi</h4>
                         <p class="text-muted">Preview data sebelum disimpan</p>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="card card-primary card-outline">
+                            <div class="card">
                                 <div class="card-header">
-                                    <h6 class="card-title mb-0"><i class="fas fa-user mr-1"></i> Detail Pelanggan</h6>
+                                    <h6 class="card-title mb-0"><i class="fas fa-user me-1"></i> Detail Pelanggan</h6>
                                 </div>
                                 <div class="card-body p-2">
                                     <table class="table table-sm table-borderless mb-0">
@@ -122,18 +116,18 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="card card-primary card-outline">
+                            <div class="card">
                                 <div class="card-header">
-                                    <h6 class="card-title mb-0"><i class="fas fa-box mr-1"></i> Detail Paket</h6>
+                                    <h6 class="card-title mb-0"><i class="fas fa-box me-1"></i> Detail Paket</h6>
                                 </div>
                                 <div class="card-body p-2">
                                     <table class="table table-sm table-borderless mb-0">
                                         <tr><td width="40%"><strong>Paket 1:</strong></td><td id="preview_namapaket">-</td></tr>
                                         <tr><td><strong>Jenis:</strong></td><td id="preview_jenis">-</td></tr>
-                                        <tr><td><strong>Harga 1:</strong></td><td id="preview_harga" class="font-weight-bold text-primary">-</td></tr>
+                                        <tr><td><strong>Harga 1:</strong></td><td id="preview_harga" class="fw-bold text-primary">-</td></tr>
                                         <tr id="preview_row_paket2" style="display: none;"><td><strong>Paket 2:</strong></td><td id="preview_namapaket2">-</td></tr>
-                                        <tr id="preview_row_harga2" style="display: none;"><td><strong>Harga 2:</strong></td><td id="preview_harga2" class="font-weight-bold text-primary">-</td></tr>
-                                        <tr><td><strong>Total:</strong></td><td id="preview_total_harga" class="font-weight-bold text-success">-</td></tr>
+                                        <tr id="preview_row_harga2" style="display: none;"><td><strong>Harga 2:</strong></td><td id="preview_harga2" class="fw-bold text-primary">-</td></tr>
+                                        <tr><td><strong>Total:</strong></td><td id="preview_total_harga" class="fw-bold text-success">-</td></tr>
                                     </table>
                                 </div>
                             </div>
@@ -141,15 +135,15 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-12">
-                            <div class="card card-info card-outline">
+                            <div class="card">
                                 <div class="card-header">
-                                    <h6 class="card-title mb-0"><i class="fas fa-info-circle mr-1"></i> Informasi Reservasi</h6>
+                                    <h6 class="card-title mb-0"><i class="fas fa-info-circle me-1"></i> Informasi Reservasi</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4"><strong>ID Reservasi:</strong><br><span class="badge badge-info" id="preview_idpencucian"><?= $next_id ?></span></div>
+                                        <div class="col-md-4"><strong>ID Reservasi:</strong><br><span class="badge bg-info" id="preview_idpencucian"><?= $next_id ?></span></div>
                                         <div class="col-md-4"><strong>Tanggal:</strong><br><span id="preview_tanggal"><?= date('d F Y') ?></span></div>
-                                        <div class="col-md-4"><strong>Status:</strong><br><span class="badge badge-secondary">Pending</span></div>
+                                        <div class="col-md-4"><strong>Status:</strong><br><span class="badge bg-secondary">Pending</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -157,14 +151,14 @@
                     </div>
                 </div>
 
-                <div class="form-group text-center mt-3">
+                <div class="mb-3 text-center mt-3">
                     <button type="submit" class="btn btn-success btn-lg" id="tombolSimpan">
                         <i class="fas fa-save"></i> Simpan Reservasi
                     </button>
-                    <button type="button" class="btn btn-warning btn-lg ml-2" id="btnResetForm">
+                    <button type="button" class="btn btn-warning btn-lg ms-2" id="btnResetForm">
                         <i class="fas fa-redo"></i> Reset Form
                     </button>
-                    <a class="btn btn-secondary btn-lg ml-2" href="<?= base_url() ?>pencucian">
+                    <a class="btn btn-secondary btn-lg ms-2" href="<?= base_url() ?>pencucian">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -178,11 +172,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Pilih Pelanggan</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -193,11 +187,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalPaketTitle">Pilih Paket</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -340,7 +334,7 @@
         });
 
         $('#modalcariPelanggan').on('show.bs.modal', function() {
-            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
+            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $(this).find('.modal-body').html(loader);
             $.get('<?= base_url() ?>/pencucian/getpelanggan', function(data) {
                 $('#modalcariPelanggan .modal-body').html(data);
@@ -350,7 +344,7 @@
         $(document).on('click', '.btn-cari-paket', function() {
             paketTarget = $(this).data('target');
             $('#modalPaketTitle').text('Pilih Paket Cucian ' + paketTarget);
-            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
+            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $('#modalcariPaket .modal-body').html(loader);
             $('#modalcariPaket').modal('show');
             $.get('<?= base_url() ?>/pencucian/getpaket', function(data) {

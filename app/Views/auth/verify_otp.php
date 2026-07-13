@@ -272,12 +272,12 @@
             <div class="resend-area">
                 <p>Tidak menerima kode?</p>
                 <button id="resendOTP" class="btn-outline" disabled>
-                    <i class="fas fa-redo mr-1"></i> <span id="resend-text">Kirim Ulang</span>
+                    <i class="fas fa-redo me-1"></i> <span id="resend-text">Kirim Ulang</span>
                 </button>
             </div>
 
             <div class="alert-info-box">
-                <h6><i class="fas fa-info-circle mr-1"></i>Tips:</h6>
+                <h6><i class="fas fa-info-circle me-1"></i>Tips:</h6>
                 <ul>
                     <li>Periksa folder spam jika kode tidak diterima</li>
                     <li>Kode hanya berlaku sekali pakai</li>
@@ -285,7 +285,7 @@
             </div>
 
             <div class="auth-links">
-                <a href="<?= site_url('auth') ?>"><i class="fas fa-arrow-left mr-1"></i>Kembali ke Login</a>
+                <a href="<?= site_url('auth') ?>"><i class="fas fa-arrow-left me-1"></i>Kembali ke Login</a>
             </div>
         </div>
     </div>
@@ -357,7 +357,7 @@
             var $text = $('#resend-text');
 
             $button.prop('disabled', true);
-            $text.html('<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...');
+            $text.html('<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...');
 
             $.ajax({
                 url: '<?= site_url('auth/resend-otp') ?>',
@@ -372,26 +372,26 @@
                         $('.otp-input[data-index="0"]').focus();
                         $('#alert-message').hide();
                         Swal.fire({ title: 'Kode Baru Terkirim!', text: response.message, icon: 'success', confirmButtonColor: '#0e0e37', timer: 2000, showConfirmButton: false });
-                        $text.html('<i class="fas fa-redo mr-1"></i>Kirim Ulang');
+                        $text.html('<i class="fas fa-redo me-1"></i>Kirim Ulang');
                     } else {
                         $('#alert-text').text(response.message);
                         $('#alert-message').show();
                         $button.prop('disabled', false);
-                        $text.html('<i class="fas fa-redo mr-1"></i>Kirim Ulang');
+                        $text.html('<i class="fas fa-redo me-1"></i>Kirim Ulang');
                     }
                 },
                 error: function() {
                     $('#alert-text').text('Terjadi kesalahan. Silakan coba lagi.');
                     $('#alert-message').show();
                     $button.prop('disabled', false);
-                    $text.html('<i class="fas fa-redo mr-1"></i>Kirim Ulang');
+                    $text.html('<i class="fas fa-redo me-1"></i>Kirim Ulang');
                 }
             });
         });
 
         $('#formOTP').on('submit', function() {
             $('#verify-btn').prop('disabled', true);
-            $('#verify-text').html('<i class="fas fa-spinner fa-spin mr-2"></i>Memverifikasi...');
+            $('#verify-text').html('<i class="fas fa-spinner fa-spin me-2"></i>Memverifikasi...');
         });
 
         $(document).on('paste', '.otp-input', function(e) {

@@ -423,14 +423,14 @@
     <?php if (isset($tglmulai) && isset($tglakhir)): ?>
     <div class="filter-info">
         <p>
-            <i class="fas fa-calendar-day mr-2"></i>
+            <i class="fas fa-calendar-day me-2"></i>
             <strong>Periode:</strong> Dari tanggal <?= date('d-m-Y', strtotime($tglmulai)) ?> s/d <?= date('d-m-Y', strtotime($tglakhir)) ?>
         </p>
     </div>
     <?php elseif (isset($bulan) && isset($tahun)): ?>
     <div class="filter-info">
         <p>
-            <i class="fas fa-calendar-alt mr-2"></i>
+            <i class="fas fa-calendar-alt me-2"></i>
             <strong>Periode:</strong> 
             <?php 
             $bulanNames = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
@@ -442,7 +442,7 @@
     <?php else: ?>
     <div class="filter-info">
         <p>
-            <i class="fas fa-list mr-2"></i>
+            <i class="fas fa-list me-2"></i>
             <strong>Periode:</strong> Semua Data Transaksi Selesai
         </p>
     </div>
