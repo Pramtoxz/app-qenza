@@ -20,6 +20,7 @@
                                     <th>Tanggal</th>
                                     <th>Pelanggan</th>
                                     <th>Jumlah Kendaraan</th>
+                                    <th>Status</th>
                                     <th>Status Bayar</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
@@ -108,7 +109,7 @@
                     $.ajax({
                         type: "POST",
                         url: "<?= site_url('faktur/assignKaryawan') ?>",
-                        data: { idkendaraan: idkendaraan, idkaryawan: idkaryawan },
+                        data: { id: idkendaraan, idkaryawan: idkaryawan },
                         dataType: 'json',
                         success: function(response) {
                             if (response.sukses) {
@@ -176,7 +177,7 @@
                     $.ajax({
                         type: "POST",
                         url: "<?= site_url('faktur/ubahstatus') ?>",
-                        data: { idkendaraan: idkendaraan },
+                        data: { id: idkendaraan },
                         dataType: 'json',
                         success: function(response) {
                             if (response.sukses) {
@@ -210,7 +211,7 @@
                     $.ajax({
                         type: "POST",
                         url: "<?= site_url('faktur/ubahbatal') ?>",
-                        data: { idkendaraan: idkendaraan },
+                        data: { id: idkendaraan },
                         dataType: 'json',
                         success: function(response) {
                             if (response.sukses) {

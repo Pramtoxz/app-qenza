@@ -133,6 +133,7 @@ class SelesaiController extends BaseController
                     return $button1;
                 }, 'last')
                 ->addNumbering()
+                ->hide('id_detail_kendaraan')
                 ->edit('harga', function ($row) {
                     return 'Rp. ' . number_format($row->harga ?? 0, 0, ',', '.');
                 })

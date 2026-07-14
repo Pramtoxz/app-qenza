@@ -156,9 +156,9 @@
             <div class="ticket-company">QENZA</div>
             <div class="ticket-subtitle">Cucian Salju Sijunjung</div>
 
-            <div class="ticket-title">Antrian</div>
-            <div class="queue-number"><?= str_pad($faktur['nomor_antrian'], 2, '0', STR_PAD_LEFT) ?></div>
-            <div class="queue-label">NOMOR ANTRIAN</div>
+            <div class="ticket-title">Reservasi</div>
+            <div class="queue-number" style="font-size: 18px; margin: 15px 0; word-break: break-all;"><?= $faktur['idreservasi'] ?></div>
+            <div class="queue-label">NOMOR FAKTUR</div>
 
             <div class="info-section">
                 <div class="info-row">
@@ -177,14 +177,22 @@
 
             <div class="kendaraan-section">
                 <div class="kendaraan-title">Kendaraan:</div>
+                <?php $grandTotal = 0; ?>
                 <?php foreach ($kendaraan as $k): ?>
+                    <?php $subTotal = 0; ?>
                     <div class="kendaraan-item">
                         <strong><?= esc($k['platnomor']) ?></strong>
                         <?php foreach ($k['paket_list'] as $p): ?>
-                            <br>&nbsp;&nbsp;- <?= esc($p['namapaket']) ?>
+                            <?php $subTotal += $p['harga']; ?>
+                            <br>&nbsp;&nbsp;- <?= esc($p['namapaket']) ?> .. <?= number_format($p['harga'], 0, ',', '.') ?>
                         <?php endforeach; ?>
+                        <br>&nbsp;&nbsp;<strong>Subtotal: Rp <?= number_format($subTotal, 0, ',', '.') ?></strong>
                     </div>
+                    <?php $grandTotal += $subTotal; ?>
                 <?php endforeach; ?>
+                <div style="border-top: 1px dashed #999; margin-top: 8px; padding-top: 8px; text-align: right; font-weight: bold; font-size: 12px;">
+                    TOTAL: Rp <?= number_format($grandTotal, 0, ',', '.') ?>
+                </div>
             </div>
 
             <div class="qr-section">
@@ -192,16 +200,8 @@
                 <div class="qr-label">Scan untuk cek status kendaraan</div>
             </div>
 
-            <div class="estimation">
-                <?php if ($antrian_sebelum > 0): ?>
-                    Ada <?= $antrian_sebelum ?> antrian sebelum Anda
-                <?php else: ?>
-                    Antrian berikutnya akan diproses
-                <?php endif; ?>
-            </div>
-
             <div class="footer-note">
-                <div><strong>Simpan tiket ini sebagai bukti antrian</strong></div>
+                <div><strong>Simpan tiket ini sebagai bukti</strong></div>
                 <div>Terima kasih telah mempercayakan kendaraan Anda kepada kami!</div>
             </div>
         </div>

@@ -515,8 +515,9 @@ class LaporanTransaksi extends BaseController
     {
         if ($this->request->isAJAX()) {
             $db = db_connect();
+            $status = $this->request->getGet('status');
 
-            $pencucian = $db->table('detail_kendaraan fk')
+            $builder = $db->table('detail_kendaraan fk')
                 ->select('
                     f.idreservasi,
                     f.tgl as tglpencucian,
@@ -535,9 +536,13 @@ class LaporanTransaksi extends BaseController
                 ->join('paket_cucian pc', 'pc.idpaket = fp.idpaket', 'left')
                 ->groupBy('fk.id')
                 ->orderBy('f.tgl', 'DESC')
-                ->orderBy('f.idreservasi', 'DESC')
-                ->get()
-                ->getResultArray();
+                ->orderBy('f.idreservasi', 'DESC');
+
+            if (!empty($status)) {
+                $builder->where('fk.status', $status);
+            }
+
+            $pencucian = $builder->get()->getResultArray();
 
             $data = [
                 'pencucian' => $pencucian

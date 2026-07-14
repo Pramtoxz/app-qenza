@@ -42,7 +42,7 @@
             $tglakhirFmt = date('d', strtotime($tglakhir)) . ' ' . $bulanNames[date('n', strtotime($tglakhir))-1] . ' ' . date('Y', strtotime($tglakhir));
         ?>
 
-        <div style="text-align: center; background: #007bff; color: white; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+        <div style="text-align: center; background: #000000; color: white; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
             <strong>Periode: <?= $tglmulaiFmt ?> - <?= $tglakhirFmt ?></strong> &nbsp;|&nbsp;
             <strong>Jumlah Cucian: <?= count($pencucianList) ?></strong>
         </div>
@@ -105,12 +105,6 @@
             <p style="color: #666;">Tidak ada data pencucian selesai pada periode ini</p>
         </div>
         <?php endif; ?>
-
-        <div class="total-box">
-            <h3>TOTAL UPAH</h3>
-            <div class="amount">Rp <?= number_format($totalUpah, 0, ',', '.') ?></div>
-        </div>
-
         <div class="footer">
             <div class="footer-box">
                 <p style="margin: 0; font-size: 11px;">Dibuat oleh,</p>

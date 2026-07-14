@@ -3,9 +3,9 @@
 -- Jalankan seluruh file ini di phpMyAdmin
 -- ============================================================
 
-DROP DATABASE IF EXISTS `qenza`;
-CREATE DATABASE `qenza` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `qenza`;
+DROP DATABASE IF EXISTS `db_qenza`;
+CREATE DATABASE `db_qenza` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `db_qenza`;
 
 -- ============================================================
 -- TABLE: users
@@ -104,7 +104,6 @@ CREATE TABLE `reservasi` (
   `tgl` date DEFAULT NULL,
   `jamdatang` time DEFAULT NULL,
   `status_bayar` enum('belum','lunas') DEFAULT 'belum',
-  `nomor_antrian` varchar(10) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`idreservasi`),
@@ -112,12 +111,12 @@ CREATE TABLE `reservasi` (
   CONSTRAINT `fk_reservasi_pelanggan` FOREIGN KEY (`idpelanggan`) REFERENCES `pelanggan` (`idpelanggan`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `reservasi` (`idreservasi`, `idpelanggan`, `tgl`, `jamdatang`, `status_bayar`, `nomor_antrian`) VALUES
-('FKP-20260713-0001', 'PL0001', '2026-07-13', '08:00:00', 'lunas', '1'),
-('FKP-20260713-0002', 'PL0002', '2026-07-13', '09:15:00', 'lunas', '2'),
-('FKP-20260713-0003', 'PL0003', '2026-07-13', '10:30:00', 'lunas', '3'),
-('FKP-20260713-0004', 'PL0004', '2026-07-13', '11:00:00', 'belum', '4'),
-('FKP-20260713-0005', 'PL0005', '2026-07-13', '11:30:00', 'belum', '5');
+INSERT INTO `reservasi` (`idreservasi`, `idpelanggan`, `tgl`, `jamdatang`, `status_bayar`) VALUES
+('FKP-20260713-0001', 'PL0001', '2026-07-13', '08:00:00', 'lunas'),
+('FKP-20260713-0002', 'PL0002', '2026-07-13', '09:15:00', 'lunas'),
+('FKP-20260713-0003', 'PL0003', '2026-07-13', '10:30:00', 'lunas'),
+('FKP-20260713-0004', 'PL0004', '2026-07-13', '11:00:00', 'belum'),
+('FKP-20260713-0005', 'PL0005', '2026-07-13', '11:30:00', 'belum');
 
 -- ============================================================
 -- TABLE: detail_kendaraan (per kendaraan dalam 1 reservasi)

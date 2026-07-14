@@ -13166,6 +13166,18 @@ td.fc-header-center {
   display: none;
 }
 
+.sidebar-logo-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-600);
+  margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+[data-theme=dark] .sidebar-logo-text {
+  color: #fff;
+}
+
 .sidebar-menu-area {
   height: calc(100vh - 72px);
   padding: 0.75rem 1rem;

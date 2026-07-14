@@ -1,5 +1,3 @@
-   <!-- JQuery Modal css -->
-   <link rel="stylesheet" href="<?= base_url() ?>assets/css/lib/jquery.modal.min.css">
    <!-- remix icon font css  -->
    <link rel="stylesheet" href="<?= base_url() ?>assets/css/remixicon.css">
    <!-- BootStrap css -->

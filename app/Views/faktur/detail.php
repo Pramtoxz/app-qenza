@@ -1,163 +1,162 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<div class="invoice p-4">
-    <!-- Header Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body text-center">
-            <div class="mb-3">
-                <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Logo Qenza" style="height: 80px;">
-            </div>
-            <h3 class="text-primary fw-bold mb-1">Faktur Pencucian Qenza</h3>
-            <h5 class="text-muted">Cucian Salju Sijunjung</h5>
-            <hr>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="p-4 rounded-3 text-white" style="background-color: #487FFF;">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <i class="ri-file-text-line fa-2x"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold mb-1">Faktur #<?= $faktur['idreservasi'] ?></h6>
-                                <div class="row mt-2">
-                                    <div class="col-6"><small>Tanggal:</small><br><strong><?= date('d F Y', strtotime($faktur['tgl'])) ?></strong></div>
-                                    <div class="col-6"><small>Nomor Antrian:</small><br><strong><?= str_pad($faktur['nomor_antrian'], 2, '0', STR_PAD_LEFT) ?></strong></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+    <div>
+        <a href="<?= site_url('faktur') ?>" class="text-muted"><i class="ri-arrow-left-line me-1"></i> Kembali</a>
+        <h4 class="mt-1 mb-0">Detail Reservasi</h4>
     </div>
-
-    <!-- Info Pelanggan -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5 class="card-title"><i class="ri-user-line me-2"></i>Detail Pelanggan</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="text-primary"><?= $faktur['nama_pelanggan'] ?></h5>
-                    <p class="mb-1"><i class="ri-map-pin-line me-2 text-muted"></i><?= $faktur['alamat'] ?></p>
-                    <p class="mb-0"><i class="ri-phone-line me-2 text-muted"></i><?= $faktur['nohp'] ?></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5 class="card-title"><i class="ri-qr-code-line me-2"></i>QR Code Tracking</h5>
-                </div>
-                <div class="card-body text-center">
-                    <p class="text-muted mb-3">Scan untuk melacak status:</p>
-                    <div class="border rounded p-3 d-inline-block bg-light">
-                        <img src="<?= $qrCodeImage ?>" alt="QR Code" style="width: 120px; height: 120px;">
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="no-print">
+        <button onclick="window.print()" class="btn btn-outline-primary btn-sm"><i class="ri-printer-line me-1"></i> Print</button>
     </div>
+</div>
 
-    <!-- Daftar Kendaraan -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header">
-            <h5 class="card-title"><i class="ri-car-line me-2"></i>Daftar Kendaraan</h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0">
-                    <thead style="background-color: #487FFF;">
-                        <tr>
-                            <th class="text-white">No</th>
-                            <th class="text-white">Plat Nomor</th>
-                            <th class="text-white">Paket</th>
-                            <th class="text-white">Karyawan</th>
-                            <th class="text-white">Status</th>
-                            <th class="text-white text-end">Harga</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $grandTotal = 0; ?>
-                        <?php foreach ($kendaraan as $i => $k): ?>
-                            <?php
-                            $kendaraanTotal = 0;
-                            foreach ($k['paket_list'] as $p) {
-                                $kendaraanTotal += $p['harga'];
-                            }
-                            $grandTotal += $kendaraanTotal;
-                            ?>
-                            <tr>
-                                <td><?= $i + 1 ?></td>
-                                <td><?= $k['platnomor'] ?></td>
-                                <td>
-                                    <?php foreach ($k['paket_list'] as $p): ?>
-                                        <span class="badge bg-info me-1"><?= $p['namapaket'] ?></span>
-                                    <?php endforeach; ?>
-                                </td>
-                                <td><?= $k['nama_karyawan'] ?? '<span class="text-muted"><i>Belum ditugaskan</i></span>' ?></td>
-                                <td>
-                                    <?php if ($k['status'] == 'pending'): ?>
-                                        <span class="badge bg-secondary"><i class="ri-time-line me-1"></i>Pending</span>
-                                    <?php elseif ($k['status'] == 'diproses'): ?>
-                                        <span class="badge bg-warning"><i class="ri-loader-4-line me-1"></i>Diproses</span>
-                                    <?php elseif ($k['status'] == 'dijemput'): ?>
-                                        <span class="badge bg-info"><i class="ri-check-line me-1"></i>Dijemput</span>
-                                    <?php elseif ($k['status'] == 'selesai'): ?>
-                                        <span class="badge bg-success"><i class="ri-check-double-line me-1"></i>Selesai</span>
-                                    <?php elseif ($k['status'] == 'batal'): ?>
-                                        <span class="badge bg-danger"><i class="ri-close-line me-1"></i>Batal</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="fw-bold text-success text-end">Rp <?= number_format($kendaraanTotal, 0, ',', '.') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+<div class="card shadow-sm mb-3">
+    <div class="card-body py-3">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <small class="text-muted d-block">ID Faktur</small>
+            <strong><?= $faktur['idreservasi'] ?></strong>
+          </div>
+          <div class="col-md-4">
+            <small class="text-muted d-block">Tanggal</small>
+            <strong><?= date('d M Y', strtotime($faktur['tgl'])) ?></strong>
+            <small class="text-muted d-block"><?= $faktur['jamdatang'] ?></small>
+          </div>
+          <div class="col-md-4">
+            <small class="text-muted d-block">Status Bayar</small>
+                <?php if ($faktur['status_bayar'] == 'lunas'): ?>
+                    <span class="badge bg-success fs-6">Lunas</span>
+                <?php else: ?>
+                    <span class="badge bg-warning text-dark fs-6">Belum Bayar</span>
+                <?php endif; ?>
             </div>
         </div>
-        <div class="card-footer bg-light">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="fw-bold mb-0">Grand Total:</h5>
-                <h4 class="text-primary fw-bold mb-0">Rp <?= number_format($grandTotal, 0, ',', '.') ?></h4>
-            </div>
-        </div>
-    </div>
-
-    <!-- Signature -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header text-center">
-                    <h5 class="card-title"><i class="ri-edit-line me-2"></i>Tanda Tangan</h5>
-                </div>
-                <div class="card-body text-center">
-                    <p class="text-muted mb-3">Sijunjung, <?= date('d F Y') ?></p>
-                    <div class="my-4">
-                        <img src="<?= site_url('assets/img/acc.png') ?>" alt="Tanda Tangan" style="width: 120px;">
-                    </div>
-                    <h5 class="text-primary fw-bold">Qenza</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="card shadow-sm no-print">
-        <div class="card-body d-flex justify-content-between">
-            <a href="<?= site_url('faktur') ?>" class="btn btn-secondary btn-lg">
-                <i class="ri-arrow-left-line me-2"></i>Kembali
-            </a>
-            <a href="#" onclick="window.print();" class="btn btn-primary btn-lg">
-                <i class="ri-printer-line me-2"></i>Print
-            </a>
+        <hr class="my-2">
+        <div class="row g-3">
+          <div class="col-md-5">
+            <small class="text-muted d-block">Pelanggan</small>
+            <strong><?= $faktur['nama_pelanggan'] ?></strong>
+            <small class="text-muted d-block"><?= $faktur['alamat'] ?> · <?= $faktur['nohp'] ?></small>
+          </div>
+          <div class="col-md-4">
+            <small class="text-muted d-block">Total</small>
+            <strong class="text-primary fs-5">Rp <?= number_format($totalKeseluruhan, 0, ',', '.') ?></strong>
+          </div>
         </div>
     </div>
 </div>
 
-<!-- Print-only Invoice Layout (Thermal 80mm) -->
+<h5 class="mb-3"><i class="ri-car-line me-2"></i>Kendaraan (<?= count($kendaraan) ?>)</h5>
+
+<?php $grandTotal = 0; ?>
+<?php foreach ($kendaraan as $i => $k): ?>
+    <?php
+    $kendaraanTotal = 0;
+    foreach ($k['paket_list'] as $p) {
+        $kendaraanTotal += $p['harga'];
+    }
+    $grandTotal += $kendaraanTotal;
+
+    $statusClass = match($k['status']) {
+        'pending' => 'secondary',
+        'diproses' => 'warning',
+        'dijemput' => 'info',
+        'selesai' => 'success',
+        'batal' => 'danger',
+        default => 'secondary'
+    };
+    $statusLabel = match($k['status']) {
+        'pending' => 'Pending',
+        'diproses' => 'Diproses',
+        'dijemput' => 'Dijemput',
+        'selesai' => 'Selesai',
+        'batal' => 'Batal',
+        default => $k['status']
+    };
+    ?>
+    <div class="card shadow-sm mb-3">
+        <div class="card-header py-2 d-flex justify-content-between align-items-center">
+            <div>
+                <strong class="me-2"><?= $k['platnomor'] ?></strong>
+                <span class="badge bg-<?= $statusClass ?>"><?= $statusLabel ?></span>
+                <?php if ($k['nama_karyawan']): ?>
+                    <span class="ms-2"><i class="ri-user-3-line me-1"></i><?= $k['nama_karyawan'] ?></span>
+                <?php else: ?>
+                    <span class="ms-2 text-muted"><i class="ri-user-3-line me-1"></i>Belum ditugaskan</span>
+                <?php endif; ?>
+            </div>
+            <div class="no-print">
+                <?php if ($k['status'] == 'pending'): ?>
+                    <button type="button" class="btn btn-success btn-sm btn-assign-detail" data-idkendaraan="<?= $k['id'] ?>">
+                        <i class="ri-user-add-line me-1"></i>Assign Karyawan
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm btn-batal-detail" data-idkendaraan="<?= $k['id'] ?>">
+                        <i class="ri-close-circle-line me-1"></i>Batal
+                    </button>
+                <?php elseif ($k['status'] == 'diproses'): ?>
+                    <button type="button" class="btn btn-info btn-sm btn-status-detail" data-idkendaraan="<?= $k['id'] ?>">
+                        <i class="ri-check-double-line me-1"></i>Tandai Dijemput
+                    </button>
+                <?php elseif ($k['status'] == 'dijemput'): ?>
+                    <span class="text-muted small"><i>Menunggu checkout</i></span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="card-body py-2">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr class="text-muted small">
+                        <th>Paket</th>
+                        <th>Jenis</th>
+                        <th class="text-end">Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($k['paket_list'] as $p): ?>
+                        <tr>
+                            <td><?= $p['namapaket'] ?></td>
+                            <td><span class="badge bg-light text-dark"><?= $p['jenis'] ?></span></td>
+                            <td class="text-end">Rp <?= number_format($p['harga'], 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr class="fw-bold">
+                        <td colspan="2">Subtotal</td>
+                        <td class="text-end text-primary">Rp <?= number_format($kendaraanTotal, 0, ',', '.') ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php endforeach; ?>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Grand Total</h5>
+        <h4 class="mb-0 fw-bold text-primary">Rp <?= number_format($grandTotal, 0, ',', '.') ?></h4>
+    </div>
+</div>
+
+<!-- Modal Assign Karyawan -->
+<div class="modal fade" id="modalAssignKaryawan" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white py-2">
+                <h6 class="modal-title"><i class="ri-user-add-line me-2"></i>Pilih Karyawan</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="assign_idkendaraan">
+                <div id="assign-karyawan-content"></div>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print-only Invoice (Thermal 80mm) -->
 <div id="print-invoice" style="display: none;">
     <div style="font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.4; max-width: 80mm; margin: 0 auto; padding: 5mm;">
         <div style="text-align: center; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 8px;">
@@ -207,5 +206,120 @@
 </style>
 
 <?= $this->endSection() ?>
+
 <?= $this->section('script') ?>
+<script>
+    $(document).on('click', '.btn-assign-detail', function() {
+        var idkendaraan = $(this).data('idkendaraan');
+        $('#assign_idkendaraan').val(idkendaraan);
+        $('#assign-karyawan-content').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
+        $('#modalAssignKaryawan').modal('show');
+        $.get('<?= site_url('faktur/getkaryawan') ?>', function(data) {
+            $('#assign-karyawan-content').html(data);
+        });
+    });
+
+    $(document).on('click', '.btn-pilihkaryawan', function() {
+        var idkaryawan = $(this).data('idkaryawan');
+        var namakaryawan = $(this).data('namakaryawan');
+        var idkendaraan = $('#assign_idkendaraan').val();
+
+        Swal.fire({
+            title: 'Assign ' + namakaryawan + '?',
+            text: 'Karyawan ini akan mulai mengerjakan kendaraan',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Assign!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= site_url('faktur/assignKaryawan') ?>",
+                    data: { id: idkendaraan, idkaryawan: idkaryawan },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.sukses) {
+                            $('#modalAssignKaryawan').modal('hide');
+                            Swal.fire('Berhasil!', response.sukses, 'success').then(() => location.reload());
+                        } else if (response.error) {
+                            Swal.fire('Gagal!', typeof response.error === 'object' ? Object.values(response.error).join(', ') : response.error, 'warning');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-status-detail', function() {
+        var idkendaraan = $(this).data('idkendaraan');
+        Swal.fire({
+            title: 'Tandai Dijemput?',
+            text: 'Kendaraan sudah selesai dicuci dan siap dijemput',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#17a2b8',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Dijemput!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= site_url('faktur/ubahstatus') ?>",
+                    data: { id: idkendaraan },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.sukses) {
+                            Swal.fire('Berhasil!', response.sukses, 'success').then(() => location.reload());
+                        } else if (response.error) {
+                            Swal.fire('Gagal!', response.error, 'warning');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-batal-detail', function() {
+        var idkendaraan = $(this).data('idkendaraan');
+        Swal.fire({
+            title: 'Batalkan kendaraan ini?',
+            text: 'Status akan diubah menjadi Batal',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Batalkan!',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= site_url('faktur/ubahbatal') ?>",
+                    data: { id: idkendaraan },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.sukses) {
+                            Swal.fire('Berhasil!', response.sukses, 'success').then(() => location.reload());
+                        } else if (response.error) {
+                            Swal.fire('Gagal!', response.error, 'warning');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                    }
+                });
+            }
+        });
+    });
+</script>
 <?= $this->endSection() ?>

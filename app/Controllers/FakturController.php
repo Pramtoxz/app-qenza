@@ -37,20 +37,6 @@ class FakturController extends BaseController
         return $prefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
     }
 
-    private function generateNomorAntrian()
-    {
-        $db = db_connect();
-        $today = date('Y-m-d');
-
-        $maxAntrian = $db->table('reservasi')
-            ->select('MAX(nomor_antrian) as max_antrian')
-            ->where('tgl', $today)
-            ->get()
-            ->getRowArray();
-
-        return ($maxAntrian['max_antrian'] ?? 0) + 1;
-    }
-
     public function index()
     {
         $data = [
@@ -67,13 +53,13 @@ class FakturController extends BaseController
                 ->select('reservasi.idreservasi, reservasi.tgl, 
                          pelanggan.nama as nama_pelanggan,
                          (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as jumlah_kendaraan,
-                         reservasi.status_bayar,
-                         reservasi.nomor_antrian,
                          (SELECT MIN(status) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as min_status,
-                         (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status != "pending") as non_pending_count')
+                         reservasi.status_bayar,
+                         (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status != "pending") as non_pending_count,
+                         (SELECT CASE MIN(status) WHEN "pending" THEN 1 WHEN "diproses" THEN 2 WHEN "dijemput" THEN 3 WHEN "selesai" THEN 4 WHEN "batal" THEN 5 END FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as status_priority')
                 ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
-                ->orderBy('reservasi.tgl', 'DESC')
-                ->orderBy('reservasi.nomor_antrian', 'ASC');
+                ->orderBy('status_priority', 'ASC')
+                ->orderBy('reservasi.idreservasi', 'DESC');
 
             return DataTable::of($query)
                 ->add('action', function ($row) {
@@ -90,8 +76,17 @@ class FakturController extends BaseController
                     return $buttonsGroup;
                 }, 'last')
                 ->addNumbering()
-                ->hide('nomor_antrian')
-                ->hide('min_status')
+                ->hide('status_priority')
+                ->edit('min_status', function ($row) {
+                    $map = [
+                        'pending' => '<span class="badge bg-secondary">Pending</span>',
+                        'diproses' => '<span class="badge bg-warning">Diproses</span>',
+                        'dijemput' => '<span class="badge bg-info">Menunggu Di Jemput</span>',
+                        'selesai' => '<span class="badge bg-success">Selesai</span>',
+                        'batal' => '<span class="badge bg-danger">Batal</span>',
+                    ];
+                    return $map[$row->min_status] ?? '-';
+                })
                 ->hide('non_pending_count')
                 ->edit('nama_pelanggan', function ($row) {
                     return $row->nama_pelanggan ?: '-';
@@ -109,11 +104,9 @@ class FakturController extends BaseController
     public function formtambah()
     {
         $next_id = $this->generateIdFaktur();
-        $next_antrian = $this->generateNomorAntrian();
 
         return view('faktur/formtambah', [
-            'next_id' => $next_id,
-            'next_antrian' => $next_antrian
+            'next_id' => $next_id
         ]);
     }
 
@@ -263,7 +256,6 @@ class FakturController extends BaseController
             $db = db_connect();
             $tgl = date('Y-m-d');
             $jamdatang = date('H:i:s');
-            $nomorAntrian = $this->generateNomorAntrian();
 
             $db->transStart();
 
@@ -273,7 +265,6 @@ class FakturController extends BaseController
                 'tgl' => $tgl,
                 'jamdatang' => $jamdatang,
                 'status_bayar' => 'belum',
-                'nomor_antrian' => $nomorAntrian,
             ]);
 
             foreach ($kendaraan as $k) {
@@ -302,9 +293,8 @@ class FakturController extends BaseController
             }
 
             return $this->response->setJSON([
-                'sukses' => 'Faktur berhasil ditambahkan. Nomor Antrian: ' . $nomorAntrian,
+                'sukses' => 'Faktur berhasil ditambahkan.',
                 'idreservasi' => $idreservasi,
-                'nomor_antrian' => $nomorAntrian
             ]);
         }
     }
@@ -522,14 +512,6 @@ class FakturController extends BaseController
             $k['total_harga'] = array_sum(array_column($paketList, 'harga'));
         }
 
-        $antrianSebelum = $db->table('reservasi')
-            ->where('nomor_antrian <', $faktur['nomor_antrian'])
-            ->where('tgl', $faktur['tgl'])
-            ->countAllResults();
-
-        $estimasiMenit = ($antrianSebelum + 1) * 30;
-        $estimasiWaktu = date('H:i', strtotime($faktur['jamdatang'] . " + {$estimasiMenit} minutes"));
-
         $trackingUrl = site_url("faktur/tracking/$idreservasi");
         $qrCode = QrCode::create($trackingUrl)->setSize(200)->setMargin(5);
         $writer = new PngWriter();
@@ -538,8 +520,6 @@ class FakturController extends BaseController
         return view('faktur/cetak_antrian', [
             'faktur' => $faktur,
             'kendaraan' => $kendaraan,
-            'estimasi_waktu' => $estimasiWaktu,
-            'antrian_sebelum' => $antrianSebelum,
             'qrCodeImage' => $qrCodeImage
         ]);
     }

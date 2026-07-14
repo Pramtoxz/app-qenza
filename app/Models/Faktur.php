@@ -9,7 +9,7 @@ class Faktur extends Model
     protected $table            = 'reservasi';
     protected $primaryKey       = 'idreservasi';
     protected $protectFields    = true;
-    protected $allowedFields    = ['idreservasi', 'idpelanggan', 'tgl', 'jamdatang', 'status_bayar', 'nomor_antrian'];
+    protected $allowedFields    = ['idreservasi', 'idpelanggan', 'tgl', 'jamdatang', 'status_bayar'];
 
     // Dates
     protected $useTimestamps = true;

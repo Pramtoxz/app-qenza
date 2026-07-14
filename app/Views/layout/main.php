@@ -16,7 +16,7 @@
         </button>
         <div>
             <a href="<?= base_url('/') ?>" class="sidebar-logo">
-                <img src="<?= base_url() ?>assets/images/logo.png" alt="site logo" class="light-logo">
+                <img src="<?= base_url() ?>assets/images/sidebar.png" alt="site logo" class="light-logo">
                 <img src="<?= base_url() ?>assets/images/logo-light.png" alt="site logo" class="dark-logo">
                 <img src="<?= base_url() ?>assets/images/logo-icon.png" alt="site logo" class="logo-icon">
             </a>
@@ -51,7 +51,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 setTimeout(function() {
-                    window.location.href = '<?= site_url('/logout') ?>';
+                    window.location.href = '<?= site_url('auth/logout') ?>';
                 }, 1000);
             }
         });
