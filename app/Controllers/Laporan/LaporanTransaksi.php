@@ -3,11 +3,118 @@
 namespace App\Controllers\Laporan;
 
 use App\Controllers\BaseController;
-use App\Models\AsetModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class LaporanTransaksi extends BaseController
 {
+    public function SlipGaji()
+    {
+        $db = db_connect();
+        $karyawan = $db->table('karyawan')
+            ->select('idkaryawan, nama')
+            ->orderBy('nama', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        return view('laporan/transaksi/slipgaji', [
+            'title' => 'Laporan Slip Gaji',
+            'karyawan' => $karyawan
+        ]);
+    }
+
+    public function getKaryawanSlipGaji()
+    {
+        if ($this->request->isAJAX()) {
+            $idkaryawan = $this->request->getPost('idkaryawan');
+            $tglmulai = $this->request->getPost('tglmulai');
+            $tglakhir = $this->request->getPost('tglakhir');
+
+            $db = db_connect();
+
+            $karyawan = $db->table('karyawan')
+                ->where('idkaryawan', $idkaryawan)
+                ->get()
+                ->getRowArray();
+
+            if (!$karyawan) {
+                return $this->response->setJSON(['error' => 'Karyawan tidak ditemukan']);
+            }
+
+            $pencucianList = $db->table('detail_kendaraan')
+                ->select('detail_kendaraan.id, detail_kendaraan.platnomor, reservasi.tgl,
+                         paket_cucian.namapaket, paket_cucian.upah')
+                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
+                ->join('detail_paket', 'detail_paket.id_detail_kendaraan = detail_kendaraan.id')
+                ->join('paket_cucian', 'paket_cucian.idpaket = detail_paket.idpaket')
+                ->where('detail_kendaraan.idkaryawan', $idkaryawan)
+                ->where('detail_kendaraan.status', 'selesai')
+                ->where('reservasi.tgl >=', $tglmulai)
+                ->where('reservasi.tgl <=', $tglakhir)
+                ->orderBy('reservasi.tgl', 'ASC')
+                ->get()
+                ->getResultArray();
+
+            $totalUpah = 0;
+            foreach ($pencucianList as $p) {
+                $totalUpah += ($p['upah'] ?? 0);
+            }
+
+            return $this->response->setJSON([
+                'sukses' => true,
+                'karyawan' => $karyawan,
+                'pencucianList' => $pencucianList,
+                'jumlah_cucian' => count($pencucianList),
+                'total_upah' => $totalUpah,
+                'tglmulai' => $tglmulai,
+                'tglakhir' => $tglakhir
+            ]);
+        }
+    }
+
+    public function cetakSlipGaji()
+    {
+        $idkaryawan = $this->request->getPost('idkaryawan');
+        $tglmulai = $this->request->getPost('tglmulai');
+        $tglakhir = $this->request->getPost('tglakhir');
+
+        $db = db_connect();
+
+        $karyawan = $db->table('karyawan')
+            ->where('idkaryawan', $idkaryawan)
+            ->get()
+            ->getRowArray();
+
+        if (!$karyawan) {
+            return redirect()->back()->with('error', 'Karyawan tidak ditemukan');
+        }
+
+        $pencucianList = $db->table('detail_kendaraan')
+            ->select('detail_kendaraan.id, detail_kendaraan.platnomor, reservasi.tgl,
+                     paket_cucian.namapaket, paket_cucian.upah')
+            ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
+            ->join('detail_paket', 'detail_paket.id_detail_kendaraan = detail_kendaraan.id')
+            ->join('paket_cucian', 'paket_cucian.idpaket = detail_paket.idpaket')
+            ->where('detail_kendaraan.idkaryawan', $idkaryawan)
+            ->where('detail_kendaraan.status', 'selesai')
+            ->where('reservasi.tgl >=', $tglmulai)
+            ->where('reservasi.tgl <=', $tglakhir)
+            ->orderBy('reservasi.tgl', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        $totalUpah = 0;
+        foreach ($pencucianList as $p) {
+            $totalUpah += ($p['upah'] ?? 0);
+        }
+
+        return view('laporan/transaksi/cetakslipgaji', [
+            'karyawan' => $karyawan,
+            'pencucianList' => $pencucianList,
+            'totalUpah' => $totalUpah,
+            'tglmulai' => $tglmulai,
+            'tglakhir' => $tglakhir
+        ]);
+    }
 
     public function LaporanReservasi()
     {
@@ -408,24 +515,27 @@ class LaporanTransaksi extends BaseController
     {
         if ($this->request->isAJAX()) {
             $db = db_connect();
-            
-            // Query untuk mengambil semua data pencucian dengan join ke tabel terkait (tanpa informasi harga)
-            $pencucian = $db->table('pencucian')
+
+            $pencucian = $db->table('detail_kendaraan fk')
                 ->select('
-                    pencucian.idpencucian,
-                    pencucian.tgl as tglpencucian,
-                    pencucian.jamdatang,
-                    pencucian.status,
-                    pelanggan.nama as nama_pelanggan,
-                    pencucian.platnomor,
-                    karyawan.nama as nama_karyawan,
-                    paket_cucian.namapaket,
-                    paket_cucian.jenis
+                    f.idreservasi,
+                    f.tgl as tglpencucian,
+                    f.jamdatang,
+                    fk.status,
+                    p.nama as nama_pelanggan,
+                    fk.platnomor,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket,
+                    GROUP_CONCAT(pc.jenis SEPARATOR ", ") as jenis
                 ')
-                ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
-                ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
-                ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket', 'left')
-                ->orderBy('pencucian.idpencucian', 'DESC')
+                ->join('reservasi f', 'f.idreservasi = fk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = f.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = fk.idkaryawan', 'left')
+                ->join('detail_paket fp', 'fp.id_detail_kendaraan = fk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = fp.idpaket', 'left')
+                ->groupBy('fk.id')
+                ->orderBy('f.tgl', 'DESC')
+                ->orderBy('f.idreservasi', 'DESC')
                 ->get()
                 ->getResultArray();
 
@@ -448,25 +558,29 @@ class LaporanTransaksi extends BaseController
             $tglakhir = $this->request->getPost('tglakhir');
 
             $db = db_connect();
-            
-            $pencucian = $db->table('pencucian')
+
+            $pencucian = $db->table('detail_kendaraan fk')
                 ->select('
-                    pencucian.idpencucian,
-                    pencucian.tgl as tglpencucian,
-                    pencucian.jamdatang,
-                    pencucian.status,
-                    pelanggan.nama as nama_pelanggan,
-                    pencucian.platnomor,
-                    karyawan.nama as nama_karyawan,
-                    paket_cucian.namapaket,
-                    paket_cucian.jenis
+                    f.idreservasi,
+                    f.tgl as tglpencucian,
+                    f.jamdatang,
+                    fk.status,
+                    p.nama as nama_pelanggan,
+                    fk.platnomor,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket,
+                    GROUP_CONCAT(pc.jenis SEPARATOR ", ") as jenis
                 ')
-                ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
-                ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
-                ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket', 'left')
-                ->where('pencucian.tgl >=', $tglmulai)
-                ->where('pencucian.tgl <=', $tglakhir)
-                ->orderBy('pencucian.idpencucian', 'DESC')
+                ->join('reservasi f', 'f.idreservasi = fk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = f.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = fk.idkaryawan', 'left')
+                ->join('detail_paket fp', 'fp.id_detail_kendaraan = fk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = fp.idpaket', 'left')
+                ->where('f.tgl >=', $tglmulai)
+                ->where('f.tgl <=', $tglakhir)
+                ->groupBy('fk.id')
+                ->orderBy('f.tgl', 'DESC')
+                ->orderBy('f.idreservasi', 'DESC')
                 ->get()
                 ->getResultArray();
 
@@ -491,25 +605,29 @@ class LaporanTransaksi extends BaseController
             $tahun = $this->request->getPost('tahun');
 
             $db = db_connect();
-            
-            $pencucian = $db->table('pencucian')
+
+            $pencucian = $db->table('detail_kendaraan fk')
                 ->select('
-                    pencucian.idpencucian,
-                    pencucian.tgl as tglpencucian,
-                    pencucian.jamdatang,
-                    pencucian.status,
-                    pelanggan.nama as nama_pelanggan,
-                    pencucian.platnomor,
-                    karyawan.nama as nama_karyawan,
-                    paket_cucian.namapaket,
-                    paket_cucian.jenis
+                    f.idreservasi,
+                    f.tgl as tglpencucian,
+                    f.jamdatang,
+                    fk.status,
+                    p.nama as nama_pelanggan,
+                    fk.platnomor,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket,
+                    GROUP_CONCAT(pc.jenis SEPARATOR ", ") as jenis
                 ')
-                ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
-                ->join('karyawan', 'karyawan.idkaryawan = pencucian.idkaryawan', 'left')
-                ->join('paket_cucian', 'paket_cucian.idpaket = pencucian.idpaket', 'left')
-                ->where('MONTH(pencucian.tgl)', $bulan)
-                ->where('YEAR(pencucian.tgl)', $tahun)
-                ->orderBy('pencucian.idpencucian', 'DESC')
+                ->join('reservasi f', 'f.idreservasi = fk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = f.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = fk.idkaryawan', 'left')
+                ->join('detail_paket fp', 'fp.id_detail_kendaraan = fk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = fp.idpaket', 'left')
+                ->where('MONTH(f.tgl)', $bulan)
+                ->where('YEAR(f.tgl)', $tahun)
+                ->groupBy('fk.id')
+                ->orderBy('f.tgl', 'DESC')
+                ->orderBy('f.idreservasi', 'DESC')
                 ->get()
                 ->getResultArray();
 
@@ -537,18 +655,18 @@ class LaporanTransaksi extends BaseController
     {
         if ($this->request->isAJAX()) {
             $db = db_connect();
-            
-            // Query untuk mengambil data kendaraan selesai (field yang diperlukan saja)
+
             $selesai = $db->table('kendaraan_selesai')
                 ->select('
                     kendaraan_selesai.idselesai,
                     kendaraan_selesai.totalbayar,
-                    pencucian.idpencucian,
-                    pelanggan.nama as nama_pelanggan,
-                    pencucian.platnomor
+                    reservasi.idreservasi,
+                    detail_kendaraan.platnomor,
+                    pelanggan.nama as nama_pelanggan
                 ')
-                ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian', 'left')
-                ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
+                ->join('detail_kendaraan', 'detail_kendaraan.id = kendaraan_selesai.id_detail_kendaraan')
+                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
+                ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
                 ->orderBy('kendaraan_selesai.idselesai', 'DESC')
                 ->get()
                 ->getResultArray();
@@ -572,21 +690,21 @@ class LaporanTransaksi extends BaseController
             $tglakhir = $this->request->getPost('tglakhir');
 
             $db = db_connect();
-            
-            // Query untuk mengambil data kendaraan selesai berdasarkan rentang tanggal
+
             $selesai = $db->table('kendaraan_selesai')
                 ->select('
                     kendaraan_selesai.idselesai,
                     kendaraan_selesai.totalbayar,
-                    pencucian.idpencucian,
-                    pencucian.tgl as tglpencucian,
-                    pelanggan.nama as nama_pelanggan,
-                    pencucian.platnomor
+                    reservasi.idreservasi,
+                    reservasi.tgl as tglpencucian,
+                    detail_kendaraan.platnomor,
+                    pelanggan.nama as nama_pelanggan
                 ')
-                ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian', 'left')
-                ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
-                ->where('pencucian.tgl >=', $tglmulai)
-                ->where('pencucian.tgl <=', $tglakhir)
+                ->join('detail_kendaraan', 'detail_kendaraan.id = kendaraan_selesai.id_detail_kendaraan')
+                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
+                ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
+                ->where('reservasi.tgl >=', $tglmulai)
+                ->where('reservasi.tgl <=', $tglakhir)
                 ->orderBy('kendaraan_selesai.idselesai', 'DESC')
                 ->get()
                 ->getResultArray();
@@ -612,21 +730,21 @@ class LaporanTransaksi extends BaseController
             $tahun = $this->request->getPost('tahun');
 
             $db = db_connect();
-            
-            // Query untuk mengambil data kendaraan selesai berdasarkan bulan dan tahun  
+
             $selesai = $db->table('kendaraan_selesai')
                 ->select('
                     kendaraan_selesai.idselesai,
                     kendaraan_selesai.totalbayar,
-                    pencucian.idpencucian,
-                    pencucian.tgl as tglpencucian,
-                    pelanggan.nama as nama_pelanggan,
-                    pencucian.platnomor
+                    reservasi.idreservasi,
+                    reservasi.tgl as tglpencucian,
+                    detail_kendaraan.platnomor,
+                    pelanggan.nama as nama_pelanggan
                 ')
-                ->join('pencucian', 'pencucian.idpencucian = kendaraan_selesai.idpencucian', 'left')
-                ->join('pelanggan', 'pelanggan.idpelanggan = pencucian.idpelanggan', 'left')
-                ->where('MONTH(pencucian.tgl)', $bulan)
-                ->where('YEAR(pencucian.tgl)', $tahun)
+                ->join('detail_kendaraan', 'detail_kendaraan.id = kendaraan_selesai.id_detail_kendaraan')
+                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
+                ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
+                ->where('MONTH(reservasi.tgl)', $bulan)
+                ->where('YEAR(reservasi.tgl)', $tahun)
                 ->orderBy('kendaraan_selesai.idselesai', 'DESC')
                 ->get()
                 ->getResultArray();

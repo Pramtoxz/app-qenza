@@ -1,11 +1,11 @@
 -- ============================================================
--- DATABASE QENZA - FRESH START
+-- DATABASE QENZA - FRESH START (v2 - One to Many)
 -- Jalankan seluruh file ini di phpMyAdmin
 -- ============================================================
 
-DROP DATABASE IF EXISTS `db_qenza`;
-CREATE DATABASE `db_qenza` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `db_qenza`;
+DROP DATABASE IF EXISTS `qenza`;
+CREATE DATABASE `qenza` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `qenza`;
 
 -- ============================================================
 -- TABLE: users
@@ -50,7 +50,7 @@ INSERT INTO `karyawan` (`idkaryawan`, `nama`, `alamat`, `nohp`) VALUES
 ('KW0003', 'Riko', 'Solok', '081377788899');
 
 -- ============================================================
--- TABLE: pelanggan (TANPA platnomor - sudah dipindah ke pencucian)
+-- TABLE: pelanggan
 -- ============================================================
 CREATE TABLE `pelanggan` (
   `idpelanggan` char(30) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE `pelanggan` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`idpelanggan`),
-  KEY `idx_tamu_jk` (`jk`)
+  KEY `idx_pelanggan_jk` (`jk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `pelanggan` (`idpelanggan`, `nama`, `alamat`, `nohp`, `jk`) VALUES
@@ -85,7 +85,7 @@ CREATE TABLE `paket_cucian` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `upah` double DEFAULT NULL,
   PRIMARY KEY (`idpaket`),
-  KEY `idx_kamar_status` (`harga`)
+  KEY `idx_paket_harga` (`harga`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `paket_cucian` (`idpaket`, `namapaket`, `jenis`, `harga`, `keterangan`, `upah`) VALUES
@@ -96,70 +96,131 @@ INSERT INTO `paket_cucian` (`idpaket`, `namapaket`, `jenis`, `harga`, `keteranga
 ('PKT0005', 'Detailing Mobil', 'mobil', 250000, 'Full detailing mobil premium', 50000);
 
 -- ============================================================
--- TABLE: pencucian (DENGAN platnomor DAN idpaket2)
+-- TABLE: reservasi (header transaksi - 1 pelanggan bisa bawa banyak kendaraan)
 -- ============================================================
-CREATE TABLE `pencucian` (
-  `idpencucian` char(30) NOT NULL,
-  `idkaryawan` char(30) DEFAULT NULL,
+CREATE TABLE `reservasi` (
+  `idreservasi` char(30) NOT NULL,
+  `idpelanggan` char(30) DEFAULT NULL,
   `tgl` date DEFAULT NULL,
   `jamdatang` time DEFAULT NULL,
-  `idpelanggan` char(30) DEFAULT NULL,
-  `platnomor` varchar(50) DEFAULT NULL,
-  `idpaket` char(30) DEFAULT NULL,
-  `idpaket2` char(30) DEFAULT NULL,
-  `status` enum('diproses','dijemput','selesai','pending','batal') DEFAULT NULL,
-  `nomor_antrian` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`idpencucian`)
+  `status_bayar` enum('belum','lunas') DEFAULT 'belum',
+  `nomor_antrian` varchar(10) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idreservasi`),
+  KEY `fk_reservasi_pelanggan` (`idpelanggan`),
+  CONSTRAINT `fk_reservasi_pelanggan` FOREIGN KEY (`idpelanggan`) REFERENCES `pelanggan` (`idpelanggan`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `pencucian` (`idpencucian`, `idkaryawan`, `tgl`, `jamdatang`, `idpelanggan`, `platnomor`, `idpaket`, `idpaket2`, `status`, `nomor_antrian`) VALUES
-('FKP-20260713-0001', 'KW0001', '2026-07-13', '08:00:00', 'PL0001', 'BA 1234 AA', 'PKT0001', NULL, 'selesai', '1'),
-('FKP-20260713-0002', 'KW0002', '2026-07-13', '09:15:00', 'PL0002', 'BA 5678 BB', 'PKT0002', NULL, 'selesai', '2'),
-('FKP-20260713-0003', 'KW0003', '2026-07-13', '10:30:00', 'PL0003', 'BA 9012 CC', 'PKT0003', 'PKT0004', 'selesai', '3'),
-('FKP-20260713-0004', 'KW0001', '2026-07-13', '11:00:00', 'PL0004', 'BA 3456 DD', 'PKT0005', NULL, 'dijemput', '4'),
-('FKP-20260713-0005', NULL, '2026-07-13', '11:30:00', 'PL0005', 'BA 7890 EE', 'PKT0001', 'PKT0002', 'pending', '5'),
-('FKP-20260713-0006', 'KW0002', '2026-07-13', '12:00:00', 'PL0001', 'BA 1111 FF', 'PKT0004', NULL, 'diproses', '6');
+INSERT INTO `reservasi` (`idreservasi`, `idpelanggan`, `tgl`, `jamdatang`, `status_bayar`, `nomor_antrian`) VALUES
+('FKP-20260713-0001', 'PL0001', '2026-07-13', '08:00:00', 'lunas', '1'),
+('FKP-20260713-0002', 'PL0002', '2026-07-13', '09:15:00', 'lunas', '2'),
+('FKP-20260713-0003', 'PL0003', '2026-07-13', '10:30:00', 'lunas', '3'),
+('FKP-20260713-0004', 'PL0004', '2026-07-13', '11:00:00', 'belum', '4'),
+('FKP-20260713-0005', 'PL0005', '2026-07-13', '11:30:00', 'belum', '5');
 
 -- ============================================================
--- TABLE: kendaraan_selesai
+-- TABLE: detail_kendaraan (per kendaraan dalam 1 reservasi)
+-- ============================================================
+CREATE TABLE `detail_kendaraan` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idreservasi` char(30) NOT NULL,
+  `platnomor` varchar(50) DEFAULT NULL,
+  `idkaryawan` char(30) DEFAULT NULL,
+  `status` enum('pending','diproses','dijemput','selesai','batal') DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_kendaraan_reservasi` (`idreservasi`),
+  KEY `fk_kendaraan_karyawan` (`idkaryawan`),
+  CONSTRAINT `fk_kendaraan_reservasi` FOREIGN KEY (`idreservasi`) REFERENCES `reservasi` (`idreservasi`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_kendaraan_karyawan` FOREIGN KEY (`idkaryawan`) REFERENCES `karyawan` (`idkaryawan`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Reservasi 1: Andi bawa 2 motor
+INSERT INTO `detail_kendaraan` (`id`, `idreservasi`, `platnomor`, `idkaryawan`, `status`) VALUES
+(1, 'FKP-20260713-0001', 'BA 1234 AA', 'KW0001', 'selesai'),
+(2, 'FKP-20260713-0001', 'BA 5678 BB', 'KW0002', 'selesai');
+
+-- Reservasi 2: Siti bawa 1 motor
+INSERT INTO `detail_kendaraan` (`id`, `idreservasi`, `platnomor`, `idkaryawan`, `status`) VALUES
+(3, 'FKP-20260713-0002', 'BA 9012 CC', 'KW0003', 'selesai');
+
+-- Reservasi 3: Budi bawa 1 mobil (banyak paket)
+INSERT INTO `detail_kendaraan` (`id`, `idreservasi`, `platnomor`, `idkaryawan`, `status`) VALUES
+(4, 'FKP-20260713-0003', 'BA 3456 DD', 'KW0001', 'selesai');
+
+-- Reservasi 4: Dewi bawa 1 mobil
+INSERT INTO `detail_kendaraan` (`id`, `idreservasi`, `platnomor`, `idkaryawan`, `status`) VALUES
+(5, 'FKP-20260713-0004', 'BA 7890 EE', 'KW0002', 'dijemput');
+
+-- Reservasi 5: Fajar bawa 2 motor (pending, belum assign karyawan)
+INSERT INTO `detail_kendaraan` (`id`, `idreservasi`, `platnomor`, `idkaryawan`, `status`) VALUES
+(6, 'FKP-20260713-0005', 'BA 1111 FF', NULL, 'pending'),
+(7, 'FKP-20260713-0005', 'BA 2222 GG', NULL, 'pending');
+
+-- ============================================================
+-- TABLE: detail_paket (per paket per kendaraan)
+-- ============================================================
+CREATE TABLE `detail_paket` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_detail_kendaraan` int UNSIGNED NOT NULL,
+  `idpaket` char(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_paket_kendaraan` (`id_detail_kendaraan`),
+  KEY `fk_paket_paket` (`idpaket`),
+  CONSTRAINT `fk_paket_kendaraan` FOREIGN KEY (`id_detail_kendaraan`) REFERENCES `detail_kendaraan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_paket_paket` FOREIGN KEY (`idpaket`) REFERENCES `paket_cucian` (`idpaket`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Motor 1 (BA 1234): 1 paket
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(1, 'PKT0001');
+
+-- Motor 2 (BA 5678): 1 paket
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(2, 'PKT0002');
+
+-- Motor 3 (BA 9012): 2 paket
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(3, 'PKT0003'),
+(3, 'PKT0004');
+
+-- Motor 4 (BA 3456): 3 paket (contoh banyak paket)
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(4, 'PKT0003'),
+(4, 'PKT0004'),
+(4, 'PKT0005');
+
+-- Motor 5 (BA 7890): 1 paket
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(5, 'PKT0004');
+
+-- Motor 6 (BA 1111): 1 paket
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(6, 'PKT0001');
+
+-- Motor 7 (BA 2222): 2 paket
+INSERT INTO `detail_paket` (`id_detail_kendaraan`, `idpaket`) VALUES
+(7, 'PKT0001'),
+(7, 'PKT0002');
+
+-- ============================================================
+-- TABLE: kendaraan_selesai (checkout per kendaraan)
 -- ============================================================
 CREATE TABLE `kendaraan_selesai` (
   `idselesai` char(30) NOT NULL,
-  `idpencucian` char(30) DEFAULT NULL,
+  `id_detail_kendaraan` int UNSIGNED DEFAULT NULL,
   `jamjemput` time DEFAULT NULL,
   `totalbayar` double DEFAULT NULL,
   `totaldibayar` double DEFAULT NULL,
-  PRIMARY KEY (`idselesai`)
+  PRIMARY KEY (`idselesai`),
+  KEY `fk_selesai_kendaraan` (`id_detail_kendaraan`),
+  CONSTRAINT `fk_selesai_kendaraan` FOREIGN KEY (`id_detail_kendaraan`) REFERENCES `detail_kendaraan` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `kendaraan_selesai` (`idselesai`, `idpencucian`, `jamjemput`, `totalbayar`, `totaldibayar`) VALUES
-('SLS-20260713-0001', 'FKP-20260713-0001', '08:45:00', 20000, 20000),
-('SLS-20260713-0002', 'FKP-20260713-0002', '10:00:00', 25000, 30000),
-('SLS-20260713-0003', 'FKP-20260713-0003', '11:30:00', 90000, 100000);
-
--- ============================================================
--- TABLE: gaji_karyawan
--- ============================================================
-CREATE TABLE `gaji_karyawan` (
-  `idgaji` char(30) NOT NULL,
-  `idkaryawan` char(30) NOT NULL,
-  `bulan` int NOT NULL,
-  `tahun` int NOT NULL,
-  `jumlah_cucian` int DEFAULT 0,
-  `total_upah` double DEFAULT 0,
-  `bonus` double DEFAULT 0,
-  `potongan` double DEFAULT 0,
-  `total_bayar` double DEFAULT 0,
-  `tanggal_bayar` date DEFAULT NULL,
-  `status` enum('draft','dibayar') DEFAULT 'draft',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`idgaji`),
-  KEY `fk_gaji_karyawan` (`idkaryawan`),
-  CONSTRAINT `fk_gaji_karyawan` FOREIGN KEY (`idkaryawan`) REFERENCES `karyawan` (`idkaryawan`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `gaji_karyawan` (`idgaji`, `idkaryawan`, `bulan`, `tahun`, `jumlah_cucian`, `total_upah`, `bonus`, `potongan`, `total_bayar`, `tanggal_bayar`, `status`) VALUES
-('GJI-20260713-0001', 'KW0001', 7, 2026, 2, 12000, 0, 0, 12000, '2026-07-13', 'dibayar'),
-('GJI-20260713-0002', 'KW0002', 7, 2026, 2, 17000, 5000, 0, 22000, '2026-07-13', 'dibayar'),
-('GJI-20260713-0003', 'KW0003', 7, 2026, 1, 22000, 0, 2000, 20000, NULL, 'draft');
+INSERT INTO `kendaraan_selesai` (`idselesai`, `id_detail_kendaraan`, `jamjemput`, `totalbayar`, `totaldibayar`) VALUES
+('SLS-20260713-0001', 1, '08:45:00', 20000, 20000),
+('SLS-20260713-0002', 2, '10:00:00', 25000, 30000),
+('SLS-20260713-0003', 3, '11:30:00', 90000, 100000),
+('SLS-20260713-0004', 4, '12:00:00', 340000, 350000);

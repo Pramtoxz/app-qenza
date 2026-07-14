@@ -3,9 +3,8 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>ID Pencucian</th>
+                <th>ID Faktur</th>
                 <th>Tanggal</th>
-                <th>Jam Datang</th>
                 <th>Pelanggan</th>
                 <th>Plat Nomor</th>
                 <th>Paket</th>

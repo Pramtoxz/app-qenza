@@ -454,7 +454,7 @@
                 <tr>
                     <th style="width: 60px;">No</th>
                     <th style="width: 120px;">ID Selesai</th>
-                    <th style="width: 120px;">ID Pencucian</th>
+                    <th style="width: 120px;">ID Faktur</th>
                     <th style="width: 120px;">Plat Nomor</th>
                     <th style="width: 200px;">Nama Pelanggan</th>
                     <th style="width: 140px;">Total Bayar</th>
@@ -471,7 +471,7 @@
                 <tr>
                     <td class="col-no"><?= $no++ ?></td>
                     <td class="col-id"><?= esc($row['idselesai']) ?></td>
-                    <td class="col-id"><?= esc($row['idpencucian']) ?></td>
+                    <td class="col-id"><?= esc($row['idreservasi']) ?></td>
                     <td class="col-id"><?= esc($row['platnomor']) ?></td>
                     <td class="col-name"><?= esc($row['nama_pelanggan']) ?></td>
                     <td class="col-price">Rp <?= number_format($row['totalbayar'], 0, ',', '.') ?></td>

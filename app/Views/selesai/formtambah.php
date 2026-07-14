@@ -18,14 +18,14 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="mb-3">
-                            <label for="idpencucian" class="form-label">ID Pencucian</label>
+                            <label for="id_detail_kendaraan" class="form-label">Faktur Kendaraan</label>
                             <div class="input-group">
-                                <input type="hidden" id="idpencucian" name="idpencucian" class="form-control" readonly>
-                                <input type="text" id="display_pencucian" name="display_pencucian" class="form-control" placeholder="Pilih Pencucian yang Sudah Dijemput" readonly>
+                                <input type="hidden" id="id_detail_kendaraan" name="id_detail_kendaraan" class="form-control" readonly>
+                                <input type="text" id="display_pencucian" name="display_pencucian" class="form-control" placeholder="Pilih Kendaraan yang Sudah Dijemput" readonly>
                                 <div class="input-group-append">
                                     <button class="btn btn-info" type="button" id="btnModalCariPencucian" data-bs-toggle="modal" data-bs-target="#modalcariPencucian">Cari</button>
                                 </div>
-                                <div class="invalid-feedback error_idpencucian"></div>
+                                <div class="invalid-feedback error_id_detail_kendaraan"></div>
                             </div>
                         </div>
                     </div>
@@ -37,9 +37,9 @@
                     <div class="text-center mb-4">
                         <h4 style="color: #007bff;">
                             <i class="fas fa-info-circle fa-lg"></i> 
-                            <span class="ms-2">Detail Pencucian Terpilih</span>
+                            <span class="ms-2">Detail Kendaraan Terpilih</span>
                         </h4>
-                        <p class="text-muted">Data pencucian yang akan diselesaikan</p>
+                        <p class="text-muted">Data kendaraan yang akan diselesaikan</p>
                     </div>
                     
                     <div class="row">
@@ -96,10 +96,6 @@
                                         <tr>
                                             <td width="40%"><strong>Tanggal:</strong></td>
                                             <td id="detail_tgl">-</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Jam Datang:</strong></td>
-                                            <td id="detail_jamdatang">-</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Karyawan:</strong></td>
@@ -184,7 +180,7 @@
                     <button type="submit" class="btn btn-success btn-lg" id="tombolSimpan" style="display: none;">
                         <i class="fas fa-check"></i> Selesaikan Pencucian
                     </button>
-                    <a class="btn btn-secondary btn-lg ms-2" href="<?= base_url() ?>selesai">
+                    <a class="btn btn-secondary btn-lg ms-2" href="<?= site_url('selesai') ?>">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -199,7 +195,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #007bff; color: white;">
                     <h5 class="modal-title" id="modalcariPencucianLabel">
-                        <i class="fas fa-search"></i> Pilih Pencucian Siap Dijemput
+                        <i class="fas fa-search"></i> Pilih Kendaraan Siap Dijemput
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -257,7 +253,6 @@
 </style>
 <script>
     $(function() {
-        // Format currency function
         function formatRupiah(value) {
             if (!value || value === '') return '';
             const cleanValue = value.toString().replace(/[^0-9]/g, '');
@@ -267,18 +262,15 @@
             return 'Rp. ' + number.toLocaleString('id-ID');
         }
 
-        // Function untuk menghitung kembalian
         function hitungKembalian() {
             var totalBayar = parseInt($('#totalbayar').val()) || 0;
             var totalDiBayar = parseInt($('#totaldibayar').val()) || 0;
             var kembalian = totalDiBayar - totalBayar;
             
-            // Update display
             $('#display_total_bayar').text(formatRupiah(totalBayar));
             $('#display_total_dibayar').text(formatRupiah(totalDiBayar));
             $('#display_kembalian').text(formatRupiah(kembalian));
             
-            // Update status pembayaran
             var statusBadge = $('#status_pembayaran');
             if (totalBayar === 0) {
                 statusBadge.html('<span class="badge bg-secondary-600">Belum ada pembayaran</span>');
@@ -296,7 +288,6 @@
             }
         }
 
-        // Event listener untuk perhitungan real-time
         $('#totaldibayar, #totalbayar').on('input keyup', function() {
             hitungKembalian();
         });
@@ -309,7 +300,7 @@
                 url: $(this).attr('action'),
                 data: {
                     idselesai: $('#idselesai').val(),
-                    idpencucian: $('#idpencucian').val(),
+                    id_detail_kendaraan: $('#id_detail_kendaraan').val(),
                     jamjemput: $('#jamjemput').val(),
                     totalbayar: $('#totalbayar').val(),
                     totaldibayar: $('#totaldibayar').val()
@@ -329,12 +320,12 @@
                     if (response.error) {
                         let err = response.error;
 
-                        if (err.error_idpencucian) {
+                        if (err.error_id_detail_kendaraan) {
                             $('#display_pencucian').addClass('is-invalid').removeClass('is-valid');
-                            $('.error_idpencucian').html(err.error_idpencucian);
+                            $('.error_id_detail_kendaraan').html(err.error_id_detail_kendaraan);
                         } else {
                             $('#display_pencucian').removeClass('is-invalid').addClass('is-valid');
-                            $('.error_idpencucian').html('');
+                            $('.error_id_detail_kendaraan').html('');
                         }
                         if (err.error_jamjemput) {
                             $('#jamjemput').addClass('is-invalid').removeClass('is-valid');
@@ -398,43 +389,35 @@
             var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $(this).find('.modal-body').html(loader);
 
-            $.get('<?= base_url() ?>/selesai/getpencuciandijemput', function(data) {
+            $.get('<?= site_url('selesai/getpencuciandijemput') ?>', function(data) {
                 $('#modalcariPencucian .modal-body').html(data);
             });
         });
         
-        // Event saat pencucian dipilih
         $(document).on('click', '.btn-pilihpencucian', function() {
-            var idpencucian = $(this).data('idpencucian');
+            var id_detail_kendaraan = $(this).data('id_detail_kendaraan');
             var nama_pelanggan = $(this).data('nama_pelanggan');
             var platnomor = $(this).data('platnomor');
             var namapaket = $(this).data('namapaket');
             var harga = $(this).data('harga');
             var nama_karyawan = $(this).data('nama_karyawan');
             var tgl = $(this).data('tgl');
-            var jamdatang = $(this).data('jamdatang');
             
-            // Set data ke form
-            $('#idpencucian').val(idpencucian);
-            $('#display_pencucian').val(idpencucian + ' - ' + nama_pelanggan + ' (' + platnomor + ')');
+            $('#id_detail_kendaraan').val(id_detail_kendaraan);
+            $('#display_pencucian').val(id_detail_kendaraan + ' - ' + nama_pelanggan + ' (' + platnomor + ')');
             
-            // Set data ke preview
             $('#detail_nama_pelanggan').text(nama_pelanggan);
             $('#detail_platnomor').text(platnomor);
             $('#detail_namapaket').text(namapaket);
             $('#detail_harga').text(formatRupiah(harga));
             $('#detail_nama_karyawan').text(nama_karyawan);
             $('#detail_tgl').text(new Date(tgl).toLocaleDateString('id-ID'));
-            $('#detail_jamdatang').text(jamdatang);
             
-            // Set default total bayar dengan harga paket
             $('#totalbayar').val(harga);
             $('#harga_paket_display').text(formatRupiah(harga));
             
-            // Hitung kembalian setelah set harga
             hitungKembalian();
             
-            // Tampilkan section detail dan form
             $('#detailPencucianTerpilih').slideDown('slow');
             $('#formPenyelesaian').slideDown('slow');
             $('#tombolSimpan').show();

@@ -189,7 +189,7 @@
             <div class="report-container" id="printHalaman">
                 <div class="print-header">
                     <div class="print-logo-section">
-                        <img src="<?= base_url() ?>/assets/img/logoqenza.jpg" alt="Logo Pencucian Qenza" class="print-logo">
+                        <img src="<?= site_url('assets/img/logoqenza.jpg') ?>" alt="Logo Pencucian Qenza" class="print-logo">
                         <div class="print-company-info">
                             <h1>Pencucian Qenza</h1>
                             <p>Sungai jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung, Sumatera Barat 27553</p>

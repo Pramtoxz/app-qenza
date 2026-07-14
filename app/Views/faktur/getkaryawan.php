@@ -2,10 +2,9 @@
     <table class="table table-hover" id="tabelKaryawan">
         <thead>
             <tr>
-                <th>No</th>
                 <th>Status</th>
-                <th>ID Karyawan</th>
-                <th>Nama Karyawan</th>
+                <th>No</th>
+                <th>Nama</th>
                 <th>Alamat</th>
                 <th>No HP</th>
                 <th class="no-short">Aksi</th>
@@ -21,11 +20,11 @@
     $('#tabelKaryawan').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '<?= site_url('pencucian/viewgetkaryawan') ?>',
+        ajax: '<?= site_url('faktur/viewgetkaryawan') ?>',
         info: true,
         ordering: true,
         paging: true,
-        order: [[1, 'asc']],
+        order: [[0, 'asc']],
         aoColumnDefs: [{ bSortable: false, aTargets: ["no-short"] }]
     });
 </script>

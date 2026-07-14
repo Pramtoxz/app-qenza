@@ -7,11 +7,11 @@
             <div class="card-body p-24">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary-light text-sm fw-medium">Total Pelanggan</span>
-                        <h6 class="mb-0 mt-8"><?= number_format($totalPelanggan) ?></h6>
+                        <span class="text-secondary-light text-sm fw-medium">Total Faktur</span>
+                        <h6 class="mb-0 mt-8"><?= number_format($totalFaktur) ?></h6>
                     </div>
                     <div class="w-48-px h-48-px bg-info-600 rounded-circle d-flex justify-content-center align-items-center">
-                        <iconify-icon icon="solar:users-group-two-rounded-outline" class="text-white text-xl"></iconify-icon>
+                        <iconify-icon icon="solar:document-text-outline" class="text-white text-xl"></iconify-icon>
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="card-body p-24">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary-light text-sm fw-medium">Pencucian Hari Ini</span>
+                        <span class="text-secondary-light text-sm fw-medium">Kendaraan Hari Ini</span>
                         <h6 class="mb-0 mt-8"><?= number_format($pencucianHariIni) ?></h6>
                     </div>
                     <div class="w-48-px h-48-px bg-danger-600 rounded-circle d-flex justify-content-center align-items-center">
@@ -37,11 +37,11 @@
             <div class="card-body p-24">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary-light text-sm fw-medium">Total Karyawan</span>
-                        <h6 class="mb-0 mt-8"><?= number_format($totalKaryawan) ?></h6>
+                        <span class="text-secondary-light text-sm fw-medium">Total Pelanggan</span>
+                        <h6 class="mb-0 mt-8"><?= number_format($totalPelanggan) ?></h6>
                     </div>
                     <div class="w-48-px h-48-px bg-success-600 rounded-circle d-flex justify-content-center align-items-center">
-                        <iconify-icon icon="solar:user-outline" class="text-white text-xl"></iconify-icon>
+                        <iconify-icon icon="solar:users-group-two-rounded-outline" class="text-white text-xl"></iconify-icon>
                     </div>
                 </div>
             </div>
@@ -137,9 +137,9 @@
                         <tbody>
                             <?php foreach ($recentPencucian as $item): ?>
                             <tr>
-                                <td><code><?= $item['idpencucian'] ?></code></td>
+                                <td><code><?= $item['idreservasi'] ?></code></td>
                                 <td><?= $item['nama_pelanggan'] ?></td>
-                                <td><?= $item['namapaket'] ?></td>
+                                <td><span class="text-muted"><?= esc($item['platnomor']) ?></span> &mdash; <?= $item['namapaket'] ?></td>
                                 <td><?= $item['nama_karyawan'] ?? '<span class="text-muted">-</span>' ?></td>
                                 <td><?= date('d/m/Y H:i', strtotime($item['tgl'] . ' ' . $item['jamdatang'])) ?></td>
                                 <td>

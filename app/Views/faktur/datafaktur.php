@@ -9,20 +9,18 @@
                 </div>
                 <div class="card-body">
                     <div class="buttons">
-                        <a href="<?= site_url('pencucian/formtambah') ?>" class="btn btn-danger">Tambah Data</a>
+                        <a href="<?= site_url('faktur/formtambah') ?>" class="btn btn-danger">Tambah Faktur</a>
                     </div>
                     <div class="table-responsive datatable-minimal mt-4">
-                        <table class="table table-hover" id="tabelCucian">
+                        <table class="table table-hover" id="tabelFaktur">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>ID Reservasi</th>
+                                    <th>ID Faktur</th>
                                     <th>Tanggal</th>
-                                    <th>Nama Pelanggan</th>
-                                    <th>Plat Nomor</th>
-                                    <th>Paket</th>
-                                    <th>Karyawan</th>
-                                    <th>Status</th>
+                                    <th>Pelanggan</th>
+                                    <th>Jumlah Kendaraan</th>
+                                    <th>Status Bayar</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
                             </thead>
@@ -38,11 +36,12 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Assign Karyawan</h5>
+                <h5 class="modal-title"><i class="ri-user-add-line me-2"></i>Assign Karyawan</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="assign_idpencucian">
+                <input type="hidden" id="assign_idreservasi">
+                <input type="hidden" id="assign_idkendaraan">
                 <div id="assign-karyawan-content"></div>
             </div>
             <div class="modal-footer">
@@ -57,10 +56,10 @@
 <?= $this->section('script') ?>
 <script>
     $(document).ready(function() {
-        var table = $('#tabelCucian').DataTable({
+        var table = $('#tabelFaktur').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "<?= site_url('pencucian/viewCucian') ?>",
+            ajax: "<?= site_url('faktur/viewFaktur') ?>",
             info: true,
             ordering: true,
             paging: true,
@@ -68,14 +67,24 @@
             aoColumnDefs: [{ bSortable: false, aTargets: ["no-short"] }]
         });
 
+        $(document).on('click', '.btn-detail', function() {
+            window.location.href = "<?= site_url('faktur/detail/') ?>" + $(this).data('idreservasi');
+        });
+
+        $(document).on('click', '.btn-cetak-antrian', function() {
+            window.location.href = "<?= site_url('faktur/cetakAntrian/') ?>" + $(this).data('idreservasi');
+        });
+
         $(document).on('click', '.btn-assign', function() {
-            var idpencucian = $(this).data('idpencucian');
-            $('#assign_idpencucian').val(idpencucian);
+            var idreservasi = $(this).data('idreservasi');
+            var idkendaraan = $(this).data('idkendaraan');
+            $('#assign_idreservasi').val(idreservasi);
+            $('#assign_idkendaraan').val(idkendaraan);
             var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
             $('#assign-karyawan-content').html(loader);
             $('#modalAssignKaryawan').modal('show');
 
-            $.get('<?= base_url() ?>/pencucian/getkaryawan', function(data) {
+            $.get('<?= site_url('faktur/getkaryawan') ?>', function(data) {
                 $('#assign-karyawan-content').html(data);
             });
         });
@@ -83,11 +92,11 @@
         $(document).on('click', '.btn-pilihkaryawan', function() {
             var idkaryawan = $(this).data('idkaryawan');
             var namakaryawan = $(this).data('namakaryawan');
-            var idpencucian = $('#assign_idpencucian').val();
+            var idkendaraan = $('#assign_idkendaraan').val();
 
             Swal.fire({
                 title: 'Assign Karyawan?',
-                text: 'Assign ' + namakaryawan + ' ke reservasi ' + idpencucian + '?',
+                text: 'Assign ' + namakaryawan + ' ke kendaraan ini?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#28a745',
@@ -98,8 +107,8 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= site_url('pencucian/assignKaryawan') ?>",
-                        data: { idpencucian: idpencucian, idkaryawan: idkaryawan },
+                        url: "<?= site_url('faktur/assignKaryawan') ?>",
+                        data: { idkendaraan: idkendaraan, idkaryawan: idkaryawan },
                         dataType: 'json',
                         success: function(response) {
                             if (response.sukses) {
@@ -119,9 +128,9 @@
         });
 
         $(document).on('click', '.btn-delete', function() {
-            var idpencucian = $(this).data('idpencucian');
+            var idreservasi = $(this).data('idreservasi');
             Swal.fire({
-                title: 'Hapus data ini?',
+                title: 'Hapus faktur ini?',
                 text: 'Data yang dihapus tidak dapat dikembalikan!',
                 icon: 'warning',
                 showCancelButton: true,
@@ -133,42 +142,8 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= site_url('pencucian/delete') ?>",
-                        data: { idpencucian: idpencucian },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.sukses) {
-                                Swal.fire('Berhasil!', response.sukses, 'success');
-                                table.ajax.reload();
-                            } else if (response.error) {
-                                Swal.fire('Gagal!', response.error, 'warning');
-                            }
-                        },
-                        error: function(xhr) {
-                            Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
-                        }
-                    });
-                }
-            });
-        });
-
-        $(document).on('click', '.btn-batal', function() {
-            var idpencucian = $(this).data('idpencucian');
-            Swal.fire({
-                title: 'Batalkan reservasi ini?',
-                text: 'Status akan diubah menjadi Batal',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ffc107',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, batalkan!',
-                cancelButtonText: 'Tidak'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= site_url('pencucian/ubahbatal') ?>",
-                        data: { idpencucian: idpencucian },
+                        url: "<?= site_url('faktur/delete') ?>",
+                        data: { idreservasi: idreservasi },
                         dataType: 'json',
                         success: function(response) {
                             if (response.sukses) {
@@ -187,9 +162,9 @@
         });
 
         $(document).on('click', '.btn-status', function() {
-            var idpencucian = $(this).data('idpencucian');
+            var idkendaraan = $(this).data('idkendaraan');
             Swal.fire({
-                title: 'Ubah Status?',
+                title: 'Ubah Status Kendaraan?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -200,8 +175,8 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= site_url('pencucian/ubahstatus') ?>",
-                        data: { idpencucian: idpencucian },
+                        url: "<?= site_url('faktur/ubahstatus') ?>",
+                        data: { idkendaraan: idkendaraan },
                         dataType: 'json',
                         success: function(response) {
                             if (response.sukses) {
@@ -219,16 +194,38 @@
             });
         });
 
-        $(document).on('click', '.btn-edit', function() {
-            window.location.href = "<?= site_url('pencucian/formedit/') ?>" + $(this).data('idpencucian');
-        });
-
-        $(document).on('click', '.btn-detail', function() {
-            window.location.href = "<?= site_url('pencucian/detail/') ?>" + $(this).data('idpencucian');
-        });
-
-        $(document).on('click', '.btn-cetak-antrian', function() {
-            window.location.href = "<?= site_url('pencucian/cetakAntrian/') ?>" + $(this).data('idpencucian');
+        $(document).on('click', '.btn-batal', function() {
+            var idkendaraan = $(this).data('idkendaraan');
+            Swal.fire({
+                title: 'Batalkan kendaraan ini?',
+                text: 'Status akan diubah menjadi Batal',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ffc107',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, batalkan!',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= site_url('faktur/ubahbatal') ?>",
+                        data: { idkendaraan: idkendaraan },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.sukses) {
+                                Swal.fire('Berhasil!', response.sukses, 'success');
+                                table.ajax.reload();
+                            } else if (response.error) {
+                                Swal.fire('Gagal!', response.error, 'warning');
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

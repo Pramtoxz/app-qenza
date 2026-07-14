@@ -40,7 +40,7 @@ $currentUri = service('uri')->getPath();
         </a>
         <ul class="sidebar-submenu">
             <li>
-                <a href="<?= site_url('pencucian') ?>"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Reservasi</a>
+                <a href="<?= site_url('faktur') ?>"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Reservasi</a>
             </li>
             <li>
                 <a href="<?= site_url('selesai') ?>"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Kendaraan Selesai</a>
@@ -48,12 +48,6 @@ $currentUri = service('uri')->getPath();
         </ul>
     </li>
 
-    <li class="mb-10">
-        <a href="<?= site_url('gaji') ?>">
-            <iconify-icon icon="solar:dollar-linear" class="menu-icon"></iconify-icon>
-            <span>Gaji Karyawan</span>
-        </a>
-    </li>
     <?php endif; ?>
 
     <?php if ($userRole == 'admin' || $userRole == 'pimpinan') : ?>
@@ -77,6 +71,9 @@ $currentUri = service('uri')->getPath();
             </li>
             <li>
                 <a href="<?= site_url('laporan-transaksi/selesai') ?>"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Selesai</a>
+            </li>
+            <li>
+                <a href="<?= site_url('laporan-transaksi/slip-gaji') ?>"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Slip Gaji</a>
             </li>
         </ul>
     </li>

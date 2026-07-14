@@ -397,7 +397,7 @@
             <thead>
                 <tr>
                     <th style="width: 60px;">No</th>
-                    <th style="width: 120px;">ID Pencucian</th>
+                    <th style="width: 120px;">ID Faktur</th>
                     <th style="width: 120px;">Plat Nomor</th>
                     <th style="width: 150px;">Pelanggan</th>
                     <th style="width: 150px;">Karyawan</th>
@@ -414,7 +414,7 @@
                 ?>
                 <tr>
                     <td class="col-no"><?= $no++ ?></td>
-                    <td class="col-id"><?= esc($row['idpencucian']) ?></td>
+                    <td class="col-id"><?= esc($row['idreservasi']) ?></td>
                     <td class="col-id"><?= esc($row['platnomor']) ?></td>
                     <td class="col-name"><?= esc($row['nama_pelanggan']) ?></td>
                     <td class="col-name"><?= esc($row['nama_karyawan'] ?? '-') ?></td>

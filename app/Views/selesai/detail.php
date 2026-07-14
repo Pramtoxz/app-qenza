@@ -19,10 +19,10 @@
                                 <i class="fas fa-check-circle fa-2x"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="fw-bold mb-1">ID Selesai #<?= $selesai['idselesai'] ?> | Pencucian #<?= $selesai['idpencucian'] ?></h6>
+                                <h6 class="fw-bold mb-1">ID Selesai #<?= $selesai['idselesai'] ?> | Faktur #<?= $selesai['idreservasi'] ?></h6>
                                 <div class="row mt-2">
                                     <div class="col-4"><small>Tanggal Masuk:</small><br><strong><?= date('d F Y', strtotime($selesai['tgl'])) ?></strong></div>
-                                    <div class="col-4"><small>Jam Datang:</small><br><strong><?= $selesai['jamdatang'] ?></strong></div>
+                                    <div class="col-4"><small>Jam Datang:</small><br><strong><?= $selesai['jamdatang'] ?? '-' ?></strong></div>
                                     <div class="col-4"><small>Jam Jemput:</small><br><strong><?= $selesai['jamjemput'] ?></strong></div>
                                 </div>
                             </div>
@@ -57,10 +57,18 @@
                     <h5 class="card-title"><i class="fas fa-box me-2"></i>Detail Paket</h5>
                 </div>
                 <div class="card-body">
-                    <h5 class="text-primary"><?= $selesai['namapaket'] ?></h5>
-                    <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i>Jenis: <?= $selesai['jenis'] ?></p>
+                    <?php
+                    $paketNames = [];
+                    $paketJenis = [];
+                    foreach ($paketList as $p) {
+                        $paketNames[] = $p['namapaket'];
+                        $paketJenis[] = $p['jenis'];
+                    }
+                    ?>
+                    <h5 class="text-primary"><?= implode(' + ', $paketNames) ?></h5>
+                    <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i>Jenis: <?= implode(' + ', $paketJenis) ?></p>
                     <h4 class="text-success fw-bold mt-3">
-                        <i class="fas fa-money-bill-wave me-2"></i>Rp <?= number_format($selesai['harga'], 0, ',', '.') ?>
+                        <i class="fas fa-money-bill-wave me-2"></i>Rp <?= number_format($totalHarga, 0, ',', '.') ?>
                     </h4>
                 </div>
             </div>
@@ -73,7 +81,7 @@
                     <h5 class="card-title"><i class="fas fa-user-tie me-2"></i>Detail Karyawan</h5>
                 </div>
                 <div class="card-body">
-                    <h5 class="text-primary"><?= $selesai['nama_karyawan'] ?></h5>
+                    <h5 class="text-primary"><?= $selesai['nama_karyawan'] ?? '-' ?></h5>
                     <p class="mb-2">Status:</p>
                     <span class="badge bg-success-600"><i class="fas fa-check-double me-1"></i>Selesai - Kendaraan sudah dijemput</span>
                 </div>
@@ -92,7 +100,7 @@
                     <thead style="background-color: #487FFF;">
                         <tr>
                             <th class="text-white">ID Selesai</th>
-                            <th class="text-white">ID Pencucian</th>
+                            <th class="text-white">ID Faktur</th>
                             <th class="text-white">Pelanggan</th>
                             <th class="text-white">Paket</th>
                             <th class="text-white">Karyawan</th>
@@ -102,11 +110,11 @@
                     <tbody>
                         <tr>
                             <td><?= $selesai['idselesai'] ?></td>
-                            <td><?= $selesai['idpencucian'] ?></td>
+                            <td><?= $selesai['idreservasi'] ?></td>
                             <td><?= $selesai['nama_pelanggan'] ?></td>
-                            <td><?= $selesai['namapaket'] ?></td>
-                            <td><?= $selesai['nama_karyawan'] ?></td>
-                            <td class="fw-bold text-success">Rp <?= number_format($selesai['harga'], 0, ',', '.') ?></td>
+                            <td><?= implode(' + ', $paketNames) ?></td>
+                            <td><?= $selesai['nama_karyawan'] ?? '-' ?></td>
+                            <td class="fw-bold text-success">Rp <?= number_format($totalHarga, 0, ',', '.') ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -199,7 +207,7 @@
                 <div class="card-body text-center">
                     <p class="text-muted mb-3">Sijunjung, <?= date('d F Y') ?></p>
                     <div class="my-4">
-                        <img src="<?= base_url() ?>/assets/img/acc.png" alt="Tanda Tangan" style="width: 120px;">
+                        <img src="<?= site_url('assets/img/acc.png') ?>" alt="Tanda Tangan" style="width: 120px;">
                     </div>
                     <h5 class="text-primary fw-bold mb-2">Pencucian Qenza</h5>
                     <p class="text-muted">Terima kasih dan sampai jumpa kembali!</p>
@@ -211,7 +219,7 @@
     <!-- Action Buttons -->
     <div class="card shadow-sm no-print">
         <div class="card-body d-flex justify-content-between">
-            <a href="<?= base_url() ?>/selesai" class="btn btn-secondary btn-lg">
+            <a href="<?= site_url('selesai') ?>" class="btn btn-secondary btn-lg">
                 <i class="fas fa-arrow-left me-2"></i>Kembali
             </a>
             <a href="#" onclick="window.print();" class="btn btn-primary btn-lg">
@@ -234,10 +242,10 @@
         
         <!-- ID & Date Info -->
         <div style="text-align: center; background: #28a745; color: white; border: 2px solid #28a745; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
-            <strong style="font-size: 16px;">ID Selesai #<?= $selesai['idselesai'] ?> | Pencucian #<?= $selesai['idpencucian'] ?></strong>
+            <strong style="font-size: 16px;">ID Selesai #<?= $selesai['idselesai'] ?> | Faktur #<?= $selesai['idreservasi'] ?></strong>
             <div style="margin-top: 8px; display: flex; justify-content: center; gap: 30px;">
                 <span><strong>Tanggal:</strong> <?= date('d F Y', strtotime($selesai['tgl'])) ?></span>
-                <span><strong>Jam Datang:</strong> <?= $selesai['jamdatang'] ?></span>
+                <span><strong>Jam Datang:</strong> <?= $selesai['jamdatang'] ?? '-' ?></span>
                 <span><strong>Jam Jemput:</strong> <?= $selesai['jamjemput'] ?></span>
             </div>
         </div>
@@ -258,17 +266,17 @@
             <!-- Paket -->
             <div style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
                 <h3 style="margin: 0 0 8px 0; color: #343a40; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Detail Paket</h3>
-                <div><strong><?= $selesai['namapaket'] ?></strong></div>
+                <div><strong><?= implode(' + ', $paketNames) ?></strong></div>
                 <div style="margin-top: 5px; font-size: 11px;">
-                    <div>Jenis: <?= $selesai['jenis'] ?></div>
-                    <div style="font-weight: bold; color: #28a745;">Rp <?= number_format($selesai['harga'], 0, ',', '.') ?></div>
+                    <div>Jenis: <?= implode(' + ', $paketJenis) ?></div>
+                    <div style="font-weight: bold; color: #28a745;">Rp <?= number_format($totalHarga, 0, ',', '.') ?></div>
                 </div>
             </div>
             
             <!-- Karyawan -->
             <div style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
                 <h3 style="margin: 0 0 8px 0; color: #343a40; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Detail Karyawan</h3>
-                <div><strong><?= $selesai['nama_karyawan'] ?></strong></div>
+                <div><strong><?= $selesai['nama_karyawan'] ?? '-' ?></strong></div>
                 <div style="margin-top: 5px; font-size: 11px;">
                     Status: 
                     <span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">Selesai</span>
@@ -283,7 +291,7 @@
                 <thead>
                     <tr style="background: #343a40; color: white;">
                         <th style="padding: 8px; text-align: left; border: 1px solid #ddd; font-size: 11px;">ID Selesai</th>
-                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd; font-size: 11px;">ID Pencucian</th>
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd; font-size: 11px;">ID Faktur</th>
                         <th style="padding: 8px; text-align: left; border: 1px solid #ddd; font-size: 11px;">Pelanggan</th>
                         <th style="padding: 8px; text-align: left; border: 1px solid #ddd; font-size: 11px;">Paket</th>
                         <th style="padding: 8px; text-align: left; border: 1px solid #ddd; font-size: 11px;">Karyawan</th>
@@ -293,11 +301,11 @@
                 <tbody>
                     <tr>
                         <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['idselesai'] ?></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['idpencucian'] ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['idreservasi'] ?></td>
                         <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['nama_pelanggan'] ?></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['namapaket'] ?></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['nama_karyawan'] ?></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px; font-weight: bold; color: #28a745;">Rp <?= number_format($selesai['harga'], 0, ',', '.') ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= implode(' + ', $paketNames) ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px;"><?= $selesai['nama_karyawan'] ?? '-' ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-size: 11px; font-weight: bold; color: #28a745;">Rp <?= number_format($totalHarga, 0, ',', '.') ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -347,7 +355,7 @@
             <div style="flex: 1; text-align: center; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
                 <h4 style="margin: 0 0 10px 0; color: #343a40; font-size: 12px;">Tanda Tangan</h4>
                 <div style="margin-bottom: 8px; font-size: 10px;">Sijunjung, <?= date('d F Y') ?></div>
-                <img src="<?= base_url() ?>/assets/img/acc.png" alt="TTD" style="width: 80px; margin: 10px 0;">
+                <img src="<?= site_url('assets/img/acc.png') ?>" alt="TTD" style="width: 80px; margin: 10px 0;">
                 <div style="font-weight: bold; color: #343a40; font-size: 11px;">Pencucian Qenza</div>
                 <div style="font-size: 9px; color: #666;">Sampai jumpa kembali!</div>
             </div>

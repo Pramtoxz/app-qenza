@@ -9,7 +9,7 @@ class Selesai extends Model
     protected $table            = 'kendaraan_selesai';
     protected $primaryKey       = 'idselesai';
     protected $protectFields    = true;
-    protected $allowedFields    = ['idselesai', 'idpencucian', 'jamjemput', 'totalbayar', 'totaldibayar'];
+    protected $allowedFields    = ['idselesai', 'id_detail_kendaraan', 'jamjemput', 'totalbayar', 'totaldibayar'];
 
     // Dates
     protected $useTimestamps = false;

@@ -17,7 +17,7 @@ $routes->post('auth/change-password', 'Auth::changePassword');
 
 // Public Tracking Routes
 $routes->get('tracking', 'Home::tracking');
-$routes->get('pencucian/tracking/(:segment)', 'PencucianController::tracking/$1');
+$routes->get('faktur/tracking/(:segment)', 'FakturController::tracking/$1');
 
 // Forgot Password dengan OTP
 // $routes->get('auth/forgot-password', 'Auth::forgotPassword');
@@ -69,54 +69,25 @@ $routes->group('paket', ['filter' => ['auth', 'role:admin']], function ($routes)
     $routes->get('detail/(:segment)', 'PaketController::detail/$1');
 });
 
-$routes->group('pencucian', ['filter' => ['auth', 'role:admin']], function ($routes) {
-    $routes->get('/', 'PencucianController::index');
-    $routes->get('viewCucian', 'PencucianController::viewCucian');
-    $routes->get('formtambah', 'PencucianController::formtambah');
-    $routes->post('save', 'PencucianController::save');
-    $routes->get('formedit/(:segment)', 'PencucianController::formedit/$1');
-    $routes->post('updatedata/(:segment)', 'PencucianController::updatedata/$1');
-    $routes->get('detail/(:segment)', 'PencucianController::detail/$1');
-    $routes->get('cetakAntrian/(:segment)', 'PencucianController::cetakAntrian/$1');
-    $routes->get('getpelanggan', 'PencucianController::getPelanggan');
-    $routes->get('viewgetpelanggan', 'PencucianController::viewGetPelanggan');
-    $routes->get('getpaket', 'PencucianController::getPaket');
-    $routes->get('viewgetpaket', 'PencucianController::viewGetPaket');
-    $routes->get('getkaryawan', 'PencucianController::getKaryawan');
-    $routes->get('viewgetkaryawan', 'PencucianController::viewGetKaryawan');
-    $routes->post('delete', 'PencucianController::delete');
-    $routes->post('ubahstatus', 'PencucianController::ubahstatus');
-    $routes->post('ubahbatal', 'PencucianController::ubahbatal');
-    $routes->post('assignKaryawan', 'PencucianController::assignKaryawan');
-});
-
-$routes->group('checkout', ['filter' => ['auth', 'role:admin']], function ($routes) {
-    $routes->get('/', 'CheckoutController::index');
-    $routes->get('viewcheckout', 'CheckoutController::viewCheckout');
-    $routes->get('formtambah', 'CheckoutController::formtambah');
-    $routes->post('save', 'CheckoutController::save');
-    $routes->get('getcheckin', 'CheckoutController::getCheckin');
-    $routes->get('viewgetcheckin', 'CheckoutController::viewGetCheckin');
-    $routes->post('delete', 'CheckoutController::delete');
-    $routes->get('detail/(:segment)', 'CheckoutController::detail/$1');
-    $routes->get('faktur/(:segment)', 'CheckoutController::faktur/$1');
-    $routes->get('formedit/(:segment)', 'CheckoutController::formedit/$1');
-    $routes->post('updatedata/(:segment)', 'CheckoutController::updatedata/$1');
-});
-
-$routes->group('gaji', ['filter' => ['auth', 'role:admin']], function ($routes) {
-    $routes->get('/', 'GajiController::index');
-    $routes->get('viewGaji', 'GajiController::viewGaji');
-    $routes->get('formtambah', 'GajiController::formtambah');
-    $routes->get('getkaryawan', 'GajiController::getKaryawan');
-    $routes->get('viewgetkaryawan', 'GajiController::viewGetKaryawan');
-    $routes->post('save', 'GajiController::save');
-    $routes->post('hitungUpah', 'GajiController::hitungUpah');
-    $routes->get('detail/(:segment)', 'GajiController::detail/$1');
-    $routes->get('slip/(:segment)', 'GajiController::slip/$1');
-    $routes->get('formedit/(:segment)', 'GajiController::formedit/$1');
-    $routes->post('updatedata/(:segment)', 'GajiController::updatedata/$1');
-    $routes->post('delete', 'GajiController::delete');
+$routes->group('faktur', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'FakturController::index');
+    $routes->get('viewFaktur', 'FakturController::viewFaktur');
+    $routes->get('formtambah', 'FakturController::formtambah');
+    $routes->post('save', 'FakturController::save');
+    $routes->get('detail/(:segment)', 'FakturController::detail/$1');
+    $routes->get('getpelanggan', 'FakturController::getPelanggan');
+    $routes->get('viewgetpelanggan', 'FakturController::viewGetPelanggan');
+    $routes->get('getpaket', 'FakturController::getPaket');
+    $routes->get('viewgetpaket', 'FakturController::viewGetPaket');
+    $routes->get('getkaryawan', 'FakturController::getKaryawan');
+    $routes->get('viewgetkaryawan', 'FakturController::viewGetKaryawan');
+    $routes->post('assignKaryawan', 'FakturController::assignKaryawan');
+    $routes->post('ubahstatus', 'FakturController::ubahstatus');
+    $routes->post('ubahbatal', 'FakturController::ubahbatal');
+    $routes->post('delete', 'FakturController::delete');
+    $routes->get('cetakAntrian/(:segment)', 'FakturController::cetakAntrian/$1');
+    $routes->get('formedit/(:segment)', 'FakturController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'FakturController::updatedata/$1');
 });
 
 $routes->group('selesai', ['filter' => ['auth', 'role:admin']], function ($routes) {
@@ -153,6 +124,10 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
     $routes->get('selesai/view', 'Laporan\LaporanTransaksi::viewallLaporanSelesai');
     $routes->post('selesai/viewtanggal', 'Laporan\LaporanTransaksi::viewallLaporanSelesaiTanggal');
     $routes->post('selesai/viewbulan', 'Laporan\LaporanTransaksi::viewallLaporanSelesaiBulan');
+
+    $routes->get('slip-gaji', 'Laporan\LaporanTransaksi::SlipGaji');
+    $routes->post('slip-gaji/getkaryawan', 'Laporan\LaporanTransaksi::getKaryawanSlipGaji');
+    $routes->post('slip-gaji/cetak', 'Laporan\LaporanTransaksi::cetakSlipGaji');
 });
 
 

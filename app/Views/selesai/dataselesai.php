@@ -20,7 +20,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>ID Selesai</th>
-                                    <th>ID Pencucian</th>
+                                    <th>ID Faktur</th>
                                     <th>Tanggal</th>
                                     <th>Pelanggan</th>
                                     <th>Plat Nomor</th>
@@ -62,7 +62,7 @@
 
             Swal.fire({
                 title: 'Apakah Anda yakin ingin menghapus data ini?',
-                text: "Data pencucian akan dikembalikan ke status 'dijemput'",
+                text: "Data kendaraan akan dikembalikan ke status 'dijemput'",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -85,7 +85,6 @@
                                     text: response.sukses,
                                     icon: 'success'
                                 });
-                                // Refresh DataTable
                                 $('#tabelSelesai').DataTable().ajax.reload();
                             } else {
                                 Swal.fire({

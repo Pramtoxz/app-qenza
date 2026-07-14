@@ -18,28 +18,26 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="mb-3">
-                            <label for="idpencucian" class="form-label">ID Pencucian</label>
+                            <label for="idreservasi" class="form-label">ID Faktur</label>
                             <div class="input-group">
-                                <input type="hidden" id="idpencucian" name="idpencucian" class="form-control" value="<?= $selesai['idpencucian'] ?>" readonly>
-                                <input type="text" id="display_pencucian" name="display_pencucian" class="form-control" value="<?= $selesai['idpencucian'] . ' - ' . $selesai['nama_pelanggan'] . ' (' . $selesai['platnomor'] . ')' ?>" readonly>
+                                <input type="text" id="idreservasi" name="idreservasi" class="form-control" value="<?= $selesai['idreservasi'] ?> - <?= $selesai['nama_pelanggan'] ?> (<?= $selesai['platnomor'] ?>)" readonly>
                                 <div class="input-group-append">
                                     <button class="btn btn-secondary" type="button" disabled>Tidak dapat diubah</button>
                                 </div>
-                                <div class="invalid-feedback error_idpencucian"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Detail Pencucian yang Dipilih -->
+                <!-- Detail Kendaraan yang Dipilih -->
                 <div id="detailPencucianTerpilih" class="mb-4">
                     <hr class="my-4" style="border-top: 3px solid #007bff;">
                     <div class="text-center mb-4">
                         <h4 style="color: #007bff;">
                             <i class="fas fa-info-circle fa-lg"></i> 
-                            <span class="ms-2">Detail Pencucian Terpilih</span>
+                            <span class="ms-2">Detail Kendaraan Terpilih</span>
                         </h4>
-                        <p class="text-muted">Data pencucian yang akan diselesaikan</p>
+                        <p class="text-muted">Data kendaraan yang akan diselesaikan</p>
                     </div>
                     
                     <div class="row">
@@ -74,11 +72,11 @@
                                     <table class="table table-sm table-borderless">
                                         <tr>
                                             <td width="40%"><strong>Paket:</strong></td>
-                                            <td id="detail_namapaket"><?= $selesai['namapaket'] ?></td>
+                                            <td id="detail_namapaket"><?= $paketDisplay ?></td>
                                         </tr>
                                         <tr>
                                             <td><strong>Harga:</strong></td>
-                                            <td id="detail_harga" class="fw-bold" style="color: #007bff;">Rp. <?= number_format($selesai['harga'], 0, ',', '.') ?></td>
+                                            <td id="detail_harga" class="fw-bold" style="color: #007bff;">Rp. <?= number_format($totalHarga, 0, ',', '.') ?></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -98,12 +96,8 @@
                                             <td id="detail_tgl"><?= date('d F Y', strtotime($selesai['tgl'])) ?></td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Jam Datang:</strong></td>
-                                            <td id="detail_jamdatang"><?= $selesai['jamdatang'] ?></td>
-                                        </tr>
-                                        <tr>
                                             <td><strong>Karyawan:</strong></td>
-                                            <td id="detail_nama_karyawan"><?= $selesai['nama_karyawan'] ?></td>
+                                            <td id="detail_nama_karyawan"><?= $selesai['nama_karyawan'] ?? '-' ?></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -136,7 +130,7 @@
                                 <label for="totalbayar" class="form-label">Total Bayar</label>
                                 <input type="number" id="totalbayar" name="totalbayar" class="form-control" value="<?= $selesai['totalbayar'] ?>" readonly>
                                 <div class="invalid-feedback error_totalbayar"></div>
-                                <small class="form-text text-muted">Harga paket: <span id="harga_paket_display">Rp. <?= number_format($selesai['harga'], 0, ',', '.') ?></span></small>
+                                <small class="form-text text-muted">Harga paket: <span id="harga_paket_display">Rp. <?= number_format($totalHarga, 0, ',', '.') ?></span></small>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -184,7 +178,7 @@
                     <button type="submit" class="btn btn-success btn-lg" id="tombolSimpan">
                         <i class="fas fa-save"></i> Update Data Selesai
                     </button>
-                    <a class="btn btn-secondary btn-lg ms-2" href="<?= base_url() ?>selesai">
+                    <a class="btn btn-secondary btn-lg ms-2" href="<?= site_url('selesai') ?>">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -192,9 +186,6 @@
             </div>
         </div>
     </div>
-    
-
-
 </div>
 <?= $this->endSection() ?>
 
@@ -239,7 +230,6 @@
 </style>
 <script>
     $(function() {
-        // Format currency function
         function formatRupiah(value) {
             if (!value || value === '') return '';
             const cleanValue = value.toString().replace(/[^0-9]/g, '');
@@ -249,18 +239,15 @@
             return 'Rp. ' + number.toLocaleString('id-ID');
         }
 
-        // Function untuk menghitung kembalian
         function hitungKembalian() {
             var totalBayar = parseInt($('#totalbayar').val()) || 0;
             var totalDiBayar = parseInt($('#totaldibayar').val()) || 0;
             var kembalian = totalDiBayar - totalBayar;
             
-            // Update display
             $('#display_total_bayar').text(formatRupiah(totalBayar));
             $('#display_total_dibayar').text(formatRupiah(totalDiBayar));
             $('#display_kembalian').text(formatRupiah(kembalian));
             
-            // Update status pembayaran
             var statusBadge = $('#status_pembayaran');
             if (totalBayar === 0) {
                 statusBadge.html('<span class="badge bg-secondary-600">Belum ada pembayaran</span>');
@@ -278,7 +265,6 @@
             }
         }
 
-        // Event listener untuk perhitungan real-time
         $('#totaldibayar, #totalbayar').on('input keyup', function() {
             hitungKembalian();
         });
@@ -368,7 +354,6 @@
             return false;
         });
 
-        // Hitung kembalian saat halaman load dengan nilai existing
         hitungKembalian();
 
     });
