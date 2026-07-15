@@ -198,6 +198,28 @@ class SelesaiController extends BaseController
                    ->where('id', $id_detail_kendaraan)
                    ->update(['status' => 'selesai']);
 
+                $kendaraan = $db->table('detail_kendaraan')
+                    ->select('idreservasi')
+                    ->where('id', $id_detail_kendaraan)
+                    ->get()->getRowArray();
+
+                if ($kendaraan) {
+                    $idreservasi = $kendaraan['idreservasi'];
+                    $totalKendaraan = $db->table('detail_kendaraan')
+                        ->where('idreservasi', $idreservasi)
+                        ->countAllResults();
+                    $selesaiCount = $db->table('detail_kendaraan')
+                        ->where('idreservasi', $idreservasi)
+                        ->where('status', 'selesai')
+                        ->countAllResults();
+
+                    if ($totalKendaraan > 0 && $totalKendaraan === $selesaiCount) {
+                        $db->table('reservasi')
+                           ->where('idreservasi', $idreservasi)
+                           ->update(['status_bayar' => 'lunas']);
+                    }
+                }
+
                 $json = [
                     'sukses' => 'Data Kendaraan Selesai Berhasil Ditambahkan',
                     'idselesai' => $idselesai
@@ -220,11 +242,22 @@ class SelesaiController extends BaseController
                          ->getRowArray();
             
             if ($selesai) {
+                $kendaraan = $db->table('detail_kendaraan')
+                    ->select('idreservasi')
+                    ->where('id', $selesai['id_detail_kendaraan'])
+                    ->get()->getRowArray();
+
                 $db->table('kendaraan_selesai')->where('idselesai', $idselesai)->delete();
                 
                 $db->table('detail_kendaraan')
                    ->where('id', $selesai['id_detail_kendaraan'])
                    ->update(['status' => 'dijemput']);
+
+                if ($kendaraan) {
+                    $db->table('reservasi')
+                       ->where('idreservasi', $kendaraan['idreservasi'])
+                       ->update(['status_bayar' => 'belum']);
+                }
             }
             
             $json = [
@@ -387,6 +420,33 @@ class SelesaiController extends BaseController
                 $db->table('kendaraan_selesai')
                    ->where('idselesai', $idselesai)
                    ->update($dataUpdate);
+
+                $selesaiRow = $db->table('kendaraan_selesai')
+                    ->select('id_detail_kendaraan')
+                    ->where('idselesai', $idselesai)
+                    ->get()->getRowArray();
+
+                if ($selesaiRow) {
+                    $kendaraan = $db->table('detail_kendaraan')
+                        ->select('idreservasi')
+                        ->where('id', $selesaiRow['id_detail_kendaraan'])
+                        ->get()->getRowArray();
+
+                    if ($kendaraan) {
+                        $idreservasi = $kendaraan['idreservasi'];
+                        $totalKendaraan = $db->table('detail_kendaraan')
+                            ->where('idreservasi', $idreservasi)
+                            ->countAllResults();
+                        $selesaiCount = $db->table('detail_kendaraan')
+                            ->where('idreservasi', $idreservasi)
+                            ->where('status', 'selesai')
+                            ->countAllResults();
+
+                        $db->table('reservasi')
+                           ->where('idreservasi', $idreservasi)
+                           ->update(['status_bayar' => ($totalKendaraan > 0 && $totalKendaraan === $selesaiCount) ? 'lunas' : 'belum']);
+                    }
+                }
 
                 $json = [
                     'sukses' => 'Data Kendaraan Selesai Berhasil Diupdate',

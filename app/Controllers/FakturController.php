@@ -54,7 +54,7 @@ class FakturController extends BaseController
                          pelanggan.nama as nama_pelanggan,
                          (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as jumlah_kendaraan,
                          (SELECT MIN(status) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as min_status,
-                         reservasi.status_bayar,
+                         (CASE WHEN (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) > 0 AND (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status = "selesai") = (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) THEN "lunas" ELSE reservasi.status_bayar END) as status_bayar,
                          (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status != "pending") as non_pending_count,
                          (SELECT CASE MIN(status) WHEN "pending" THEN 1 WHEN "diproses" THEN 2 WHEN "dijemput" THEN 3 WHEN "selesai" THEN 4 WHEN "batal" THEN 5 END FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as status_priority')
                 ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
@@ -443,7 +443,8 @@ class FakturController extends BaseController
     {
         $db = db_connect();
         $faktur = $db->table('reservasi')
-            ->select('reservasi.*, pelanggan.nama as nama_pelanggan, pelanggan.alamat, pelanggan.nohp')
+            ->select('reservasi.*, pelanggan.nama as nama_pelanggan, pelanggan.alamat, pelanggan.nohp,
+                     (CASE WHEN (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) > 0 AND (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status = "selesai") = (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) THEN "lunas" ELSE reservasi.status_bayar END) as status_bayar')
             ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
             ->where('reservasi.idreservasi', $idreservasi)
             ->get()->getRowArray();
