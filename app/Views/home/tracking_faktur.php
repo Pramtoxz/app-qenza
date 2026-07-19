@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="<?= site_url('assets/img/logoqenza.jpg') ?>">
+    <link rel="shortcut icon" type="image/png" href="<?= site_url('assets/img/logoqenza.jpeg') ?>">
     <script>
         tailwind.config = {
             theme: {
@@ -44,7 +44,7 @@
     <div class="max-w-2xl mx-auto px-5 py-6 sm:py-10">
 
         <div class="flex items-center gap-3 mb-6">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza" class="w-8 h-8 rounded-md object-cover">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza" class="w-8 h-8 rounded-md object-cover">
             <span class="text-sm font-bold text-brand-800 tracking-tight">Pencucian Qenza</span>
         </div>
 
@@ -120,7 +120,7 @@
 <footer class="border-t border-gray-200 bg-white mt-auto">
     <div class="max-w-2xl mx-auto px-5 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
         <div class="flex items-center gap-2">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza" class="w-5 h-5 rounded object-cover">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza" class="w-5 h-5 rounded object-cover">
             <span class="text-xs font-bold text-brand-800">Pencucian Qenza</span>
         </div>
         <p class="text-xs text-gray-400">&copy; <?= date('Y') ?> Qenza. Semua hak dilindungi.</p>

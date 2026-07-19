@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print">
-    <h4 class="mb-0">Laporan Selesai</h4>
+    <h4 class="mb-0">Laporan Pendapatan</h4>
     <button onclick="cetakLaporan()" class="btn btn-primary btn-sm"><i class="ri-printer-line me-1"></i> Cetak</button>
 </div>
 
@@ -26,6 +26,17 @@
             </div>
             <div class="col-auto"><input type="number" id="tahun" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
             <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadBulan()">Filter</button></div>
+        </div>
+        <div class="row g-2 align-items-end mt-2">
+            <div class="col-auto"><strong class="small">Tahun:</strong></div>
+            <div class="col-auto">
+                <select id="tahunFilter" class="form-select form-select-sm">
+                    <?php for ($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
+                        <option value="<?= $y ?>"><?= $y ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadTahun()">Filter Tahun</button></div>
         </div>
     </div>
 </div>
@@ -68,18 +79,27 @@ function loadBulan() {
         $('#tabelContent').html(dataLoaded || '<p class="text-muted text-center">Tidak ada data</p>');
     }});
 }
+function loadTahun() {
+    var th = $('#tahunFilter').val();
+    if (!th) { Swal.fire('Perhatian', 'Pilih tahun', 'warning'); return; }
+    $('#tabelContent').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
+    $.ajax({url: '<?= base_url('laporan-transaksi/selesai/viewtahun') ?>', type: 'POST', data: {tahun: th}, dataType: 'json', success: function(r) {
+        dataLoaded = r.data || '';
+        $('#tabelContent').html(dataLoaded || '<p class="text-muted text-center">Tidak ada data</p>');
+    }});
+}
 
 function cetakLaporan() {
     if (!dataLoaded) { Swal.fire('Perhatian', 'Muat data terlebih dahulu', 'warning'); return; }
     var w = window.open('', '_blank');
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Selesai</title>' +
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Pendapatan</title>' +
         '<style>@page{size:A4 landscape;margin:1.5cm;}body{font-family:"Times New Roman",serif;font-size:11px;color:#000;}' +
         '.header{text-align:center;margin-bottom:15px;}.header h2{margin:0;font-size:16px;}.header p{margin:2px 0;font-size:11px;}' +
         '.header hr{border:1px solid #000;margin:8px 0;}.title{font-size:14px;font-weight:bold;text-decoration:underline;margin:10px 0;}' +
         'table{width:100%;border-collapse:collapse;margin:10px 0;font-size:10px;}th,td{border:1px solid #000;padding:5px 6px;text-align:left;}th{background:#f0f0f0;font-weight:bold;text-align:center;}' +
         '.footer{margin-top:25px;text-align:right;}.footer .sign{display:inline-block;text-align:center;width:200px;}.footer .sign .space{margin-top:50px;border-bottom:1px solid #000;}' +
         '</style></head><body>' +
-        '<div class="header"><h2>PENCUCIAN QENZA</h2><p>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</p><hr><div class="title">Laporan Transaksi Selesai</div></div>' +
+        '<div class="header"><h2>PENCUCIAN QENZA</h2><p>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</p><hr><div class="title">Laporan Pendapatan</div></div>' +
         dataLoaded +
         '<div class="footer"><div class="sign"><p>Sijunjung, <?= date("d F Y") ?></p><p style="font-weight:bold;margin-top:5px;">Pimpinan</p><div class="space">&nbsp;</div></div></div>' +
         '</body></html>');

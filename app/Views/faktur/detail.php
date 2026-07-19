@@ -160,7 +160,7 @@
 <div id="print-invoice" style="display: none;">
     <div style="font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.4; max-width: 80mm; margin: 0 auto; padding: 5mm;">
         <div style="text-align: center; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 8px;">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Logo" style="height: 40px; margin-bottom: 5px;">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Logo" style="height: 40px; margin-bottom: 5px;">
             <div style="font-weight: bold; font-size: 13px;">QENZA</div>
             <div style="font-size: 10px;">Cucian Salju Sijunjung</div>
         </div>

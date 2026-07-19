@@ -166,7 +166,7 @@
                                         </tr>
                                     </table>
                                     <div id="status_pembayaran" class="mt-2 text-center">
-                                        <span class="badge bg-secondary-600">Belum ada pembayaran</span>
+                                        <span class="badge bg-warning-600">Belum ada pembayaran</span>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@
             
             var statusBadge = $('#status_pembayaran');
             if (totalBayar === 0) {
-                statusBadge.html('<span class="badge bg-secondary-600">Belum ada pembayaran</span>');
+                statusBadge.html('<span class="badge bg-warning-600">Belum ada pembayaran</span>');
             } else if (totalDiBayar === 0) {
                 statusBadge.html('<span class="badge bg-warning-600">Menunggu pembayaran</span>');
             } else if (kembalian < 0) {

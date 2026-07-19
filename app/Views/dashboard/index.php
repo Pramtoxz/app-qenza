@@ -75,7 +75,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="d-flex justify-content-between mb-1">
                             <span class="text-sm">Menunggu (Pending)</span>
-                            <span class="badge bg-secondary-600"><?= $statusStats['pending'] ?></span>
+                            <span class="badge bg-warning-600"><?= $statusStats['pending'] ?></span>
                         </div>
                         <div class="progress" style="height: 8px;">
                             <div class="progress-bar bg-secondary" style="width: <?= $totalPencucian > 0 ? ($statusStats['pending'] / $totalPencucian * 100) : 0 ?>%"></div>
@@ -144,7 +144,7 @@
                                 <td><?= date('d/m/Y H:i', strtotime($item['tgl'] . ' ' . $item['jamdatang'])) ?></td>
                                 <td>
                                     <?php if ($item['status'] == 'pending'): ?>
-                                        <span class="badge bg-secondary-600">Pending</span>
+                                        <span class="badge bg-warning-600">Pending</span>
                                     <?php elseif ($item['status'] == 'diproses'): ?>
                                         <span class="badge bg-warning-600">Diproses</span>
                                     <?php elseif ($item['status'] == 'dijemput'): ?>

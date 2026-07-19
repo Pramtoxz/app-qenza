@@ -124,6 +124,7 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
     $routes->get('selesai/view', 'Laporan\LaporanTransaksi::viewallLaporanSelesai');
     $routes->post('selesai/viewtanggal', 'Laporan\LaporanTransaksi::viewallLaporanSelesaiTanggal');
     $routes->post('selesai/viewbulan', 'Laporan\LaporanTransaksi::viewallLaporanSelesaiBulan');
+    $routes->post('selesai/viewtahun', 'Laporan\LaporanTransaksi::viewallLaporanSelesaiTahun');
 
     $routes->get('slip-gaji', 'Laporan\LaporanTransaksi::SlipGaji');
     $routes->post('slip-gaji/getkaryawan', 'Laporan\LaporanTransaksi::getKaryawanSlipGaji');

@@ -31,8 +31,8 @@
 <body>
     <div class="slip-container">
         <div class="header">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Logo">
-            <h1>SLIP GAJI KARYAWAN</h1>
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Logo">
+            <h1>GAJI KARYAWAN</h1>
             <h2>Qenza - Cucian Salju Sijunjung</h2>
         </div>
 
@@ -123,7 +123,7 @@
 
     <div class="no-print" style="text-align: center; margin-top: 20px;">
         <button onclick="window.print();" style="padding: 10px 30px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
-            Print Slip Gaji
+            Cetak Gaji Karyawan
         </button>
         <button onclick="window.close();" style="padding: 10px 30px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-left: 10px;">
             Tutup

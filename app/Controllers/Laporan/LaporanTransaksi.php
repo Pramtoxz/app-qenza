@@ -17,7 +17,7 @@ class LaporanTransaksi extends BaseController
             ->getResultArray();
 
         return view('laporan/transaksi/slipgaji', [
-            'title' => 'Laporan Slip Gaji',
+            'title' => 'Gaji Karyawan',
             'karyawan' => $karyawan
         ]);
     }
@@ -666,6 +666,7 @@ class LaporanTransaksi extends BaseController
                     kendaraan_selesai.idselesai,
                     kendaraan_selesai.totalbayar,
                     reservasi.idreservasi,
+                    reservasi.tgl as tglpencucian,
                     detail_kendaraan.platnomor,
                     pelanggan.nama as nama_pelanggan
                 ')
@@ -757,6 +758,43 @@ class LaporanTransaksi extends BaseController
             $data = [
                 'selesai' => $selesai,
                 'bulan' => $bulan,
+                'tahun' => $tahun
+            ];
+
+            $response = [
+                'data' => view('laporan/transaksi/viewselesai', $data)
+            ];
+
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function viewallLaporanSelesaiTahun()
+    {
+        if ($this->request->isAJAX()) {
+            $tahun = $this->request->getPost('tahun');
+
+            $db = db_connect();
+
+            $selesai = $db->table('kendaraan_selesai')
+                ->select('
+                    kendaraan_selesai.idselesai,
+                    kendaraan_selesai.totalbayar,
+                    reservasi.idreservasi,
+                    reservasi.tgl as tglpencucian,
+                    detail_kendaraan.platnomor,
+                    pelanggan.nama as nama_pelanggan
+                ')
+                ->join('detail_kendaraan', 'detail_kendaraan.id = kendaraan_selesai.id_detail_kendaraan')
+                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
+                ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
+                ->where('YEAR(reservasi.tgl)', $tahun)
+                ->orderBy('kendaraan_selesai.idselesai', 'DESC')
+                ->get()
+                ->getResultArray();
+
+            $data = [
+                'selesai' => $selesai,
                 'tahun' => $tahun
             ];
 

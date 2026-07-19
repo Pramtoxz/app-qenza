@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print">
-    <h4 class="mb-0">Laporan Pencucian</h4>
+    <h4 class="mb-0">Laporan Cucian Selesai</h4>
     <button onclick="cetakLaporan()" class="btn btn-primary btn-sm"><i class="ri-printer-line me-1"></i> Cetak</button>
 </div>
 
@@ -88,7 +88,7 @@ function cetakLaporan() {
         'table{width:100%;border-collapse:collapse;margin:10px 0;font-size:10px;}th,td{border:1px solid #000;padding:5px 6px;text-align:left;}th{background:#f0f0f0;font-weight:bold;text-align:center;}' +
         '.footer{margin-top:25px;text-align:right;}.footer .sign{display:inline-block;text-align:center;width:200px;}.footer .sign .space{margin-top:50px;border-bottom:1px solid #000;}' +
         '</style></head><body>' +
-        '<div class="header"><h2>PENCUCIAN QENZA</h2><p>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</p><hr><div class="title">Laporan Transaksi Pencucian</div></div>' +
+        '<div class="header"><h2>PENCUCIAN QENZA</h2><p>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</p><hr><div class="title">Laporan Cucian Selesai</div></div>' +
         dataLoaded +
         '<div class="footer"><div class="sign"><p>Sijunjung, <?= date("d F Y") ?></p><p style="font-weight:bold;margin-top:5px;">Pimpinan</p><div class="space">&nbsp;</div></div></div>' +
         '</body></html>');

@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Slip Gaji Karyawan</h4>
+    <h4 class="mb-0">Gaji Karyawan</h4>
 </div>
 
 <div class="card shadow-sm mb-3 no-print">
@@ -62,7 +62,7 @@ function renderSlip(d) {
     var html = '<div class="card shadow-sm" id="printArea"><div class="card-body">' +
         '<div class="text-center mb-3">' +
             '<div class="d-none d-print-block"><strong style="font-size:16px;">Pencucian Qenza</strong><br><small>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</small><hr style="border-top:1px solid #000;"></div>' +
-            '<strong>Slip Gaji Karyawan</strong><br>' +
+            '<strong>Gaji Karyawan</strong><br>' +
             '<small class="text-muted">Periode: ' + fmtDate(d.tglmulai) + ' - ' + fmtDate(d.tglakhir) + '</small>' +
         '</div>' +
         '<div class="row mb-3"><div class="col-md-6"><table class="table table-sm table-borderless mb-0">' +

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Antrian - <?= $faktur['idreservasi'] ?></title>
-    <link rel="shortcut icon" type="image/png" href="<?= site_url('assets/img/logoqenza.jpg') ?>">
+    <link rel="shortcut icon" type="image/png" href="<?= site_url('assets/img/logoqenza.jpeg') ?>">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -151,7 +151,7 @@
     <div>
         <div class="ticket">
             <div class="ticket-logo">
-                <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza">
+                <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza">
             </div>
             <div class="ticket-company">QENZA</div>
             <div class="ticket-subtitle">Cucian Salju Sijunjung</div>

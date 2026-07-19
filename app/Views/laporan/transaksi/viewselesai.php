@@ -1,12 +1,14 @@
 <?php if (empty($selesai)): ?>
     <p class="text-muted text-center">Tidak ada data transaksi selesai</p>
 <?php else: ?>
+    <?php $totalSemua = 0; ?>
     <table class="table table-bordered table-sm">
         <thead>
             <tr>
                 <th class="text-center" style="width:40px">No</th>
                 <th>ID Selesai</th>
                 <th>ID Faktur</th>
+                <th>Tanggal</th>
                 <th>Pelanggan</th>
                 <th>Plat Nomor</th>
                 <th class="text-end">Total Bayar</th>
@@ -14,16 +16,24 @@
         </thead>
         <tbody>
             <?php $no = 1; foreach ($selesai as $s): ?>
+            <?php $totalSemua += ($s['totalbayar'] ?? 0); ?>
             <tr>
                 <td class="text-center"><?= $no++ ?></td>
                 <td><?= esc($s['idselesai']) ?></td>
                 <td><?= esc($s['idreservasi']) ?></td>
+                <td><?= !empty($s['tglpencucian']) ? date('d/m/Y', strtotime($s['tglpencucian'])) : '-' ?></td>
                 <td><?= esc($s['nama_pelanggan']) ?></td>
                 <td><strong><?= esc($s['platnomor']) ?></strong></td>
-                <td class="text-end">Rp <?= number_format($s['totalbayar'], 0, ',', '.') ?></td>
+                <td class="text-end">Rp <?= number_format($s['totalbayar'] ?? 0, 0, ',', '.') ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr class="table-success">
+                <td colspan="6" class="text-end fw-bold">Total Pendapatan:</td>
+                <td class="text-end fw-bold">Rp <?= number_format($totalSemua, 0, ',', '.') ?></td>
+            </tr>
+        </tfoot>
     </table>
-    <small class="text-muted">Total: <?= count($selesai) ?> transaksi</small>
+    <small class="text-muted">Total: <?= count($selesai) ?> transaksi | Pendapatan: Rp <?= number_format($totalSemua, 0, ',', '.') ?></small>
 <?php endif; ?>

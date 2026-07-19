@@ -49,17 +49,20 @@ class FakturController extends BaseController
     {
         if ($this->request->isAJAX()) {
             $db = db_connect();
-            $query = $db->table('reservasi')
-                ->select('reservasi.idreservasi, reservasi.tgl, 
+            $query = $db->table('detail_kendaraan')
+                ->select('reservasi.idreservasi, reservasi.tgl,
                          pelanggan.nama as nama_pelanggan,
-                         (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as jumlah_kendaraan,
-                         (SELECT MIN(status) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as min_status,
-                         (CASE WHEN (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) > 0 AND (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status = "selesai") = (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) THEN "lunas" ELSE reservasi.status_bayar END) as status_bayar,
-                         (SELECT COUNT(*) FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi AND status != "pending") as non_pending_count,
-                         (SELECT CASE MIN(status) WHEN "pending" THEN 1 WHEN "diproses" THEN 2 WHEN "dijemput" THEN 3 WHEN "selesai" THEN 4 WHEN "batal" THEN 5 END FROM detail_kendaraan WHERE detail_kendaraan.idreservasi = reservasi.idreservasi) as status_priority')
+                         detail_kendaraan.id as id_kendaraan,
+                         detail_kendaraan.platnomor,
+                         detail_kendaraan.status,
+                         (CASE WHEN (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi) > 0 AND (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi AND dk.status = "selesai") = (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi) THEN "lunas" ELSE reservasi.status_bayar END) as status_bayar,
+                         (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi AND dk.status != "pending") as non_pending_count,
+                         (SELECT CASE MIN(dk.status) WHEN "pending" THEN 1 WHEN "diproses" THEN 2 WHEN "dijemput" THEN 3 WHEN "selesai" THEN 4 WHEN "batal" THEN 5 END FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi) as status_priority')
+                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi', 'left')
                 ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan', 'left')
                 ->orderBy('status_priority', 'ASC')
-                ->orderBy('reservasi.idreservasi', 'DESC');
+                ->orderBy('reservasi.idreservasi', 'DESC')
+                ->orderBy('detail_kendaraan.id', 'ASC');
 
             return DataTable::of($query)
                 ->add('action', function ($row) {
@@ -77,7 +80,9 @@ class FakturController extends BaseController
                 }, 'last')
                 ->addNumbering()
                 ->hide('status_priority')
-                ->edit('min_status', function ($row) {
+                ->hide('non_pending_count')
+                ->hide('id_kendaraan')
+                ->edit('status', function ($row) {
                     $map = [
                         'pending' => '<span class="badge bg-secondary">Pending</span>',
                         'diproses' => '<span class="badge bg-warning">Diproses</span>',
@@ -85,9 +90,8 @@ class FakturController extends BaseController
                         'selesai' => '<span class="badge bg-success">Selesai</span>',
                         'batal' => '<span class="badge bg-danger">Batal</span>',
                     ];
-                    return $map[$row->min_status] ?? '-';
+                    return $map[$row->status] ?? '-';
                 })
-                ->hide('non_pending_count')
                 ->edit('nama_pelanggan', function ($row) {
                     return $row->nama_pelanggan ?: '-';
                 })

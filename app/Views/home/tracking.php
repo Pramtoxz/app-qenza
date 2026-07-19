@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="shortcut icon" type="image/png" href="<?= site_url('assets/img/logoqenza.jpg') ?>">
+    <link rel="shortcut icon" type="image/png" href="<?= site_url('assets/img/logoqenza.jpeg') ?>">
     <style>
         :root { --accent: #0e0e37; --accent-soft: #eeeef8; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -195,7 +195,7 @@
 
     <nav class="site-nav">
         <a class="nav-logo" href="<?= base_url() ?>">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza">
             <span>Qenza</span>
         </a>
         <div class="nav-right">
@@ -348,7 +348,7 @@
 
     <footer class="site-footer">
         <div class="footer-brand">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza">
             <span>Qenza</span>
         </div>
         <span class="footer-copy">&copy; <?= date('Y') ?> Qenza. Semua hak dilindungi.</span>

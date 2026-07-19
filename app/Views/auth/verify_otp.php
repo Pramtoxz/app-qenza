@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="shortcut icon" type="image/png" href="<?= base_url() ?>/assets/img/logoqenza.jpg">
+    <link rel="shortcut icon" type="image/png" href="<?= base_url() ?>/assets/img/logoqenza.jpeg">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -203,7 +203,7 @@
 <body>
     <div class="auth-left">
         <div class="brand">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza">
             <div class="brand-name">Qenza</div>
             <div class="brand-sub">Cucian Salju Sijunjung</div>
         </div>

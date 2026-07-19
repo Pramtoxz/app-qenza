@@ -19,7 +19,7 @@
                                     <th>ID Faktur</th>
                                     <th>Tanggal</th>
                                     <th>Pelanggan</th>
-                                    <th>Jumlah Kendaraan</th>
+                                    <th>Plat Kendaraan</th>
                                     <th>Status</th>
                                     <th>Status Bayar</th>
                                     <th class="no-short">Aksi</th>

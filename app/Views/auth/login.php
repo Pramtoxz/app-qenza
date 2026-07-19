@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="shortcut icon" type="image/png" href="<?= base_url() ?>/assets/img/logoqenza.jpg">
+    <link rel="shortcut icon" type="image/png" href="<?= base_url() ?>/assets/img/logoqenza.jpeg">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -18,7 +18,7 @@
         }
         .auth-left {
             width: 42%;
-            background: #0e0e37;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnIpDC1okcfLnkgReR4gTw8tQUCTLJEQBehr0YyKPH90KgJZ5o3fm_bV9S&s=10') center/cover no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -26,21 +26,12 @@
             position: relative;
             overflow: hidden;
         }
-        .auth-left::after {
-            content: '';
-            position: absolute;
-            bottom: -80px; right: -80px;
-            width: 300px; height: 300px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,.06);
-        }
         .auth-left::before {
             content: '';
             position: absolute;
-            top: -60px; left: -60px;
-            width: 200px; height: 200px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,.04);
+            inset: 0;
+            background: rgba(14,14,55,.65);
+            z-index: 1;
         }
         .brand { position: relative; z-index: 2; }
         .brand img { height: 40px; border-radius: 6px; margin-bottom: 16px; }
@@ -169,12 +160,12 @@
 </head>
 <body>
     <div class="auth-left">
-        <div class="brand">
-            <img src="<?= base_url('assets/img/logoqenza.jpg') ?>" alt="Qenza">
+        <div class="brand" style="position:relative;z-index:2;">
+            <img src="<?= base_url('assets/img/logoqenza.jpeg') ?>" alt="Qenza">
             <div class="brand-name">Qenza</div>
             <div class="brand-sub">Cucian Salju Sijunjung</div>
         </div>
-        <div class="auth-left-quote">
+        <div class="auth-left-quote" style="position:relative;z-index:2;">
             <strong>Kendaraan bersih, hati senang.</strong><br>
             Sistem manajemen pencucian untuk memantau pesanan, pelacakkan status, dan kelola operasional harian.
         </div>
