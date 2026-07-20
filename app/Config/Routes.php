@@ -119,6 +119,7 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
     $routes->get('pencucian/view', 'Laporan\LaporanTransaksi::viewallLaporanPencucian');
     $routes->post('pencucian/viewtanggal', 'Laporan\LaporanTransaksi::viewallLaporanPencucianTanggal');
     $routes->post('pencucian/viewbulan', 'Laporan\LaporanTransaksi::viewallLaporanPencucianBulan');
+    $routes->post('pencucian/viewtahun', 'Laporan\LaporanTransaksi::viewallLaporanPencucianTahun');
 
     $routes->get('selesai', 'Laporan\LaporanTransaksi::LaporanSelesai');
     $routes->get('selesai/view', 'Laporan\LaporanTransaksi::viewallLaporanSelesai');

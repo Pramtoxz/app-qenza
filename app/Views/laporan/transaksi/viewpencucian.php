@@ -24,7 +24,7 @@
                 <td><strong><?= esc($p['platnomor']) ?></strong></td>
                 <td><?= esc($p['namapaket']) ?></td>
                 <td><?= esc($p['nama_karyawan'] ?? '-') ?></td>
-                <td class="text-center"><?= ucfirst($p['status']) ?></td>
+                <td class="text-center"><?= $p['status'] == 'dijemput' ? 'Bisa Di Jemput' : ucfirst($p['status']) ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

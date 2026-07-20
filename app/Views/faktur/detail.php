@@ -69,7 +69,7 @@
     $statusLabel = match($k['status']) {
         'pending' => 'Pending',
         'diproses' => 'Diproses',
-        'dijemput' => 'Dijemput',
+        'dijemput' => 'Bisa Di Jemput',
         'selesai' => 'Selesai',
         'batal' => 'Batal',
         default => $k['status']
@@ -96,7 +96,7 @@
                     </button>
                 <?php elseif ($k['status'] == 'diproses'): ?>
                     <button type="button" class="btn btn-info btn-sm btn-status-detail" data-idkendaraan="<?= $k['id'] ?>">
-                        <i class="ri-check-double-line me-1"></i>Tandai Dijemput
+                        <i class="ri-check-double-line me-1"></i>Tandai Bisa Di Jemput
                     </button>
                 <?php elseif ($k['status'] == 'dijemput'): ?>
                     <span class="text-muted small"><i>Menunggu checkout</i></span>
@@ -259,13 +259,13 @@
     $(document).on('click', '.btn-status-detail', function() {
         var idkendaraan = $(this).data('idkendaraan');
         Swal.fire({
-            title: 'Tandai Dijemput?',
+            title: 'Tandai Bisa Di Jemput?',
             text: 'Kendaraan sudah selesai dicuci dan siap dijemput',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#17a2b8',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Dijemput!',
+            confirmButtonText: 'Ya, Bisa Di Jemput!',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {

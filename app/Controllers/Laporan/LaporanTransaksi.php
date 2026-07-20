@@ -650,6 +650,50 @@ class LaporanTransaksi extends BaseController
         }
     }
 
+    public function viewallLaporanPencucianTahun()
+    {
+        if ($this->request->isAJAX()) {
+            $tahun = $this->request->getPost('tahun');
+
+            $db = db_connect();
+
+            $pencucian = $db->table('detail_kendaraan fk')
+                ->select('
+                    f.idreservasi,
+                    f.tgl as tglpencucian,
+                    f.jamdatang,
+                    fk.status,
+                    p.nama as nama_pelanggan,
+                    fk.platnomor,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket,
+                    GROUP_CONCAT(pc.jenis SEPARATOR ", ") as jenis
+                ')
+                ->join('reservasi f', 'f.idreservasi = fk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = f.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = fk.idkaryawan', 'left')
+                ->join('detail_paket fp', 'fp.id_detail_kendaraan = fk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = fp.idpaket', 'left')
+                ->where('YEAR(f.tgl)', $tahun)
+                ->groupBy('fk.id')
+                ->orderBy('f.tgl', 'DESC')
+                ->orderBy('f.idreservasi', 'DESC')
+                ->get()
+                ->getResultArray();
+
+            $data = [
+                'pencucian' => $pencucian,
+                'tahun' => $tahun
+            ];
+
+            $response = [
+                'data' => view('laporan/transaksi/viewpencucian', $data)
+            ];
+
+            return $this->response->setJSON($response);
+        }
+    }
+
     // Laporan Transaksi Selesai (dengan informasi keuangan lengkap)
     public function LaporanSelesai()
     {

@@ -14,7 +14,7 @@
                     <option value="">Semua Status</option>
                     <option value="pending">Pending</option>
                     <option value="diproses">Diproses</option>
-                    <option value="dijemput">Dijemput</option>
+                    <option value="dijemput">Bisa Di Jemput</option>
                     <option value="selesai">Selesai</option>
                     <option value="batal">Batal</option>
                 </select>
@@ -34,6 +34,11 @@
             </div>
             <div class="col-auto"><input type="number" id="tahun" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
             <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadBulan()">Filter</button></div>
+        </div>
+        <div class="row g-2 align-items-end mt-2">
+            <div class="col-auto"><strong class="small">Tahun:</strong></div>
+            <div class="col-auto"><input type="number" id="tahunFilter" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
+            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadTahun()">Filter Tahun</button></div>
         </div>
     </div>
 </div>
@@ -73,6 +78,15 @@ function loadBulan() {
     if (!bl) { Swal.fire('Perhatian', 'Pilih bulan', 'warning'); return; }
     $('#tabelContent').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
     $.ajax({url: '<?= base_url('laporan-transaksi/pencucian/viewbulan') ?>', type: 'POST', data: {bulan: bl, tahun: th}, dataType: 'json', success: function(r) {
+        dataLoaded = r.data || '';
+        $('#tabelContent').html(dataLoaded || '<p class="text-muted text-center">Tidak ada data</p>');
+    }});
+}
+function loadTahun() {
+    var th = $('#tahunFilter').val();
+    if (!th) { Swal.fire('Perhatian', 'Pilih tahun', 'warning'); return; }
+    $('#tabelContent').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
+    $.ajax({url: '<?= base_url('laporan-transaksi/pencucian/viewtahun') ?>', type: 'POST', data: {tahun: th}, dataType: 'json', success: function(r) {
         dataLoaded = r.data || '';
         $('#tabelContent').html(dataLoaded || '<p class="text-muted text-center">Tidak ada data</p>');
     }});

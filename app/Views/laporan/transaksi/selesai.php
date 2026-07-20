@@ -29,13 +29,9 @@
         </div>
         <div class="row g-2 align-items-end mt-2">
             <div class="col-auto"><strong class="small">Tahun:</strong></div>
-            <div class="col-auto">
-                <select id="tahunFilter" class="form-select form-select-sm">
-                    <?php for ($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
-                        <option value="<?= $y ?>"><?= $y ?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
+            <div class="col-auto"><input type="number" id="tahunFilter" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
+            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadTahun()">Filter Tahun</button></div>
+        </div>
             <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadTahun()">Filter Tahun</button></div>
         </div>
     </div>

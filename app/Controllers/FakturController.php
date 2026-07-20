@@ -86,7 +86,7 @@ class FakturController extends BaseController
                     $map = [
                         'pending' => '<span class="badge bg-secondary">Pending</span>',
                         'diproses' => '<span class="badge bg-warning">Diproses</span>',
-                        'dijemput' => '<span class="badge bg-info">Menunggu Di Jemput</span>',
+                        'dijemput' => '<span class="badge bg-info">Bisa Di Jemput</span>',
                         'selesai' => '<span class="badge bg-success">Selesai</span>',
                         'batal' => '<span class="badge bg-danger">Batal</span>',
                     ];
