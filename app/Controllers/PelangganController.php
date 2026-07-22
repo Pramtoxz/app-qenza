@@ -20,7 +20,7 @@ class PelangganController extends BaseController
     {
         $db = db_connect();
         $query = $db->table('pelanggan')
-            ->select('idpelanggan, nama, nohp, jk');
+            ->select('idpelanggan, nama, nohp, jk, alamat');
 
         return DataTable::of($query)
             ->add('action', function ($row) {

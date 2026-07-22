@@ -140,6 +140,7 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
 
     $routes->get('gaji-karyawan', 'Laporan\LaporanTransaksi::LaporanGajiKaryawan');
     $routes->post('gaji-karyawan/view', 'Laporan\LaporanTransaksi::viewallLaporanGajiKaryawan');
+    $routes->post('gaji-karyawan/viewtahun', 'Laporan\LaporanTransaksi::viewallLaporanGajiKaryawanTahun');
 });
 
 

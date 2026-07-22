@@ -23,6 +23,7 @@
                                     <th>Nama Pelanggan</th>
                                     <th>No HP</th>
                                     <th>Jenis Kelamin</th>
+                                    <th>Alamat</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
                             </thead>

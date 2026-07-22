@@ -18,15 +18,18 @@
                     <?php endfor; ?>
                 </select>
             </div>
-            <div class="col-auto"><input type="number" id="tahun" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
-            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadGaji()">Tampilkan</button></div>
+            <div class="col-auto"><input type="number" id="tahunBulan" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
+            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadGaji()">Filter Bulan</button></div>
+            <div class="col-auto"><strong class="small">Tahun:</strong></div>
+            <div class="col-auto"><input type="number" id="tahunFilter" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
+            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadGajiTahun()">Filter Tahun</button></div>
         </div>
     </div>
 </div>
 
 <div class="card shadow-sm no-print">
     <div class="card-body">
-        <div id="tabelContent"><p class="text-muted text-center py-4">Pilih bulan dan tahun untuk menampilkan data</p></div>
+        <div id="tabelContent"><p class="text-muted text-center py-4">Pilih filter untuk menampilkan data</p></div>
     </div>
 </div>
 
@@ -34,10 +37,15 @@
 <?= $this->section('script') ?>
 <script>
 var dataLoaded = '';
+var judulLaporan = 'Laporan Gaji Karyawan';
+var periodeLaporan = '';
 
 function loadGaji() {
-    var bl = $('#bulan').val(), th = $('#tahun').val();
+    var bl = $('#bulan').val(), th = $('#tahunBulan').val();
     if (!bl) { Swal.fire('Perhatian', 'Pilih bulan', 'warning'); return; }
+    var bulanNames = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    judulLaporan = 'Laporan Gaji Karyawan Bulan';
+    periodeLaporan = bulanNames[parseInt(bl)] + ' ' + th;
     $('#tabelContent').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
     $.ajax({
         url: '<?= base_url('laporan-transaksi/gaji-karyawan/view') ?>',
@@ -51,17 +59,36 @@ function loadGaji() {
     });
 }
 
+function loadGajiTahun() {
+    var th = $('#tahunFilter').val();
+    if (!th) { Swal.fire('Perhatian', 'Pilih tahun', 'warning'); return; }
+    judulLaporan = 'Laporan Gaji Karyawan Tahun';
+    periodeLaporan = th;
+    $('#tabelContent').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
+    $.ajax({
+        url: '<?= base_url('laporan-transaksi/gaji-karyawan/viewtahun') ?>',
+        type: 'POST',
+        data: {tahun: th},
+        dataType: 'json',
+        success: function(r) {
+            dataLoaded = r.data || '';
+            $('#tabelContent').html(dataLoaded || '<p class="text-muted text-center">Tidak ada data</p>');
+        }
+    });
+}
+
 function cetakLaporan() {
     if (!dataLoaded) { Swal.fire('Perhatian', 'Muat data terlebih dahulu', 'warning'); return; }
+    var periodeHtml = periodeLaporan ? '<p style="margin:2px 0;font-size:11px;">Periode: ' + periodeLaporan + '</p>' : '';
     var w = window.open('', '_blank');
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Gaji Karyawan</title>' +
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + judulLaporan + '</title>' +
         '<style>@page{size:A4 portrait;margin:1.5cm;}body{font-family:"Times New Roman",serif;font-size:11px;color:#000;}' +
         '.header{text-align:center;margin-bottom:15px;}.header h2{margin:0;font-size:16px;}.header p{margin:2px 0;font-size:11px;}' +
         '.header hr{border:1px solid #000;margin:8px 0;}.title{font-size:14px;font-weight:bold;text-decoration:underline;margin:10px 0;}' +
         'table{width:100%;border-collapse:collapse;margin:10px 0;font-size:10px;}th,td{border:1px solid #000;padding:5px 6px;text-align:left;}th{background:#f0f0f0;font-weight:bold;text-align:center;}' +
         '.footer{margin-top:25px;text-align:right;}.footer .sign{display:inline-block;text-align:center;width:200px;}.footer .sign .space{margin-top:50px;border-bottom:1px solid #000;}' +
         '</style></head><body>' +
-        '<div class="header"><h2>PENCUCIAN QENZA</h2><p>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</p><hr><div class="title">Laporan Gaji Karyawan</div></div>' +
+        '<div class="header"><h2>PENCUCIAN QENZA</h2><p>Sungai Jodi, Kec. Lubuk Tarok, Kabupaten Sijunjung</p><hr><div class="title">' + judulLaporan + '</div>' + periodeHtml + '</div>' +
         dataLoaded +
         '<div class="footer"><div class="sign"><p>Sijunjung, <?= date("d F Y") ?></p><p style="font-weight:bold;margin-top:5px;">Pimpinan</p><div class="space">&nbsp;</div></div></div>' +
         '</body></html>');

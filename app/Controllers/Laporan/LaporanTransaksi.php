@@ -130,25 +130,57 @@ class LaporanTransaksi extends BaseController
 
             $gaji = $db->query("
                 SELECT 
-                    k.idkaryawan,
+                    r.tgl,
                     k.nama as nama_karyawan,
-                    COUNT(DISTINCT dk.id) as jumlah_cucian,
                     COALESCE(SUM(pc.upah), 0) as total_upah
-                FROM karyawan k
-                LEFT JOIN detail_kendaraan dk ON dk.idkaryawan = k.idkaryawan AND dk.status = 'selesai'
-                LEFT JOIN reservasi r ON r.idreservasi = dk.idreservasi AND MONTH(r.tgl) = ? AND YEAR(r.tgl) = ?
-                LEFT JOIN detail_paket dp ON dp.id_detail_kendaraan = dk.id
-                LEFT JOIN paket_cucian pc ON pc.idpaket = dp.idpaket
-                GROUP BY k.idkaryawan, k.nama
-                HAVING jumlah_cucian > 0
-                ORDER BY total_upah DESC
+                FROM detail_kendaraan dk
+                JOIN reservasi r ON r.idreservasi = dk.idreservasi
+                JOIN karyawan k ON k.idkaryawan = dk.idkaryawan
+                JOIN detail_paket dp ON dp.id_detail_kendaraan = dk.id
+                JOIN paket_cucian pc ON pc.idpaket = dp.idpaket
+                WHERE dk.status = 'selesai' AND MONTH(r.tgl) = ? AND YEAR(r.tgl) = ?
+                GROUP BY dk.id, r.tgl, k.nama
+                ORDER BY r.tgl ASC, k.nama ASC
             ", [$bulan, $tahun])->getResultArray();
 
             return $this->response->setJSON([
                 'data' => view('laporan/transaksi/viewgajikaryawan', [
                     'gaji' => $gaji,
                     'bulan' => $bulan,
-                    'tahun' => $tahun
+                    'tahun' => $tahun,
+                    'filter_type' => 'bulan'
+                ])
+            ]);
+        }
+    }
+
+    public function viewallLaporanGajiKaryawanTahun()
+    {
+        if ($this->request->isAJAX()) {
+            $tahun = $this->request->getPost('tahun');
+            $db = db_connect();
+
+            $gaji = $db->query("
+                SELECT 
+                    MONTH(r.tgl) as bulan_num,
+                    k.nama as nama_karyawan,
+                    COALESCE(SUM(pc.upah), 0) as total_upah
+                FROM detail_kendaraan dk
+                JOIN reservasi r ON r.idreservasi = dk.idreservasi
+                JOIN karyawan k ON k.idkaryawan = dk.idkaryawan
+                JOIN detail_paket dp ON dp.id_detail_kendaraan = dk.id
+                JOIN paket_cucian pc ON pc.idpaket = dp.idpaket
+                WHERE dk.status = 'selesai' AND YEAR(r.tgl) = ?
+                GROUP BY MONTH(r.tgl), k.nama
+                ORDER BY bulan_num ASC, k.nama ASC
+            ", [$tahun])->getResultArray();
+
+            return $this->response->setJSON([
+                'data' => view('laporan/transaksi/viewgajikaryawan', [
+                    'gaji' => $gaji,
+                    'bulan' => null,
+                    'tahun' => $tahun,
+                    'filter_type' => 'tahun'
                 ])
             ]);
         }
@@ -870,7 +902,8 @@ class LaporanTransaksi extends BaseController
             $data = [
                 'selesai' => $selesai,
                 'bulan' => $bulan,
-                'tahun' => $tahun
+                'tahun' => $tahun,
+                'filter_type' => 'bulan'
             ];
 
             $response = [
@@ -907,7 +940,8 @@ class LaporanTransaksi extends BaseController
 
             $data = [
                 'selesai' => $selesai,
-                'tahun' => $tahun
+                'tahun' => $tahun,
+                'filter_type' => 'tahun'
             ];
 
             $response = [

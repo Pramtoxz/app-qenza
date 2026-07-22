@@ -8,7 +8,7 @@
                 <th>Nama</th>
                 <th>Alamat</th>
                 <th class="text-center">No HP</th>
-                <th class="text-center" style="width:100px">JK</th>
+                <th class="text-center" style="width:100px">Jenis Kelamin</th>
             </tr>
         </thead>
         <tbody>
