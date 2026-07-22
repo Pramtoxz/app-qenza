@@ -5,6 +5,7 @@
         <thead>
             <tr>
                 <th class="text-center" style="width:40px">No</th>
+                <th>ID Pelanggan</th>
                 <th>Nama</th>
                 <th>Alamat</th>
                 <th class="text-center">No HP</th>
@@ -15,6 +16,7 @@
             <?php $no = 1; foreach ($pelanggan as $p): ?>
             <tr>
                 <td class="text-center"><?= $no++ ?></td>
+                <td><?= esc($p['idpelanggan']) ?></td>
                 <td><?= esc($p['nama']) ?></td>
                 <td><?= esc($p['alamat']) ?></td>
                 <td class="text-center"><?= esc($p['nohp']) ?></td>

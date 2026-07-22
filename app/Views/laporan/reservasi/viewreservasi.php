@@ -1,6 +1,20 @@
 <?php if (empty($reservasi)): ?>
     <p class="text-muted text-center">Tidak ada data reservasi</p>
 <?php else: ?>
+    <?php
+    $bulanNames = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    $periodeText = '';
+    if (!empty($tglmulai) && !empty($tglakhir)) {
+        $periodeText = 'dari ' . date('d/m/Y', strtotime($tglmulai)) . ' sd/ ' . date('d/m/Y', strtotime($tglakhir));
+    } elseif (!empty($bulan) && !empty($tahun)) {
+        $periodeText = 'Periode: ' . ($bulanNames[(int)$bulan] ?? '') . ' ' . $tahun;
+    } elseif (!empty($tahun)) {
+        $periodeText = 'Periode: ' . $tahun;
+    }
+    ?>
+    <?php if ($periodeText): ?>
+        <div class="mb-2"><strong><?= $periodeText ?></strong></div>
+    <?php endif; ?>
     <table class="table table-bordered table-sm">
         <thead>
             <tr>

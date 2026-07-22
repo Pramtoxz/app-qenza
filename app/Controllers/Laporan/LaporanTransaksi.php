@@ -263,7 +263,11 @@ class LaporanTransaksi extends BaseController
                 ->getResultArray();
 
             return $this->response->setJSON([
-                'data' => view('laporan/reservasi/viewreservasi', ['reservasi' => $reservasi])
+                'data' => view('laporan/reservasi/viewreservasi', [
+                    'reservasi' => $reservasi,
+                    'tglmulai' => $tglmulai,
+                    'tglakhir' => $tglakhir
+                ])
             ]);
         }
     }
@@ -301,7 +305,11 @@ class LaporanTransaksi extends BaseController
                 ->getResultArray();
 
             return $this->response->setJSON([
-                'data' => view('laporan/reservasi/viewreservasi', ['reservasi' => $reservasi])
+                'data' => view('laporan/reservasi/viewreservasi', [
+                    'reservasi' => $reservasi,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun
+                ])
             ]);
         }
     }
