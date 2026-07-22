@@ -32,8 +32,6 @@
             <div class="col-auto"><input type="number" id="tahunFilter" class="form-control form-control-sm" value="<?= date('Y') ?>" style="width:90px;"></div>
             <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadTahun()">Filter Tahun</button></div>
         </div>
-            <div class="col-auto"><button class="btn btn-primary btn-sm" onclick="loadTahun()">Filter Tahun</button></div>
-        </div>
     </div>
 </div>
 

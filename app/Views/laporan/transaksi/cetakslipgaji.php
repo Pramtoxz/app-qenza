@@ -72,7 +72,6 @@
             <thead>
                 <tr>
                     <th style="text-align: center; width: 40px;">No</th>
-                    <th>ID Kendaraan</th>
                     <th>Tanggal</th>
                     <th>Plat Nomor</th>
                     <th>Paket</th>
@@ -85,7 +84,6 @@
                 ?>
                 <tr>
                     <td style="text-align: center;"><?= $no++ ?></td>
-                    <td><?= $p['id'] ?></td>
                     <td><?= date('d/m/Y', strtotime($p['tgl'])) ?></td>
                     <td><?= $p['platnomor'] ?></td>
                     <td><?= $p['namapaket'] ?></td>
@@ -95,7 +93,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" style="text-align: right;">Total Upah:</td>
+                    <td colspan="4" style="text-align: right;">Total Upah:</td>
                     <td style="text-align: right;">Rp <?= number_format($totalUpah, 0, ',', '.') ?></td>
                 </tr>
             </tfoot>

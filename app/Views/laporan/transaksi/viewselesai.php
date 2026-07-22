@@ -1,36 +1,36 @@
 <?php if (empty($selesai)): ?>
     <p class="text-muted text-center">Tidak ada data transaksi selesai</p>
 <?php else: ?>
-    <?php $totalSemua = 0; ?>
+    <?php
+    $rekap = [];
+    $totalSemua = 0;
+    foreach ($selesai as $s) {
+        $tgl = !empty($s['tglpencucian']) ? date('d/m/Y', strtotime($s['tglpencucian'])) : '-';
+        if (!isset($rekap[$tgl])) $rekap[$tgl] = 0;
+        $rekap[$tgl] += ($s['totalbayar'] ?? 0);
+        $totalSemua += ($s['totalbayar'] ?? 0);
+    }
+    ?>
     <table class="table table-bordered table-sm">
         <thead>
             <tr>
                 <th class="text-center" style="width:40px">No</th>
-                <th>ID Selesai</th>
-                <th>ID Faktur</th>
                 <th>Tanggal</th>
-                <th>Pelanggan</th>
-                <th>Plat Nomor</th>
-                <th class="text-end">Total Bayar</th>
+                <th class="text-end">Jumlah</th>
             </tr>
         </thead>
         <tbody>
-            <?php $no = 1; foreach ($selesai as $s): ?>
-            <?php $totalSemua += ($s['totalbayar'] ?? 0); ?>
+            <?php $no = 1; foreach ($rekap as $tgl => $total): ?>
             <tr>
                 <td class="text-center"><?= $no++ ?></td>
-                <td><?= esc($s['idselesai']) ?></td>
-                <td><?= esc($s['idreservasi']) ?></td>
-                <td><?= !empty($s['tglpencucian']) ? date('d/m/Y', strtotime($s['tglpencucian'])) : '-' ?></td>
-                <td><?= esc($s['nama_pelanggan']) ?></td>
-                <td><strong><?= esc($s['platnomor']) ?></strong></td>
-                <td class="text-end">Rp <?= number_format($s['totalbayar'] ?? 0, 0, ',', '.') ?></td>
+                <td><?= $tgl ?></td>
+                <td class="text-end">Rp <?= number_format($total, 0, ',', '.') ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr class="table-success">
-                <td colspan="6" class="text-end fw-bold">Total Pendapatan:</td>
+                <td colspan="2" class="text-end fw-bold">Total Pendapatan:</td>
                 <td class="text-end fw-bold">Rp <?= number_format($totalSemua, 0, ',', '.') ?></td>
             </tr>
         </tfoot>

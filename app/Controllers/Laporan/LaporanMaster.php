@@ -71,8 +71,8 @@ class LaporanMaster extends BaseController
         $db = db_connect();
         $paket = $db
             ->table('paket_cucian')
-            ->select('idpaket, namapaket, harga, jenis, keterangan')
-            ->groupBy('paket_cucian.idpaket, paket_cucian.namapaket, paket_cucian.harga, paket_cucian.jenis, paket_cucian.keterangan')
+            ->select('idpaket, namapaket, harga, jenis, keterangan, upah')
+            ->groupBy('paket_cucian.idpaket, paket_cucian.namapaket, paket_cucian.harga, paket_cucian.jenis, paket_cucian.keterangan, paket_cucian.upah')
             ->get()
             ->getResultArray();
         $data = [
