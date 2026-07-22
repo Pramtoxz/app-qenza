@@ -84,6 +84,7 @@ $routes->group('faktur', ['filter' => ['auth', 'role:admin']], function ($routes
     $routes->post('assignKaryawan', 'FakturController::assignKaryawan');
     $routes->post('ubahstatus', 'FakturController::ubahstatus');
     $routes->post('ubahbatal', 'FakturController::ubahbatal');
+    $routes->post('ubahStatusBayar', 'FakturController::ubahStatusBayar');
     $routes->post('delete', 'FakturController::delete');
     $routes->get('cetakAntrian/(:segment)', 'FakturController::cetakAntrian/$1');
     $routes->get('formedit/(:segment)', 'FakturController::formedit/$1');
@@ -97,6 +98,7 @@ $routes->group('selesai', ['filter' => ['auth', 'role:admin']], function ($route
     $routes->post('save', 'SelesaiController::save');
     $routes->get('getpencuciandijemput', 'SelesaiController::getPencucianDijemput');
     $routes->get('viewgetpencuciandijemput', 'SelesaiController::viewGetPencucianDijemput');
+    $routes->get('getkendaranbyfaktur', 'SelesaiController::getKendaraanByFaktur');
     $routes->post('delete', 'SelesaiController::delete');
     $routes->get('formedit/(:segment)', 'SelesaiController::formedit/$1');
     $routes->post('updatedata/(:segment)', 'SelesaiController::updatedata/$1');
@@ -121,6 +123,11 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
     $routes->post('pencucian/viewbulan', 'Laporan\LaporanTransaksi::viewallLaporanPencucianBulan');
     $routes->post('pencucian/viewtahun', 'Laporan\LaporanTransaksi::viewallLaporanPencucianTahun');
 
+    $routes->get('reservasi', 'Laporan\LaporanTransaksi::LaporanReservasi');
+    $routes->get('reservasi/view', 'Laporan\LaporanTransaksi::viewallLaporanReservasi');
+    $routes->post('reservasi/viewtanggal', 'Laporan\LaporanTransaksi::viewallLaporanReservasiTanggal');
+    $routes->post('reservasi/viewbulan', 'Laporan\LaporanTransaksi::viewallLaporanReservasiBulan');
+
     $routes->get('selesai', 'Laporan\LaporanTransaksi::LaporanSelesai');
     $routes->get('selesai/view', 'Laporan\LaporanTransaksi::viewallLaporanSelesai');
     $routes->post('selesai/viewtanggal', 'Laporan\LaporanTransaksi::viewallLaporanSelesaiTanggal');
@@ -130,6 +137,9 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
     $routes->get('slip-gaji', 'Laporan\LaporanTransaksi::SlipGaji');
     $routes->post('slip-gaji/getkaryawan', 'Laporan\LaporanTransaksi::getKaryawanSlipGaji');
     $routes->post('slip-gaji/cetak', 'Laporan\LaporanTransaksi::cetakSlipGaji');
+
+    $routes->get('gaji-karyawan', 'Laporan\LaporanTransaksi::LaporanGajiKaryawan');
+    $routes->post('gaji-karyawan/view', 'Laporan\LaporanTransaksi::viewallLaporanGajiKaryawan');
 });
 
 

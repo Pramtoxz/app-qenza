@@ -55,7 +55,7 @@ class FakturController extends BaseController
                          detail_kendaraan.id as id_kendaraan,
                          detail_kendaraan.platnomor,
                          detail_kendaraan.status,
-                         (CASE WHEN (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi) > 0 AND (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi AND dk.status = "selesai") = (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi) THEN "lunas" ELSE reservasi.status_bayar END) as status_bayar,
+                         detail_kendaraan.status_bayar,
                          (SELECT COUNT(*) FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi AND dk.status != "pending") as non_pending_count,
                          (SELECT CASE MIN(dk.status) WHEN "pending" THEN 1 WHEN "diproses" THEN 2 WHEN "dijemput" THEN 3 WHEN "selesai" THEN 4 WHEN "batal" THEN 5 END FROM detail_kendaraan dk WHERE dk.idreservasi = reservasi.idreservasi) as status_priority')
                 ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi', 'left')
@@ -279,6 +279,7 @@ class FakturController extends BaseController
                     'platnomor' => strtoupper($platnomor),
                     'idkaryawan' => null,
                     'status' => 'pending',
+                    'status_bayar' => 'belum',
                 ]);
                 $idKendaraan = $db->insertID();
 
@@ -408,6 +409,32 @@ class FakturController extends BaseController
             $model->update($id, ['status' => 'batal']);
 
             return $this->response->setJSON(['sukses' => 'Kendaraan berhasil dibatalkan']);
+        }
+    }
+
+    public function ubahStatusBayar()
+    {
+        if ($this->request->isAJAX()) {
+            $id = $this->request->getPost('id');
+            $db = db_connect();
+
+            $kendaraan = $db->table('detail_kendaraan')
+                ->where('id', $id)
+                ->get()
+                ->getRowArray();
+
+            if (!$kendaraan) {
+                return $this->response->setJSON(['error' => 'Data kendaraan tidak ditemukan']);
+            }
+
+            $statusBaru = ($kendaraan['status_bayar'] == 'belum') ? 'lunas' : 'belum';
+
+            $db->table('detail_kendaraan')
+                ->where('id', $id)
+                ->update(['status_bayar' => $statusBaru]);
+
+            $labelBaru = ($statusBaru == 'lunas') ? 'Lunas' : 'Belum Bayar';
+            return $this->response->setJSON(['sukses' => 'Status bayar berhasil diubah menjadi ' . $labelBaru]);
         }
     }
 
@@ -649,6 +676,7 @@ class FakturController extends BaseController
                         'platnomor' => strtoupper($k['platnomor']),
                         'idkaryawan' => null,
                         'status' => 'pending',
+                        'status_bayar' => 'belum',
                     ]);
                     $idKendaraan = $db->insertID();
 

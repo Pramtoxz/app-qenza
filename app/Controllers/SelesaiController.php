@@ -90,54 +90,94 @@ class SelesaiController extends BaseController
 
     public function getPencucianDijemput()
     {
-        return view('selesai/getpencucian');
+        $db = db_connect();
+        $pencucian = $db->query("
+            SELECT 
+                r.idreservasi,
+                r.tgl,
+                p.nama as nama_pelanggan,
+                COUNT(dk.id) as jumlah_kendaraan,
+                GROUP_CONCAT(dk.platnomor SEPARATOR ', ') as plat_list
+            FROM detail_kendaraan dk
+            JOIN reservasi r ON r.idreservasi = dk.idreservasi
+            JOIN pelanggan p ON p.idpelanggan = r.idpelanggan
+            WHERE dk.status = 'dijemput'
+            AND dk.id NOT IN (SELECT id_detail_kendaraan FROM kendaraan_selesai)
+            GROUP BY r.idreservasi, r.tgl, p.nama
+            ORDER BY r.tgl DESC
+        ")->getResultArray();
+
+        return view('selesai/getpencucian', ['pencucian' => $pencucian]);
     }
 
     public function viewGetPencucianDijemput()
     {
         if ($this->request->isAJAX()) {
             $db = db_connect();
-            $pencucian = $db->table('detail_kendaraan')
-                ->select('detail_kendaraan.id as id_detail_kendaraan,
-                         reservasi.idreservasi,
-                         reservasi.tgl,
-                         detail_kendaraan.platnomor,
-                         pelanggan.nama as nama_pelanggan,
-                         (SELECT GROUP_CONCAT(p.namapaket SEPARATOR " + ")
-                          FROM detail_paket fp
-                          JOIN paket_cucian p ON p.idpaket = fp.idpaket
-                          WHERE fp.id_detail_kendaraan = detail_kendaraan.id) as namapaket,
-                         (SELECT SUM(p.harga)
-                          FROM detail_paket fp
-                          JOIN paket_cucian p ON p.idpaket = fp.idpaket
-                          WHERE fp.id_detail_kendaraan = detail_kendaraan.id) as harga,
-                         karyawan.nama as nama_karyawan')
-                ->join('reservasi', 'reservasi.idreservasi = detail_kendaraan.idreservasi')
-                ->join('pelanggan', 'pelanggan.idpelanggan = reservasi.idpelanggan')
-                ->join('karyawan', 'karyawan.idkaryawan = detail_kendaraan.idkaryawan', 'left')
-                ->where('detail_kendaraan.status', 'dijemput')
-                ->whereNotIn('detail_kendaraan.id', function($builder) {
-                    return $builder->select('id_detail_kendaraan')->from('kendaraan_selesai');
-                });
+            $pencucian = $db->query("
+                SELECT 
+                    r.idreservasi,
+                    r.tgl,
+                    p.nama as nama_pelanggan,
+                    COUNT(dk.id) as jumlah_kendaraan,
+                    GROUP_CONCAT(dk.platnomor SEPARATOR ', ') as plat_list
+                FROM detail_kendaraan dk
+                JOIN reservasi r ON r.idreservasi = dk.idreservasi
+                JOIN pelanggan p ON p.idpelanggan = r.idpelanggan
+                WHERE dk.status = 'dijemput'
+                AND dk.id NOT IN (SELECT id_detail_kendaraan FROM kendaraan_selesai)
+                GROUP BY r.idreservasi, r.tgl, p.nama
+                ORDER BY r.tgl DESC
+            ")->getResultArray();
 
-            return DataTable::of($pencucian)
-                ->add('action', function ($row) {
-                    $button1 = '<button type="button" class="btn btn-primary btn-pilihpencucian" 
-                                data-id_detail_kendaraan="' . $row->id_detail_kendaraan . '" 
-                                data-nama_pelanggan="' . esc($row->nama_pelanggan) . '"
-                                data-platnomor="' . esc($row->platnomor) . '"
-                                data-namapaket="' . esc($row->namapaket) . '"
-                                data-harga="' . ($row->harga ?? 0) . '"
-                                data-nama_karyawan="' . esc($row->nama_karyawan) . '"
-                                data-tgl="' . $row->tgl . '">Pilih</button>';
-                    return $button1;
-                }, 'last')
-                ->addNumbering()
-                ->hide('id_detail_kendaraan')
-                ->edit('harga', function ($row) {
-                    return 'Rp. ' . number_format($row->harga ?? 0, 0, ',', '.');
+            $data = ['pencucian' => $pencucian];
+            return view('selesai/getpencucian', $data);
+        }
+    }
+
+    public function getKendaraanByFaktur()
+    {
+        if ($this->request->isAJAX()) {
+            $idreservasi = $this->request->getGet('idreservasi');
+            $db = db_connect();
+
+            $kendaraan = $db->table('detail_kendaraan dk')
+                ->select('dk.id as id_detail_kendaraan,
+                         dk.platnomor,
+                         dk.status_bayar,
+                         k.nama as nama_karyawan,
+                         (SELECT GROUP_CONCAT(pc.namapaket SEPARATOR " + ")
+                          FROM detail_paket dp
+                          JOIN paket_cucian pc ON pc.idpaket = dp.idpaket
+                          WHERE dp.id_detail_kendaraan = dk.id) as namapaket,
+                         (SELECT SUM(pc.harga)
+                          FROM detail_paket dp
+                          JOIN paket_cucian pc ON pc.idpaket = dp.idpaket
+                          WHERE dp.id_detail_kendaraan = dk.id) as harga')
+                ->join('karyawan k', 'k.idkaryawan = dk.idkaryawan', 'left')
+                ->where('dk.idreservasi', $idreservasi)
+                ->where('dk.status', 'dijemput')
+                ->whereNotIn('dk.id', function($builder) {
+                    return $builder->select('id_detail_kendaraan')->from('kendaraan_selesai');
                 })
-                ->toJson();
+                ->get()
+                ->getResultArray();
+
+            $belumBayar = array_filter($kendaraan, fn($k) => $k['status_bayar'] === 'belum');
+            $totalBelumBayar = array_sum(array_column($belumBayar, 'harga'));
+
+            $sudahDibayar = $db->table('kendaraan_selesai ks')
+                ->select('COALESCE(SUM(ks.totaldibayar), 0) as total')
+                ->join('detail_kendaraan dk', 'dk.id = ks.id_detail_kendaraan')
+                ->where('dk.idreservasi', $idreservasi)
+                ->get()
+                ->getRowArray();
+
+            return $this->response->setJSON([
+                'kendaraan' => $kendaraan,
+                'total_belum_bayar' => $totalBelumBayar,
+                'sudah_dibayar' => $sudahDibayar['total'] ?? 0
+            ]);
         }
     }
 
@@ -145,87 +185,91 @@ class SelesaiController extends BaseController
     {
         if ($this->request->isAJAX()) {
             $idselesai = $this->request->getPost('idselesai');
-            $id_detail_kendaraan = $this->request->getPost('id_detail_kendaraan');
+            $idKendaraanList = $this->request->getPost('id_kendaraan_list');
             $jamjemput = $this->request->getPost('jamjemput');
             $totalbayar = $this->request->getPost('totalbayar');
             $totaldibayar = $this->request->getPost('totaldibayar');
 
-            $rules = [
-                'id_detail_kendaraan' => [
-                    'label' => 'Faktur Kendaraan',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
-                'jamjemput' => [
-                    'label' => 'Jam Jemput',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
-                'totalbayar' => [
-                    'label' => 'Total Bayar',
-                    'rules' => 'required|numeric',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                        'numeric' => '{field} harus berupa angka',
-                    ]
-                ],
-            ];
+            if (empty($idKendaraanList) || !is_array($idKendaraanList)) {
+                return $this->response->setJSON(['error' => 'Pilih minimal 1 kendaraan']);
+            }
 
-            if (!$this->validate($rules)) {
-                $errors = [];
-                foreach ($rules as $field => $rule) {
-                    $errors["error_$field"] = $this->validator->getError($field);
-                }
-                $json = [
-                    'error' => $errors
-                ];
-            } else {
-                $db = db_connect();
-                
+            if (empty($jamjemput)) {
+                return $this->response->setJSON(['error' => 'Jam jemput tidak boleh kosong']);
+            }
+
+            $db = db_connect();
+            $db->transStart();
+
+            $today = date('Ymd');
+            $prefix = "SLS-$today-";
+            $counter = 0;
+
+            $query = $db->query("SELECT idselesai FROM kendaraan_selesai WHERE idselesai LIKE ?", ["$prefix%"]);
+            $existing = $query->getResultArray();
+            $numbers = [];
+            foreach ($existing as $row) {
+                $num = substr($row['idselesai'], strlen($prefix));
+                if (is_numeric($num)) $numbers[] = (int)$num;
+            }
+            $nextNo = !empty($numbers) ? max($numbers) + 1 : 1;
+
+            foreach ($idKendaraanList as $idKendaraan) {
+                $kendaraan = $db->table('detail_kendaraan')
+                    ->where('id', $idKendaraan)
+                    ->get()->getRowArray();
+
+                if (!$kendaraan || $kendaraan['status'] !== 'dijemput') continue;
+
+                $idselesaiItem = $prefix . str_pad($nextNo + $counter, 4, '0', STR_PAD_LEFT);
+                $counter++;
+
+                $harga = 0;
+                $paketList = $db->table('detail_paket dp')
+                    ->select('SUM(pc.harga) as total')
+                    ->join('paket_cucian pc', 'pc.idpaket = dp.idpaket')
+                    ->where('dp.id_detail_kendaraan', $idKendaraan)
+                    ->get()->getRowArray();
+                $harga = $paketList['total'] ?? 0;
+
                 $db->table('kendaraan_selesai')->insert([
-                    'idselesai' => $idselesai,
-                    'id_detail_kendaraan' => $id_detail_kendaraan,
+                    'idselesai' => $idselesaiItem,
+                    'id_detail_kendaraan' => $idKendaraan,
                     'jamjemput' => $jamjemput,
-                    'totalbayar' => $totalbayar,
+                    'totalbayar' => $harga,
                     'totaldibayar' => $totaldibayar,
                 ]);
 
                 $db->table('detail_kendaraan')
-                   ->where('id', $id_detail_kendaraan)
-                   ->update(['status' => 'selesai']);
-
-                $kendaraan = $db->table('detail_kendaraan')
-                    ->select('idreservasi')
-                    ->where('id', $id_detail_kendaraan)
-                    ->get()->getRowArray();
-
-                if ($kendaraan) {
-                    $idreservasi = $kendaraan['idreservasi'];
-                    $totalKendaraan = $db->table('detail_kendaraan')
-                        ->where('idreservasi', $idreservasi)
-                        ->countAllResults();
-                    $selesaiCount = $db->table('detail_kendaraan')
-                        ->where('idreservasi', $idreservasi)
-                        ->where('status', 'selesai')
-                        ->countAllResults();
-
-                    if ($totalKendaraan > 0 && $totalKendaraan === $selesaiCount) {
-                        $db->table('reservasi')
-                           ->where('idreservasi', $idreservasi)
-                           ->update(['status_bayar' => 'lunas']);
-                    }
-                }
-
-                $json = [
-                    'sukses' => 'Data Kendaraan Selesai Berhasil Ditambahkan',
-                    'idselesai' => $idselesai
-                ];
+                   ->where('id', $idKendaraan)
+                   ->update(['status' => 'selesai', 'status_bayar' => 'lunas']);
             }
-            return $this->response->setJSON($json);
+
+            $idreservasi = $kendaraan['idreservasi'] ?? null;
+            if ($idreservasi) {
+                $totalKendaraan = $db->table('detail_kendaraan')
+                    ->where('idreservasi', $idreservasi)->countAllResults();
+                $selesaiCount = $db->table('detail_kendaraan')
+                    ->where('idreservasi', $idreservasi)
+                    ->where('status', 'selesai')->countAllResults();
+
+                if ($totalKendaraan > 0 && $totalKendaraan === $selesaiCount) {
+                    $db->table('reservasi')
+                       ->where('idreservasi', $idreservasi)
+                       ->update(['status_bayar' => 'lunas']);
+                }
+            }
+
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                return $this->response->setJSON(['error' => 'Gagal menyimpan data']);
+            }
+
+            return $this->response->setJSON([
+                'sukses' => $counter . ' kendaraan berhasil di-checkout',
+                'idselesai' => $idselesai
+            ]);
         }
     }
 

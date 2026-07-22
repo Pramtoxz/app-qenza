@@ -116,94 +116,162 @@ class LaporanTransaksi extends BaseController
         ]);
     }
 
-    public function LaporanReservasi()
+    public function LaporanGajiKaryawan()
     {
-        $data['title'] = 'Laporan Reservasi';
-        return view('laporan/reservasi/reservasi', $data);
+        return view('laporan/transaksi/gajikaryawan');
     }
 
+    public function viewallLaporanGajiKaryawan()
+    {
+        if ($this->request->isAJAX()) {
+            $bulan = $this->request->getPost('bulan');
+            $tahun = $this->request->getPost('tahun');
+            $db = db_connect();
+
+            $gaji = $db->query("
+                SELECT 
+                    k.idkaryawan,
+                    k.nama as nama_karyawan,
+                    COUNT(DISTINCT dk.id) as jumlah_cucian,
+                    COALESCE(SUM(pc.upah), 0) as total_upah
+                FROM karyawan k
+                LEFT JOIN detail_kendaraan dk ON dk.idkaryawan = k.idkaryawan AND dk.status = 'selesai'
+                LEFT JOIN reservasi r ON r.idreservasi = dk.idreservasi AND MONTH(r.tgl) = ? AND YEAR(r.tgl) = ?
+                LEFT JOIN detail_paket dp ON dp.id_detail_kendaraan = dk.id
+                LEFT JOIN paket_cucian pc ON pc.idpaket = dp.idpaket
+                GROUP BY k.idkaryawan, k.nama
+                HAVING jumlah_cucian > 0
+                ORDER BY total_upah DESC
+            ", [$bulan, $tahun])->getResultArray();
+
+            return $this->response->setJSON([
+                'data' => view('laporan/transaksi/viewgajikaryawan', [
+                    'gaji' => $gaji,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun
+                ])
+            ]);
+        }
+    }
+
+    public function LaporanReservasi()
+    {
+        return view('laporan/reservasi/reservasi');
+    }
+
+    public function viewallLaporanReservasi()
+    {
+        if ($this->request->isAJAX()) {
+            $db = db_connect();
+            $status = $this->request->getGet('status');
+
+            $builder = $db->table('detail_kendaraan dk')
+                ->select('
+                    r.idreservasi,
+                    r.tgl,
+                    r.jamdatang,
+                    dk.status_bayar,
+                    dk.status,
+                    dk.platnomor,
+                    p.nama as nama_pelanggan,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket
+                ')
+                ->join('reservasi r', 'r.idreservasi = dk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = r.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = dk.idkaryawan', 'left')
+                ->join('detail_paket dp', 'dp.id_detail_kendaraan = dk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = dp.idpaket', 'left')
+                ->groupBy('dk.id')
+                ->orderBy('r.tgl', 'DESC')
+                ->orderBy('r.idreservasi', 'DESC');
+
+            if (!empty($status)) {
+                $builder->where('dk.status', $status);
+            }
+
+            $reservasi = $builder->get()->getResultArray();
+
+            return $this->response->setJSON([
+                'data' => view('laporan/reservasi/viewreservasi', ['reservasi' => $reservasi])
+            ]);
+        }
+    }
 
     public function viewallLaporanReservasiTanggal()
     {
-        $tglmulai = $this->request->getPost('tglmulai');
-        $tglakhir = $this->request->getPost('tglakhir');
-        $db = db_connect();
-        
-        // Adaptasi query dari ReservasiController->detail() method dengan join yang tepat
-        $reservasi = $db->table('reservasi')
-            ->select('
-                reservasi.idbooking,
-                reservasi.created_at as tanggal_booking, 
-                reservasi.tglcheckin, 
-                reservasi.tglcheckout, 
-                reservasi.status,
-                reservasi.tipe,
-                reservasi.totalbayar,
-                tamu.nama as nama_tamu,
-                kamar.id_kamar as kode_kamar,
-                kamar.nama as nama_kamar, 
-                kamar.harga
-            ')
-            ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
-            ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-            ->where('reservasi.tglcheckin >=', $tglmulai)
-            ->where('reservasi.tglcheckin <=', $tglakhir)
-            ->orderBy('reservasi.idbooking', 'DESC')
-            ->get()
-            ->getResultArray();
-            
-        $data = [
-            'reservasi' => $reservasi,
-            'tglmulai' => $tglmulai,
-            'tglakhir' => $tglakhir,
-        ];
-        $response = [
-            'data' => view('laporan/reservasi/viewreservasi', $data),
-        ];
+        if ($this->request->isAJAX()) {
+            $tglmulai = $this->request->getPost('tglmulai');
+            $tglakhir = $this->request->getPost('tglakhir');
+            $db = db_connect();
 
-        echo json_encode($response);
+            $reservasi = $db->table('detail_kendaraan dk')
+                ->select('
+                    r.idreservasi,
+                    r.tgl,
+                    r.jamdatang,
+                    dk.status_bayar,
+                    dk.status,
+                    dk.platnomor,
+                    p.nama as nama_pelanggan,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket
+                ')
+                ->join('reservasi r', 'r.idreservasi = dk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = r.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = dk.idkaryawan', 'left')
+                ->join('detail_paket dp', 'dp.id_detail_kendaraan = dk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = dp.idpaket', 'left')
+                ->where('r.tgl >=', $tglmulai)
+                ->where('r.tgl <=', $tglakhir)
+                ->groupBy('dk.id')
+                ->orderBy('r.tgl', 'DESC')
+                ->orderBy('r.idreservasi', 'DESC')
+                ->get()
+                ->getResultArray();
+
+            return $this->response->setJSON([
+                'data' => view('laporan/reservasi/viewreservasi', ['reservasi' => $reservasi])
+            ]);
+        }
     }
 
     public function viewallLaporanReservasiBulan()
     {
-        $bulanawal = $this->request->getPost('bulanawal');
-        $bulanakhir = $this->request->getPost('bulanakhir');
-        
-        $db = db_connect();
-        
-        // Adaptasi query dari ReservasiController->detail() method dengan join yang tepat
-        $reservasi = $db->table('reservasi')
-            ->select('
-                reservasi.idbooking,
-                reservasi.created_at as tanggal_booking, 
-                reservasi.tglcheckin, 
-                reservasi.tglcheckout, 
-                reservasi.status,
-                reservasi.tipe,
-                reservasi.totalbayar,
-                tamu.nama as nama_tamu,
-                kamar.id_kamar as kode_kamar,
-                kamar.nama as nama_kamar, 
-                kamar.harga
-            ')
-            ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
-            ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-            ->where('reservasi.tglcheckin >=', $bulanawal . '-01')
-            ->where('reservasi.tglcheckin <=', $bulanakhir . '-31')
-            ->orderBy('reservasi.idbooking', 'DESC')
-            ->get()
-            ->getResultArray();
-            
-        $data = [
-            'reservasi' => $reservasi,
-            'bulanawal' => $bulanawal,
-            'bulanakhir' => $bulanakhir,
-        ];
-        $response = [
-            'data' => view('laporan/reservasi/viewreservasi', $data),
-        ];
+        if ($this->request->isAJAX()) {
+            $bulan = $this->request->getPost('bulan');
+            $tahun = $this->request->getPost('tahun');
+            $db = db_connect();
 
-        echo json_encode($response);
+            $reservasi = $db->table('detail_kendaraan dk')
+                ->select('
+                    r.idreservasi,
+                    r.tgl,
+                    r.jamdatang,
+                    dk.status_bayar,
+                    dk.status,
+                    dk.platnomor,
+                    p.nama as nama_pelanggan,
+                    k.nama as nama_karyawan,
+                    GROUP_CONCAT(pc.namapaket SEPARATOR ", ") as namapaket
+                ')
+                ->join('reservasi r', 'r.idreservasi = dk.idreservasi')
+                ->join('pelanggan p', 'p.idpelanggan = r.idpelanggan', 'left')
+                ->join('karyawan k', 'k.idkaryawan = dk.idkaryawan', 'left')
+                ->join('detail_paket dp', 'dp.id_detail_kendaraan = dk.id', 'left')
+                ->join('paket_cucian pc', 'pc.idpaket = dp.idpaket', 'left')
+                ->where('MONTH(r.tgl)', $bulan)
+                ->where('YEAR(r.tgl)', $tahun)
+                ->groupBy('dk.id')
+                ->orderBy('r.tgl', 'DESC')
+                ->orderBy('r.idreservasi', 'DESC')
+                ->get()
+                ->getResultArray();
+
+            return $this->response->setJSON([
+                'data' => view('laporan/reservasi/viewreservasi', ['reservasi' => $reservasi])
+            ]);
+        }
     }
 
     public function LaporanCheckin()

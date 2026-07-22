@@ -25,10 +25,16 @@
           </div>
           <div class="col-md-4">
             <small class="text-muted d-block">Status Bayar</small>
-                <?php if ($faktur['status_bayar'] == 'lunas'): ?>
-                    <span class="badge bg-success fs-6">Lunas</span>
+                <?php
+                $allLunas = true;
+                foreach ($kendaraan as $kk) {
+                    if (($kk['status_bayar'] ?? 'belum') != 'lunas') { $allLunas = false; break; }
+                }
+                ?>
+                <?php if ($allLunas): ?>
+                    <span class="badge bg-success fs-6">Semua Lunas</span>
                 <?php else: ?>
-                    <span class="badge bg-warning text-dark fs-6">Belum Bayar</span>
+                    <span class="badge bg-warning text-dark fs-6">Ada yang Belum Bayar</span>
                 <?php endif; ?>
             </div>
         </div>
@@ -80,6 +86,11 @@
             <div>
                 <strong class="me-2"><?= $k['platnomor'] ?></strong>
                 <span class="badge bg-<?= $statusClass ?>"><?= $statusLabel ?></span>
+                <?php if ($k['status_bayar'] == 'lunas'): ?>
+                    <span class="badge bg-success ms-1 badge-bayar-<?= $k['id'] ?>">Lunas</span>
+                <?php else: ?>
+                    <span class="badge bg-warning text-dark ms-1 badge-bayar-<?= $k['id'] ?>">Belum Bayar</span>
+                <?php endif; ?>
                 <?php if ($k['nama_karyawan']): ?>
                     <span class="ms-2"><i class="ri-user-3-line me-1"></i><?= $k['nama_karyawan'] ?></span>
                 <?php else: ?>
@@ -87,6 +98,9 @@
                 <?php endif; ?>
             </div>
             <div class="no-print">
+                <button type="button" class="btn btn-sm btn-outline-primary btn-ubah-bayar" data-idkendaraan="<?= $k['id'] ?>" data-status="<?= $k['status_bayar'] ?>">
+                    <i class="ri-money-dollar-circle-line me-1"></i>Ubah Bayar
+                </button>
                 <?php if ($k['status'] == 'pending'): ?>
                     <button type="button" class="btn btn-success btn-sm btn-assign-detail" data-idkendaraan="<?= $k['id'] ?>">
                         <i class="ri-user-add-line me-1"></i>Assign Karyawan
@@ -305,6 +319,78 @@
                 $.ajax({
                     type: "POST",
                     url: "<?= site_url('faktur/ubahbatal') ?>",
+                    data: { id: idkendaraan },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.sukses) {
+                            Swal.fire('Berhasil!', response.sukses, 'success').then(() => location.reload());
+                        } else if (response.error) {
+                            Swal.fire('Gagal!', response.error, 'warning');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#btnUbahStatusBayar', function() {
+        var idreservasi = $(this).data('idreservasi');
+        var currentStatus = $('#badgeStatusBayar').text().trim();
+        var newStatus = (currentStatus === 'Lunas') ? 'Belum Bayar' : 'Lunas';
+
+        Swal.fire({
+            title: 'Ubah Status Bayar?',
+            text: 'Ubah dari "' + currentStatus + '" menjadi "' + newStatus + '"?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Ubah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= site_url('faktur/ubahStatusBayar') ?>",
+                    data: { idreservasi: idreservasi },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.sukses) {
+                            Swal.fire('Berhasil!', response.sukses, 'success').then(() => location.reload());
+                        } else if (response.error) {
+                            Swal.fire('Gagal!', response.error, 'warning');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-ubah-bayar', function() {
+        var idkendaraan = $(this).data('idkendaraan');
+        var currentStatus = $(this).data('status');
+        var newStatus = (currentStatus === 'belum') ? 'Lunas' : 'Belum Bayar';
+
+        Swal.fire({
+            title: 'Ubah Status Bayar?',
+            text: 'Ubah menjadi "' + newStatus + '"?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Ubah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= site_url('faktur/ubahStatusBayar') ?>",
                     data: { id: idkendaraan },
                     dataType: 'json',
                     success: function(response) {

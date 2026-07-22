@@ -94,22 +94,28 @@ $currentUri = service('uri')->getPath();
         </div>
         <ul class="sidebar-submenu sidebar-open">
         <li>
-    <a href="<?= site_url('laporan-master/pelanggan') ?>" class="<?= (strpos($currentUri, 'laporan-master/pelanggan') !== false) ? 'active' : '' ?>"><i class="ri-user-smile-line circle-icon text-primary-600 w-auto"></i> Pelanggan</a>
+    <a href="<?= site_url('laporan-master/pelanggan') ?>" class="<?= (strpos($currentUri, 'laporan-master/pelanggan') !== false) ? 'active' : '' ?>"><i class="ri-user-smile-line circle-icon text-primary-600 w-auto"></i>Laporan Pelanggan</a>
 </li>
 <li>
-    <a href="<?= site_url('laporan-master/paket') ?>" class="<?= (strpos($currentUri, 'laporan-master/paket') !== false) ? 'active' : '' ?>"><i class="ri-archive-line circle-icon text-primary-600 w-auto"></i> Paket Cucian</a>
+    <a href="<?= site_url('laporan-master/paket') ?>" class="<?= (strpos($currentUri, 'laporan-master/paket') !== false) ? 'active' : '' ?>"><i class="ri-archive-line circle-icon text-primary-600 w-auto"></i>Laporan Paket Cucian</a>
 </li>
 <li>
-    <a href="<?= site_url('laporan-master/karyawan') ?>" class="<?= (strpos($currentUri, 'laporan-master/karyawan') !== false) ? 'active' : '' ?>"><i class="ri-user-line circle-icon text-primary-600 w-auto"></i> Karyawan</a>
+    <a href="<?= site_url('laporan-master/karyawan') ?>" class="<?= (strpos($currentUri, 'laporan-master/karyawan') !== false) ? 'active' : '' ?>"><i class="ri-user-line circle-icon text-primary-600 w-auto"></i>Laporan Karyawan</a>
 </li>
 <li>
-    <a href="<?= site_url('laporan-transaksi/pencucian') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/pencucian') !== false) ? 'active' : '' ?>"><i class="ri-checkbox-circle-line circle-icon text-primary-600 w-auto"></i> Cucian Selesai</a>
+    <a href="<?= site_url('laporan-transaksi/reservasi') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/reservasi') !== false) ? 'active' : '' ?>"><i class="ri-calendar-check-line circle-icon text-primary-600 w-auto"></i>Laporan Reservasi</a>
 </li>
 <li>
-    <a href="<?= site_url('laporan-transaksi/selesai') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/selesai') !== false) ? 'active' : '' ?>"><i class="ri-money-dollar-circle-line circle-icon text-primary-600 w-auto"></i> Laporan Pendapatan</a>
+    <a href="<?= site_url('laporan-transaksi/pencucian') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/pencucian') !== false) ? 'active' : '' ?>"><i class="ri-checkbox-circle-line circle-icon text-primary-600 w-auto"></i>Laporan Cucian Selesai</a>
 </li>
 <li>
-    <a href="<?= site_url('laporan-transaksi/slip-gaji') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/slip-gaji') !== false) ? 'active' : '' ?>"><i class="ri-wallet-3-line circle-icon text-primary-600 w-auto"></i> Gaji Karyawan</a>
+    <a href="<?= site_url('laporan-transaksi/selesai') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/selesai') !== false) ? 'active' : '' ?>"><i class="ri-money-dollar-circle-line circle-icon text-primary-600 w-auto"></i>Laporan Pendapatan</a>
+</li>
+<li>
+    <a href="<?= site_url('laporan-transaksi/slip-gaji') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/slip-gaji') !== false) ? 'active' : '' ?>"><i class="ri-wallet-3-line circle-icon text-primary-600 w-auto"></i> Slip Gaji</a>
+</li>
+<li>
+    <a href="<?= site_url('laporan-transaksi/gaji-karyawan') ?>" class="<?= (strpos($currentUri, 'laporan-transaksi/gaji-karyawan') !== false) ? 'active' : '' ?>"><i class="ri-checkbox-circle-line circle-icon text-primary-600 w-auto"></i>Laporan Gaji Karyawan</a>
 </li>                
     </ul>
     </li>
